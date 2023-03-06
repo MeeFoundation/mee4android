@@ -14,11 +14,6 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import uniffi.mee_agent.*
 
 class MainActivity : ComponentActivity() {
-    companion object {
-        init {
-            System.loadLibrary("uniffi_mee_agent")
-        }
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
             var appDir = getApplicationInfo().dataDir + "/mee"
             var agent = getAgent(
