@@ -56,8 +56,8 @@ apply plugin: 'org.mozilla.rust-android-gradle.rust-android'
 cargo {
     module  = "../mee-core"       // Or whatever directory contains your Cargo.toml
     libname = "uniffi_mee_agent"          // Or whatever matches Cargo.toml's [package] name.
-    targets = ["arm64", "x86_64", "x86"]  // See bellow for a longer list of options
-    pythonCommand = "/usr/local/bin/python3"
+    targets = ["arm64", "x86_64"]  // See bellow for a longer list of options
+    pythonCommand = "/opt/homebrew/bin/python3"
     targetDirectory = "../mee-core/target"
     apiLevel = 23
 }
