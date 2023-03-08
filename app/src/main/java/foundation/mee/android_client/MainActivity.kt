@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import uniffi.mee.*
+import uniffi.mee_agent.*
 
 class MainActivity : ComponentActivity() {
 
@@ -31,7 +31,16 @@ class MainActivity : ComponentActivity() {
             MeeAgentDidRegistryConfig.DidWeb("", ""))
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        var agent = getAgent()
+            var appDir = getApplicationInfo().dataDir + "/mee"
+            var agent = getAgent(
+                MeeAgentConfig(
+                    appDir,
+                null,
+                MeeAgentDidRegistryConfig.DidKey
+            )
+            )
+        print("test")
+        print( agent.listMaterializedContexts())
         super.onCreate(savedInstanceState)
         setContent {
             MeeIdentityAgentTheme {
