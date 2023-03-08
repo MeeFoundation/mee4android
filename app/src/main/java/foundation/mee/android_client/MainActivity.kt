@@ -26,21 +26,23 @@ import uniffi.mee_agent.*
 class MainActivity : ComponentActivity() {
 
     private val config: MeeAgentConfig =
-        MeeAgentConfig("",
+        MeeAgentConfig(
+            "",
             null,
-            MeeAgentDidRegistryConfig.DidWeb("", ""))
+            MeeAgentDidRegistryConfig.DidWeb("", "")
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-            var appDir = getApplicationInfo().dataDir + "/mee"
-            var agent = getAgent(
-                MeeAgentConfig(
-                    appDir,
+        var appDir = getApplicationInfo().dataDir + "/mee"
+        var agent = getAgent(
+            MeeAgentConfig(
+                appDir,
                 null,
                 MeeAgentDidRegistryConfig.DidKey
             )
-            )
+        )
         print("test")
-        print( agent.listMaterializedContexts())
+        print(agent.listMaterializedContexts())
         super.onCreate(savedInstanceState)
         setContent {
             MeeIdentityAgentTheme {
@@ -72,9 +74,26 @@ fun DefaultPreview() {
 @Preview(showBackground = true, widthDp = 375, heightDp = 800)
 @Composable
 fun ConnectionsPreview() {
-    val connections: List<MaterializedContext.RelyingParty> = listOf(MaterializedContext.RelyingParty("", "connection_name1", RpContextData(ContextProtocol.GoogleAccount)), MaterializedContext.RelyingParty("", "connection_name2", RpContextData(ContextProtocol.GoogleAccount)))
+    val connections: List<MaterializedContext.RelyingParty> = listOf(
+        MaterializedContext.RelyingParty(
+            "",
+            "connection_name1",
+            RpContextData(ContextProtocol.GoogleAccount)
+        ),
+        MaterializedContext.RelyingParty(
+            "",
+            "connection_name2",
+            RpContextData(ContextProtocol.GoogleAccount)
+        )
+    )
     var partnerConnections: List<MaterializedContext.RelyingParty> = PartnersRegistry.shared
-    var agent: MeeAgent = getAgent(MeeAgentConfig("/Users/vamuzing/projects/Mee/mee-core/target/test_create_delete_ctx.sqlite", null, MeeAgentDidRegistryConfig.DidKey))
+    var agent: MeeAgent = getAgent(
+        MeeAgentConfig(
+            "/Users/vamuzing/projects/Mee/mee-core/target/test_create_delete_ctx.sqlite",
+            null,
+            MeeAgentDidRegistryConfig.DidKey
+        )
+    )
 //
 //    var conns: List<MaterializedContext> = agent.listMaterializedContexts()
     MeeIdentityAgentTheme() {
@@ -83,7 +102,11 @@ fun ConnectionsPreview() {
 }
 
 @Composable
-fun ConnectionsScreen(modifier: Modifier = Modifier, connections: List<MaterializedContext>, partner_connections: List<MaterializedContext.RelyingParty> = listOf()) {
+fun ConnectionsScreen(
+    modifier: Modifier = Modifier,
+    connections: List<MaterializedContext>,
+    partner_connections: List<MaterializedContext.RelyingParty> = listOf()
+) {
     MeeIdentityAgentTheme() {
         Column(modifier = modifier.fillMaxSize()) {
             Column(
@@ -124,7 +147,11 @@ fun ConnectionsScreen(modifier: Modifier = Modifier, connections: List<Materiali
 @Preview(showBackground = true)
 @Composable
 fun PreviewPrintConnectionSummary() {
-    val connection: MaterializedContext = MaterializedContext.RelyingParty("", "connection_name", RpContextData(ContextProtocol.GoogleAccount))
+    val connection: MaterializedContext = MaterializedContext.RelyingParty(
+        "",
+        "connection_name",
+        RpContextData(ContextProtocol.GoogleAccount)
+    )
     MeeIdentityAgentTheme() {
 //        coroutineScope {
 //
@@ -134,8 +161,12 @@ fun PreviewPrintConnectionSummary() {
 }
 
 @Composable
-fun PrintConnectionSummary(modifier: Modifier = Modifier, connection: MaterializedContext.RelyingParty) {
-    Row(horizontalArrangement = Arrangement.Center,
+fun PrintConnectionSummary(
+    modifier: Modifier = Modifier,
+    connection: MaterializedContext.RelyingParty
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
 //    modifier = Modifier.fillMaxWidth()
     ) {
         // Add icon from metadata
@@ -143,16 +174,19 @@ fun PrintConnectionSummary(modifier: Modifier = Modifier, connection: Materializ
             Modifier
                 .size(50.dp)
                 .padding(10.dp)
-                .background(Color.Cyan)) {
+                .background(Color.Cyan)
+        ) {
             Text(text = "Ic")
         }
         Column(verticalArrangement = Arrangement.Center) {
             Row() {
                 Text(text = connection.name)
-                Box(modifier = Modifier
-                    .size(20.dp)
-                    .padding(5.dp)
-                    .background(Color.Blue))
+                Box(
+                    modifier = Modifier
+                        .size(20.dp)
+                        .padding(5.dp)
+                        .background(Color.Blue)
+                )
             }
             Text(text = "connection_name.com")
         }
@@ -168,6 +202,6 @@ fun PrintConnectionSummary(modifier: Modifier = Modifier, connection: Materializ
 @Composable
 fun PrintConnectionDetailed() {
     MeeIdentityAgentTheme() {
-        
+
     }
 }

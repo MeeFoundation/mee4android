@@ -1,6 +1,6 @@
 package foundation.mee.android_client
 
-import uniffi.mee.*
+import uniffi.mee_agent.*
 
 object PartnersRegistry {
     val shared: List<MaterializedContext.RelyingParty> = listOf(
