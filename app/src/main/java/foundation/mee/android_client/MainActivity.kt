@@ -11,11 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import uniffi.mee.getAgent
+import uniffi.mee_agent.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-//        var agent = getAgent()
+            var appDir = getApplicationInfo().dataDir + "/mee"
+            var agent = getAgent(
+                MeeAgentConfig(
+                    appDir,
+                null,
+                MeeAgentDidRegistryConfig.DidKey
+            )
+            )
+        print("test")
+        print( agent.listMaterializedContexts())
         super.onCreate(savedInstanceState)
         setContent {
             MeeIdentityAgentTheme {
