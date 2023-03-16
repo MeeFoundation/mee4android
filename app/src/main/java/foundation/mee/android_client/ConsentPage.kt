@@ -1,156 +1,125 @@
 package foundation.mee.android_client
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import uniffi.mee_agent.*
+import uniffi.mee_agent.OidcClientMetadata
 
+
+@Composable
+fun ConnectionsContent(
+    modifier: Modifier = Modifier,
+//    connectionsComposable: @Composable () -> Unit,
+    connections: List<Context>,
+//    connectionsComposable: @Composable () -> Unit,
+    mobileConnections: List<Context>,
+//    connectionsComposable: @Composable () -> Unit,
+    partnerConnections: List<Context> = emptyList()
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        if (connections.isNotEmpty()) {
+            ConsentsList(title = "Sites", contexts = connections, hasEntry = true)
+        }
+        if (mobileConnections.isNotEmpty()) {
+            ConsentsList(title = "Mobile Apps", contexts = mobileConnections, hasEntry = true)
+        }
+        if (partnerConnections.isNotEmpty()) {
+            ConsentsList(title = "Other Sites You Might Like", contexts = partnerConnections)
+        }
+    }
+}
+
+
+//@Composable
+//fun PrintConnectionDetailed() {
+//    MeeIdentityAgentTheme() {
+//
+//    }
+//}
 
 @Preview(showBackground = true, widthDp = 375, heightDp = 800)
 @Composable
 fun ConnectionsPreview() {
-    val connections: List<MaterializedContext.RelyingParty> = listOf(
-        MaterializedContext.RelyingParty(
-            "",
-            "connection_name1",
-            RpContextData(ContextProtocol.GoogleAccount)
-        ),
-        MaterializedContext.RelyingParty(
-            "",
-            "connection_name2",
-            RpContextData(ContextProtocol.GoogleAccount)
-        )
-    )
-    var partnerConnections: List<Context> = PartnersRegistry.shared
-    var agent: MeeAgent = getAgent(
-        MeeAgentConfig(
-            "/Users/vamuzing/projects/Mee/mee-core/target/test_create_delete_ctx.sqlite",
-            null,
-            MeeAgentDidRegistryConfig.DidKey
-        )
-    )
+
+    val partnerConnections: List<Context> = PartnersRegistry.shared
+//    var agent: MeeAgent = getAgent(
+//        MeeAgentConfig(
+//            "/Users/vamuzing/projects/Mee/mee-core/target/test_create_delete_ctx.sqlite",
+//            null,
+//            MeeAgentDidRegistryConfig.DidKey
+//        )
+//    )
 //
 //    var conns: List<MaterializedContext> = agent.listMaterializedContexts()
-    MeeIdentityAgentTheme() {
-        ConnectionsScreen(connections = connections, partner_connections = partnerConnections)
+    MeeIdentityAgentTheme {
+        ConnectionsContent(
+            connections = sites,
+            mobileConnections = mobileApps,
+            partnerConnections = partnerConnections
+        )
     }
 }
 
-@Composable
-fun ConnectionsScreen(
-    modifier: Modifier = Modifier,
-    connections: List<MaterializedContext>,
-    partner_connections: List<MaterializedContext.RelyingParty> = listOf()
-) {
-    MeeIdentityAgentTheme() {
-        Column(modifier = modifier.fillMaxSize()) {
-            Column(
-                modifier = modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Surface() {
-                    Text(text = "Connections")
-                }
+val sites: List<Context> = listOf(
+    Context(
+        id = "https://www.nytimes.com",
+        did = "",
+        claims = emptyList(),
+        clientMetadata = PartnerMetadata(
+            from = OidcClientMetadata(
+                applicationType = null,
 
-            }
-            Column() {
-                Text(text = "Sites")
-                LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
-                    items(items = connections) { connection ->
-                        when (connection) {
-                            is MaterializedContext.RelyingParty -> PrintConnectionSummary(connection = connection as MaterializedContext.RelyingParty)
-
-                            else -> {}
-                        }
-
-                    }
-                }
-            }
-            Column() {
-                Text(text = "Other Sites You Might Like")
-                LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
-                    items(items = partner_connections) { partner_connection ->
-                        PrintConnectionSummary(connection = partner_connection)
-
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPrintConnectionSummary() {
-    val connection: MaterializedContext = MaterializedContext.RelyingParty(
-        "",
-        "connection_name",
-        RpContextData(ContextProtocol.GoogleAccount)
-    )
-    MeeIdentityAgentTheme() {
-//        coroutineScope {
-//
-//        }
-        PrintConnectionSummary(connection = connection as MaterializedContext.RelyingParty)
-    }
-}
-
-@Composable
-fun PrintConnectionSummary(
-    modifier: Modifier = Modifier,
-    connection: MaterializedContext.RelyingParty
-) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-//    modifier = Modifier.fillMaxWidth()
-    ) {
-        // Add icon from metadata
-        Box(
-            Modifier
-                .size(50.dp)
-                .padding(10.dp)
-                .background(Color.Cyan)
-        ) {
-            Text(text = "Ic")
-        }
-        Column(verticalArrangement = Arrangement.Center) {
-            Row() {
-                Text(text = connection.name)
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .padding(5.dp)
-                        .background(Color.Blue)
-                )
-            }
-            Text(text = "connection_name.com")
-        }
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Filled.ChevronRight,
-                contentDescription = "test"
+                clientName = "New York Times",
+//            displayUrl = "mee.foundation",
+                logoUri = "https://www.nytimes.com/favicon.ico",
+                contacts = emptyList(),
+                jwks = null
             )
-        }
-    }
-}
+        )
+    )
+)
+val mobileApps: List<Context> = listOf(
+    Context(
+        id = "https://www.washingtonpost.com",
+        did = "",
+        claims = emptyList(),
+        clientMetadata = PartnerMetadata(
+            from = OidcClientMetadata(
+                applicationType = null,
 
-@Composable
-fun PrintConnectionDetailed() {
-    MeeIdentityAgentTheme() {
+                clientName = "The Washington Post",
+//            displayUrl = "mee.foundation",
+                logoUri = "https://www.washingtonpost.com/favicon.ico",
+                contacts = emptyList(),
+                jwks = null
+            )
+        )
+    ),
+    Context(
+        id = "https://www.theguardian.com",
+        did = "",
+        claims = emptyList(),
+        clientMetadata = PartnerMetadata(
+            from = OidcClientMetadata(
+                applicationType = null,
 
-    }
-}
+                clientName = "The Guardian",
+//            displayUrl = "mee.foundation",
+                logoUri = "https://www.theguardian.com/favicon.ico",
+                contacts = emptyList(),
+                jwks = null
+            )
+        )
+    )
+)
