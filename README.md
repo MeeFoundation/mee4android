@@ -13,7 +13,7 @@ rustup target add x86_64-linux-android
 ```
 4) Install uniffi-bindgen
 ```
-cargo install uniffi_bindgen
+cargo install uniffi_bindgen@0.21.0
 ```
 5) export variable
 ```
