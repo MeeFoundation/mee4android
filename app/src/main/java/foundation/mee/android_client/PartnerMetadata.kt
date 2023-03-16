@@ -1,21 +1,20 @@
 package foundation.mee.android_client
 import uniffi.mee_agent.OidcClientMetadata
 
-class PartnerMetadata {
+class PartnerMetadata(from: OidcClientMetadata) {
     val name: String
     val displayUrl: String
     val logoUrl: String
     val contacts: List<String>
     var type: ClientType = ClientType.WEB
     var jwks: List<String>? = null
-
-    constructor(from: OidcClientMetadata) {
+    init {
         val name = from.clientName
         val logoUrl = from.logoUri
         val type = from.applicationType
         require(name is String)
         require(logoUrl is String)
-        require(type is String)
+//        require(type is String)
         this.name = name
         this.displayUrl = name
         this.logoUrl = logoUrl
