@@ -28,8 +28,8 @@ fun PartnerEntry(
         modifier = modifier
             .fillMaxWidth(1f)
             .sizeIn(minHeight = 64.dp),
-        color = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.onPrimary,
+        color = MaterialTheme.colors.surface,
+        contentColor = MaterialTheme.colors.onSurface,
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,

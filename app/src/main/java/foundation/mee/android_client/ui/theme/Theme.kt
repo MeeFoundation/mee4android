@@ -13,11 +13,11 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = PartnerEntryBackgroundColor,
-    onPrimary = PartnerEntryOnBackgroundColor,
+    surface = PartnerEntryBackgroundColor,
+    onSurface = PartnerEntryOnBackgroundColor,
     primaryVariant = Purple700,
     secondary = MeeBrand,
-    surface = TopBarColorBackgroundColor,
+    primary = TopBarColorBackgroundColor,
 
     /* Other default colors to override
     background = Color.White,

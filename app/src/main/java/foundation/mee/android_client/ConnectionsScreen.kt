@@ -20,7 +20,7 @@ fun ConnectionsScreen() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    backgroundColor = MaterialTheme.colors.surface,
+                    backgroundColor = MaterialTheme.colors.primary,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Row {
