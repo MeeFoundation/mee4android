@@ -26,4 +26,9 @@ export PATH=$PATH:$ANDROID_NDK_HOME/toolchains/x86_64-4.9/prebuilt/darwin-x86_64
 ```
 export RUST_ANDROID_GRADLE_PYTHON_COMMAND=python3
 ```
+8) initialize submodules
+```
+git submodule init
+git submodule update
+```
 
