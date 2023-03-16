@@ -9,6 +9,7 @@ Steps for Mac OS
 3) Install Rust targets
 ```
 rustup target add aarch64-linux-android
+rustup target add x86_64-linux-android
 ```
 4) Install uniffi-bindgen
 ```
