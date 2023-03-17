@@ -40,14 +40,6 @@ fun ConnectionsContent(
     }
 }
 
-
-//@Composable
-//fun PrintConnectionDetailed() {
-//    MeeIdentityAgentTheme() {
-//
-//    }
-//}
-
 @Preview(showBackground = true, widthDp = 375, heightDp = 800)
 @Composable
 fun ConnectionsPreview() {
@@ -70,56 +62,3 @@ fun ConnectionsPreview() {
         )
     }
 }
-
-val sites: List<Context> = listOf(
-    Context(
-        id = "https://www.nytimes.com",
-        did = "",
-        claims = emptyList(),
-        clientMetadata = PartnerMetadata(
-            from = OidcClientMetadata(
-                applicationType = null,
-
-                clientName = "New York Times",
-//            displayUrl = "mee.foundation",
-                logoUri = "https://www.nytimes.com/favicon.ico",
-                contacts = emptyList(),
-                jwks = null
-            )
-        )
-    )
-)
-val mobileApps: List<Context> = listOf(
-    Context(
-        id = "https://www.washingtonpost.com",
-        did = "",
-        claims = emptyList(),
-        clientMetadata = PartnerMetadata(
-            from = OidcClientMetadata(
-                applicationType = null,
-
-                clientName = "The Washington Post",
-//            displayUrl = "mee.foundation",
-                logoUri = "https://www.washingtonpost.com/favicon.ico",
-                contacts = emptyList(),
-                jwks = null
-            )
-        )
-    ),
-    Context(
-        id = "https://www.theguardian.com",
-        did = "",
-        claims = emptyList(),
-        clientMetadata = PartnerMetadata(
-            from = OidcClientMetadata(
-                applicationType = null,
-
-                clientName = "The Guardian",
-//            displayUrl = "mee.foundation",
-                logoUri = "https://www.theguardian.com/favicon.ico",
-                contacts = emptyList(),
-                jwks = null
-            )
-        )
-    )
-)

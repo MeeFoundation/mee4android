@@ -46,4 +46,3 @@ fun ConsentsListPreview() {
         ConsentsList(title = "Sites", contexts = mobileApps)
     }
 }
-

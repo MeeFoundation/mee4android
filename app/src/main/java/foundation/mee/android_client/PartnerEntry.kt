@@ -4,13 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
@@ -113,25 +110,10 @@ fun PreviewPrintConnectionSummary() {
 //        "connection_name",
 //        RpContextData(ContextProtocol.GoogleAccount)
 //    )
-    val connection = Context(
-        id = "https://mee.foundation/",
-        did = "",
-        claims = emptyList(),
-        clientMetadata = PartnerMetadata(
-            from = OidcClientMetadata(
-                applicationType = "web",
 
-                clientName = "Mee Foundation",
-//            displayUrl = "mee.foundation",
-                logoUri = "https://mee.foundation/favicon.png",
-                contacts = emptyList(),
-                jwks = null
-            )
-        )
-    )
     MeeIdentityAgentTheme {
         PartnerEntry(
-            request = ConsentRequest(from = connection),
+            request = ConsentRequest(from = meeContextMock),
             hasEntry = true,
 //            modifier = Modifier.padding(
 //                horizontal = 16.dp
