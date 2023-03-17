@@ -20,25 +20,10 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import uniffi.mee_agent.*
 
 class MainActivity : ComponentActivity() {
-
-    private val config: MeeAgentConfig =
-        MeeAgentConfig(
-            "",
-            null,
-            MeeAgentDidRegistryConfig.DidWeb("", "")
-        )
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        var appDir = getApplicationInfo().dataDir + "/mee"
-        var agent = getAgent(
-            MeeAgentConfig(
-                appDir,
-                null,
-                MeeAgentDidRegistryConfig.DidKey
-            )
-        )
+        val agent = MeeAgentStore()
         print("test")
-        print(agent.listMaterializedContexts())
+        print(agent.getAllItems())
         super.onCreate(savedInstanceState)
         setContent {
             MeeIdentityAgentTheme {
