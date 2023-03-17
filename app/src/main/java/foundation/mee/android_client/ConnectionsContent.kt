@@ -2,14 +2,12 @@ package foundation.mee.android_client
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import uniffi.mee_agent.OidcClientMetadata
 
 
 @Composable
@@ -42,7 +40,7 @@ fun ConnectionsContent(
 
 @Preview(showBackground = true, widthDp = 375, heightDp = 800)
 @Composable
-fun ConnectionsPreview() {
+fun ConnectionsContentPreview() {
 
     val partnerConnections: List<Context> = PartnersRegistry.shared
 //    var agent: MeeAgent = getAgent(
