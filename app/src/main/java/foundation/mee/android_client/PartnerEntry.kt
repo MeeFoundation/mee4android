@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import uniffi.mee_agent.OidcClientMetadata
 
 @Composable
 fun PartnerEntry(
@@ -74,9 +73,8 @@ fun PartnerEntry(
                         }
                     }
                     Text(
-                        text = request.id,
+                        text = getURLFromString(request.id)?.host ?: request.id,
                         style = MaterialTheme.typography.caption
-
                     )
                 }
             }
