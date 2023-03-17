@@ -8,42 +8,21 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
+import foundation.mee.android_client.ui.theme.publicSansFamily
 
 @Composable
 fun ConnectionsScreen() {
     MeeIdentityAgentTheme {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-//                        .paddingFromBaseline(bottom = 10.dp)
-//                        .padding(16.dp)
-//                    contentPadding = PaddingValues(bottom = 10.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.Bottom,
-                        modifier = Modifier.fillMaxHeight()
-                    ) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            // TODO: extract to string resource???
-                            text = "Connections",
-                            color = MaterialTheme.colors.onSurface,
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h5,
-                            modifier = Modifier.paddingFromBaseline(bottom = 10.dp)
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
-
-
-                }
+                ConnectionsScreenTitle()
             }
         ) { padding ->
             ConnectionsContent(
