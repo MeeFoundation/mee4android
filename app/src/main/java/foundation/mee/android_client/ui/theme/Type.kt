@@ -10,7 +10,8 @@ import foundation.mee.android_client.R
 
 val publicSansFamily = FontFamily(
     Font(R.font.publicsans_medium, FontWeight.Medium),
-    Font(R.font.publicsans_semibold, FontWeight.SemiBold)
+    Font(R.font.publicsans_semibold, FontWeight.SemiBold),
+    Font(R.font.publicsans_regular, FontWeight.Normal)
 )
 
 // Set of Material typography styles to start with
@@ -27,8 +28,13 @@ val Typography = Typography(
     ),
     h6 = TextStyle(
         fontFamily = publicSansFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp
+    ),
+    caption = TextStyle(
+        fontFamily = publicSansFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
     )
     /* Other default text styles to override
     button = TextStyle(
