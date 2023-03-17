@@ -24,9 +24,9 @@ fun ConnectionsContent(
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .padding(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+//            .fillMaxSize(),
+            .padding(top = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         if (connections.isNotEmpty()) {
             ConsentsList(title = "Sites", contexts = connections, hasEntry = true)
