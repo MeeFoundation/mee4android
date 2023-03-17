@@ -103,19 +103,10 @@ fun PartnerEntry(
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 fun PreviewPrintConnectionSummary() {
-//    val connection: MaterializedContext = MaterializedContext.RelyingParty(
-//        "",
-//        "connection_name",
-//        RpContextData(ContextProtocol.GoogleAccount)
-//    )
-
     MeeIdentityAgentTheme {
         PartnerEntry(
             request = ConsentRequest(from = meeContextMock),
             hasEntry = true,
-//            modifier = Modifier.padding(
-//                horizontal = 16.dp
-//            )
         )
     }
 }
