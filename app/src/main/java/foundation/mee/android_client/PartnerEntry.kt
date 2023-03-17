@@ -10,10 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import uniffi.mee_agent.OidcClientMetadata
 
@@ -38,7 +42,9 @@ fun PartnerEntry(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp),
         ) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Image(
                     painter = rememberAsyncImagePainter(model = request.clientMetadata.logoUrl),
                     contentDescription = null,
@@ -51,10 +57,13 @@ fun PartnerEntry(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 ) {
-                    Row {
+                    Row(
+
+                    ) {
                         Text(
                             text = request.clientMetadata.name,
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.h6,
+//                            modifier = modifier.line
                         )
                         if (isCertified) {
                             Image(
@@ -69,19 +78,25 @@ fun PartnerEntry(
                     }
                     Text(
                         text = request.id,
+                        style = MaterialTheme.typography.caption
 
                     )
                 }
             }
             if (hasEntry) {
                 IconButton(
-//                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { /*TODO*/ }
+                    onClick = { /*TODO*/ },
+                    modifier = modifier
+                        .padding(end = 8.dp)
+                        .size(width = 7.dp, height = 14.dp)
                 ) {
                     // Insert icon from Figma
                     Icon(
-                        imageVector = Icons.Filled.ChevronRight,
-                        contentDescription = "test"
+                        imageVector = ImageVector.vectorResource(
+                            id = R.drawable.icon_chevron_right,
+                        ), //,
+                        contentDescription = "test",
+                        tint = ChevronRightIconColor
                     )
                 }
             }
