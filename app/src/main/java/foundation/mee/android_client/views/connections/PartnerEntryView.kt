@@ -1,4 +1,4 @@
-package foundation.mee.android_client
+package foundation.mee.android_client.views.connections
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -14,6 +14,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import foundation.mee.android_client.R
+import foundation.mee.android_client.getURLFromString
+import foundation.mee.android_client.meeContextMock
+import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
@@ -59,12 +63,10 @@ fun PartnerEntry(
                         Text(
                             text = request.clientMetadata.name,
                             style = MaterialTheme.typography.h6,
-//                            modifier = modifier.line
                         )
                         if (isCertified) {
                             Image(
                                 painter = rememberAsyncImagePainter(R.drawable.mee_certified_logo),
-//                            painterResource(id = R.drawable.mee_certified_logo),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .padding(horizontal = 5.dp)
@@ -85,11 +87,10 @@ fun PartnerEntry(
                         .padding(end = 8.dp)
                         .size(width = 7.dp, height = 14.dp)
                 ) {
-                    // Insert icon from Figma
                     Icon(
                         imageVector = ImageVector.vectorResource(
                             id = R.drawable.icon_chevron_right,
-                        ), //,
+                        ),
                         contentDescription = "test",
                         tint = ChevronRightIconColor
                     )

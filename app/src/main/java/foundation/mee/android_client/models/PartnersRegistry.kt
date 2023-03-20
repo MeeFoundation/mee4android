@@ -1,22 +1,20 @@
-package foundation.mee.android_client
+package foundation.mee.android_client.models
 
 import uniffi.mee_agent.OidcClientMetadata
 
 object PartnersRegistry {
-    var shared: List<Context>
+    var shared: List<MeeContext>
 
     init {
-        this.shared = listOf(
-            Context(
+        shared = listOf(
+            MeeContext(
                 id = "https://mee.foundation/",
                 did = "",
-                claims = emptyList<ConsentRequestClaim>(),
+                claims = emptyList(),
                 clientMetadata = PartnerMetadata(
                     from = OidcClientMetadata(
                         applicationType = null,
-
                         clientName = "Mee Foundation",
-//            displayUrl = "mee.foundation",
                         logoUri = "https://mee.foundation/favicon.png",
                         contacts = emptyList(),
                         jwks = null

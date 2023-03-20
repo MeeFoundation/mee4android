@@ -1,4 +1,4 @@
-package foundation.mee.android_client
+package foundation.mee.android_client.views.connections
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -36,7 +36,6 @@ fun ConnectionsScreenTitle() {
                 fontWeight = FontWeight(600),
                 color = Color.Black,
                 textAlign = TextAlign.Center,
-//                style = MaterialTheme.typography.h5,
                 modifier = Modifier.paddingFromBaseline(bottom = 10.dp),
             )
             Spacer(modifier = Modifier.weight(1f))

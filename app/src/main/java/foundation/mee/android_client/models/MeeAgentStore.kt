@@ -1,28 +1,11 @@
-package foundation.mee.android_client
+package foundation.mee.android_client.models
 
 import uniffi.mee_agent.MeeAgent
 import uniffi.mee_agent.MeeAgentConfig
 import uniffi.mee_agent.MeeAgentDidRegistryConfig
 import uniffi.mee_agent.getAgent
-import java.io.File
-import kotlin.system.exitProcess
-
-//class MeeAgentStore {
-//    private lateinit var agent: MeeAgent
-//    init {
-//        val folderURL = File("")
-//        if (folderURL.exists() && folderURL.isDirectory) {
-//            val dbURL = File(folderURL.absolutePath + "mee.sqlite")
-//             try {
-//                 agent = getAgent(config = MeeAgentConfig(dsUrl = dbURL.absolutePath, dsEncryptionPassword = null, didRegistryConfig = MeeAgentDidRegistryConfig.DidKey))
-//            } catch (e: Exception) {
-//                // Print something like in Swift
-//                error("Failed to init MeeAgent")
-////                exitProcess(1)
-//            }
-//        }
-import android.content.ContextWrapper
 import androidx.activity.ComponentActivity
+import foundation.mee.android_client.ConsentRequestClaim
 import uniffi.mee_agent.*
 
 
@@ -40,7 +23,7 @@ class MeeAgentStore {
         )
     }
 
-    fun getAllItems (): List<Context> {
+    fun getAllItems (): List<MeeContext> {
         val contextsCore = agent.listMaterializedContexts();
         val contexts = contextsCore.filterIsInstance<MaterializedContext.RelyingParty>()
             .mapNotNull { rec ->
@@ -62,13 +45,13 @@ class MeeAgentStore {
                         }
                     }
 
-                    val context = Context(
+                    val meeContext = MeeContext(
                         currentProtocol.value.redirectUri,
                         rec.did,
                         claims,
                         PartnerMetadata(currentProtocol.value.clientMetadata),
                     )
-                    return@mapNotNull context
+                    return@mapNotNull meeContext
                 }
 
             return@mapNotNull null
@@ -76,17 +59,4 @@ class MeeAgentStore {
         return contexts
     }
 
-//    fun getAllItems(): Array<Context>? {
-//        try {
-//            val contextsCore = agent.listMaterializedContexts()
-////            val contexts: Array<Context>? = contextsCore.reduce<Context>(
-////                return Context()
-////            )
-//        }
-//        catch (e: Exception) {
-//            println("error getting all contexts: ${e.toString()}")
-//            return null
-//        }
-//        return null
-//    }
 }
