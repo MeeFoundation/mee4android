@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.getURLFromString
-import foundation.mee.android_client.meeContextMock
+import foundation.mee.android_client.models.meeContextMock
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme

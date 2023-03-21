@@ -1,4 +1,4 @@
-package foundation.mee.android_client
+package foundation.mee.android_client.models
 
 import foundation.mee.android_client.models.MeeContext
 import foundation.mee.android_client.models.PartnerMetadata

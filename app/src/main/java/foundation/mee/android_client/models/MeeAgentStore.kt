@@ -5,7 +5,6 @@ import uniffi.mee_agent.MeeAgentConfig
 import uniffi.mee_agent.MeeAgentDidRegistryConfig
 import uniffi.mee_agent.getAgent
 import androidx.activity.ComponentActivity
-import foundation.mee.android_client.ConsentRequestClaim
 import uniffi.mee_agent.*
 
 

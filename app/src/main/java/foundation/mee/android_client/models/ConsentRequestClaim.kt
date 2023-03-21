@@ -1,4 +1,4 @@
-package foundation.mee.android_client
+package foundation.mee.android_client.models
 
 import uniffi.mee_agent.OidcClaimParams
 import uniffi.mee_agent.RetentionDuration
@@ -13,35 +13,30 @@ enum class ConsentEntryType(val type: String) {
 }
 
 data class ConsentRequestClaim(
+    val id: String,
+    val name: String,
     var code: String,
     var attributeType: String?,
     var businessPurpose: String?,
     var isSensitive: Boolean?,
     var value: String?,
     var retentionDuration: RetentionDuration? = RetentionDuration.UNTIL_CONNECTION_DELETION,
-    var isRequired: Boolean = false
+    var isRequired: Boolean = false,
+    val type: ConsentEntryType,
 ) {
-    private lateinit var id: String
-    private lateinit var name: String
-    private lateinit var type: ConsentEntryType
-
     constructor(
         from: OidcClaimParams,
         code: String
     ) : this(
+        id = from.name!!,
+        name = from.name!!,
         code = code,
         attributeType = from.attributeType,
         businessPurpose = from.businessPurpose,
         isSensitive = from.isSensitive,
         value = from.value,
         retentionDuration = from.retentionDuration,
-        isRequired = from.essential
-    ) {
-        val name = from.name
-        require(name is String)
-        this.id = name
-        this.name = name
-        this.type =
-            ConsentEntryType.values().find { it.name == from.typ } ?: ConsentEntryType.string
-    }
+        isRequired = from.essential,
+        type = ConsentEntryType.values().find { it.name == from.typ } ?: ConsentEntryType.string
+    )
 }

@@ -3,27 +3,15 @@ package foundation.mee.android_client
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import uniffi.mee_agent.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val agent = MeeAgentStore()
-        print("test")
-        print(agent.getAllItems())
         super.onCreate(savedInstanceState)
         setContent {
             MeeIdentityAgentTheme {

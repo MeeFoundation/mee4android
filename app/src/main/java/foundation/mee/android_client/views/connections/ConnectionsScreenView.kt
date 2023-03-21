@@ -5,9 +5,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import foundation.mee.android_client.mobileApps
+import foundation.mee.android_client.models.mobileApps
 import foundation.mee.android_client.models.PartnersRegistry
-import foundation.mee.android_client.sites
+import foundation.mee.android_client.models.sites
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
