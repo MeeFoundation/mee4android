@@ -3,28 +3,15 @@ package foundation.mee.android_client
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import uniffi.mee_agent.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-            var appDir = getApplicationInfo().dataDir + "/mee"
-            var agent = getAgent(
-                MeeAgentConfig(
-                    appDir,
-                null,
-                MeeAgentDidRegistryConfig.DidKey
-            )
-            )
-        print("test")
-        print( agent.listMaterializedContexts())
         super.onCreate(savedInstanceState)
         setContent {
             MeeIdentityAgentTheme {
@@ -45,7 +32,7 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     MeeIdentityAgentTheme {
