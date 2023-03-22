@@ -11,7 +11,9 @@ import foundation.mee.android_client.models.sites
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
-fun ConnectionsScreen() {
+fun ConnectionsScreen(
+    navigateToManage: (String) -> Unit = {}
+) {
     MeeIdentityAgentTheme {
         Scaffold(
             topBar = {
@@ -22,7 +24,8 @@ fun ConnectionsScreen() {
                 connections = sites,
                 mobileConnections = mobileApps,
                 partnerConnections = PartnersRegistry.shared,
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.padding(padding),
+                navigateToManage = navigateToManage
             )
 
         }

@@ -19,7 +19,8 @@ fun ConnectionsContent(
     modifier: Modifier = Modifier,
     connections: List<MeeContext>,
     mobileConnections: List<MeeContext>,
-    partnerConnections: List<MeeContext> = emptyList()
+    partnerConnections: List<MeeContext> = emptyList(),
+    navigateToManage: (String) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -27,10 +28,10 @@ fun ConnectionsContent(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         if (connections.isNotEmpty()) {
-            ConsentsList(title = "Sites", meeContexts = connections, hasEntry = true)
+            ConsentsList(title = "Sites", meeContexts = connections, hasEntry = true, navigateToManage = navigateToManage)
         }
         if (mobileConnections.isNotEmpty()) {
-            ConsentsList(title = "Mobile Apps", meeContexts = mobileConnections, hasEntry = true)
+            ConsentsList(title = "Mobile Apps", meeContexts = mobileConnections, hasEntry = true, navigateToManage = navigateToManage)
         }
         if (partnerConnections.isNotEmpty()) {
             ConsentsList(title = "Other Sites You Might Like", meeContexts = partnerConnections)

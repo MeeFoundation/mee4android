@@ -26,6 +26,7 @@ fun PartnerEntry(
     modifier: Modifier = Modifier,
     request: ConsentRequest,
     hasEntry: Boolean = false,
+    navigateToManage: (String) -> Unit = {}
 ) {
     val isCertified = true
     Surface(
@@ -82,7 +83,7 @@ fun PartnerEntry(
             }
             if (hasEntry) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navigateToManage(request.clientMetadata.name) },
                     modifier = modifier
                         .padding(end = 8.dp)
                         .size(width = 7.dp, height = 14.dp)
