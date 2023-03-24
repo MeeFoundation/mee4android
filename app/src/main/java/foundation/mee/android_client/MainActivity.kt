@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
+import foundation.mee.android_client.views.connections.ConnectionsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,12 +17,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             MeeIdentityAgentTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Mee")
-                }
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+//                    Greeting("Mee")
+//                }
+                ConnectionsScreen()
             }
         }
     }
