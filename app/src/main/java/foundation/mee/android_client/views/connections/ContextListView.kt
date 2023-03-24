@@ -21,8 +21,7 @@ fun ConsentsList(
     modifier: Modifier = Modifier,
     title: String,
     meeContexts: List<MeeContext> = emptyList(),
-    hasEntry: Boolean = false,
-    navigateToManage: (String) -> Unit = {}
+    hasEntry: Boolean = false
 ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp),
     verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -36,7 +35,7 @@ fun ConsentsList(
         ) {
             items(items = meeContexts) { context ->
                 PartnerEntry(request = ConsentRequest(from = context),
-                    hasEntry = hasEntry, navigateToManage = navigateToManage)
+                    hasEntry = hasEntry)
             }
         }
     }

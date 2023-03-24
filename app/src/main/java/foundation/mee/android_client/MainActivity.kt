@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import foundation.mee.android_client.ui.MeeNavGraph
+import androidx.navigation.compose.rememberNavController
+import foundation.mee.android_client.navigation.Navigator
+import foundation.mee.android_client.navigation.MeeNavGraph
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +22,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MeeNavGraph()
+                    val controller = rememberNavController()
+                    // Need to pass controller to enable navigation
+                    Navigator.navController = controller
+                    MeeNavGraph(controller)
                 }
             }
         }

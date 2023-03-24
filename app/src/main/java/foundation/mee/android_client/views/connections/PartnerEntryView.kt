@@ -14,19 +14,20 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import foundation.mee.android_client.navigation.Navigator
 import foundation.mee.android_client.R
 import foundation.mee.android_client.getURLFromString
 import foundation.mee.android_client.models.meeContextMock
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
+import foundation.mee.android_client.navigation.MeeDestinations.*
 
 @Composable
 fun PartnerEntry(
     modifier: Modifier = Modifier,
     request: ConsentRequest,
-    hasEntry: Boolean = false,
-    navigateToManage: (String) -> Unit = {}
+    hasEntry: Boolean = false
 ) {
     val isCertified = true
     Surface(
@@ -83,7 +84,7 @@ fun PartnerEntry(
             }
             if (hasEntry) {
                 IconButton(
-                    onClick = { navigateToManage(request.clientMetadata.name) },
+                    onClick = { Navigator.navigate("${MANAGE.route}/${request.clientMetadata.name}") },
                     modifier = modifier
                         .padding(end = 8.dp)
                         .size(width = 7.dp, height = 14.dp)
