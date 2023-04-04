@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import foundation.mee.android_client.models.MeeAgentStore
+import dagger.hilt.android.AndroidEntryPoint
+import foundation.mee.android_client.navigation.MeeNavGraph
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +22,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Mee")
+                    MeeNavGraph()
                 }
             }
         }

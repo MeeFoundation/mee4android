@@ -13,21 +13,26 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.getURLFromString
 import foundation.mee.android_client.models.meeContextMock
 import foundation.mee.android_client.models.ConsentRequest
+import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
+import foundation.mee.android_client.navigation.MeeDestinations.*
 
 @Composable
 fun PartnerEntry(
     modifier: Modifier = Modifier,
     request: ConsentRequest,
     hasEntry: Boolean = false,
+    viewModel: NavViewModel = hiltViewModel()
 ) {
     val isCertified = true
+    val navigator = viewModel.navigator
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
@@ -82,7 +87,7 @@ fun PartnerEntry(
             }
             if (hasEntry) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {navigator.navigate("${MANAGE.route}/${request.clientMetadata.name}") },
                     modifier = modifier
                         .padding(end = 8.dp)
                         .size(width = 7.dp, height = 14.dp)

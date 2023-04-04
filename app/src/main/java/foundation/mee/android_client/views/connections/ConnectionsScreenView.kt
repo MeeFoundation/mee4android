@@ -22,7 +22,7 @@ fun ConnectionsScreen() {
                 connections = sites,
                 mobileConnections = mobileApps,
                 partnerConnections = PartnersRegistry.shared,
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.padding(padding),
             )
 
         }
