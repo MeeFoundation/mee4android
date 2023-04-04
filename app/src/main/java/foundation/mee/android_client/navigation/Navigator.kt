@@ -1,13 +1,15 @@
 package foundation.mee.android_client.navigation
 
-import android.util.Log
 import androidx.navigation.NavHostController
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import javax.inject.Inject
 
-object Navigator {
+@ActivityRetainedScoped
+class Navigator @Inject constructor() {
 
-    var navController: NavHostController? = null
+    lateinit var navController: NavHostController
 
     fun navigate(path: String) {
-        navController?.navigate(path) ?: Log.d("Navigator", "navController is null")
+        navController.navigate(path)
     }
 }

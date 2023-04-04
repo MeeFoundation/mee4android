@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'idea'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 apply plugin: 'com.android.application'
@@ -75,6 +77,9 @@ dependencies {
     implementation "net.java.dev.jna:jna:5.7.0@aar"
     implementation("io.coil-kt:coil-compose:2.2.2")
     implementation "androidx.navigation:navigation-compose:2.5.3"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation  "androidx.hilt:hilt-navigation-compose:1.0.0"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -100,4 +105,8 @@ android.applicationVariants.all { variant ->
     sourceSet.java.srcDir new File(buildDir, "generated/source/uniffi/${variant.name}/java")
     // XXX: I've been trying to make this work but I can't, so the compiled bindings will show as "regular sources" in Android Studio.
     idea.module.generatedSourceDirs += file("${buildDir}/generated/source/uniffi/${variant.name}/java/uniffi")
+}
+
+kapt {
+    correctErrorTypes = true
 }
