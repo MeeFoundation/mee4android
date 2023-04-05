@@ -2,12 +2,16 @@ package foundation.mee.android_client.views.buttons
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,14 +28,17 @@ fun RejectButton(action: () -> Unit = {}, title: String) {
         shape = AbsoluteRoundedCornerShape(10.dp),
         modifier = Modifier
             .sizeIn(maxHeight = 51.dp)
-            .fillMaxSize()
+//            .padding(start = 16.dp, end = 16.dp)
+            .fillMaxSize(),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
     ) {
         Text(
             text = title,
             color = MeeGreenPrimaryColor,
             fontFamily = publicSansFamily,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
+            fontSize = 18.sp,
+            letterSpacing = 0.45.sp
         )
     }
 }
@@ -40,6 +47,6 @@ fun RejectButton(action: () -> Unit = {}, title: String) {
 @Composable
 fun RejectButtonPreview() {
     MeeIdentityAgentTheme() {
-        RejectButton(title = "Continue")
+        RejectButton(title = "Get Started")
     }
 }
