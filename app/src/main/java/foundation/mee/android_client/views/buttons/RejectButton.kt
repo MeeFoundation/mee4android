@@ -28,7 +28,6 @@ fun RejectButton(action: () -> Unit = {}, title: String) {
         shape = AbsoluteRoundedCornerShape(10.dp),
         modifier = Modifier
             .sizeIn(maxHeight = 51.dp)
-//            .padding(start = 16.dp, end = 16.dp)
             .fillMaxSize(),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
     ) {

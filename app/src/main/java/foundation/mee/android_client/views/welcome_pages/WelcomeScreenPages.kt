@@ -38,28 +38,3 @@ fun ScreenScaffold(
         bottomBar()
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewScreenScaffoldEmpty() {
-//    MeeIdentityAgentTheme() {
-//        ScreenScaffold(image = R.drawable.welcome_screen1) {
-//            Spacer(
-//                modifier = Modifier
-//                    .sizeIn(maxHeight = 51.dp)
-//                    .fillMaxSize(),
-//            )
-//        }
-//    }
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewScreenScaffoldContinue() {
-//    MeeIdentityAgentTheme() {
-//        ScreenScaffold(image = R.drawable.welcome_screen2) {
-//
-//            RejectButton(title = "Continue")
-//        }
-//    }
-//}

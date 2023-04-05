@@ -23,7 +23,6 @@ fun WelcomePageIconButton(
     IconButton(
         onClick = action,
         modifier = modifier
-//            .size(12.dp) // defaulted to this size after import from figma
             .size(width = 7.dp, height = 12.dp) // defaulted to this size after import from figma
     ) {
         Icon(
