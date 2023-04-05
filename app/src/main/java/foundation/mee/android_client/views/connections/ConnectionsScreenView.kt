@@ -17,7 +17,7 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
 fun ConnectionsScreen() {
-    var isFirstTime: Boolean by rememberSaveable { mutableStateOf(true) }
+    val isFirstTime: Boolean by rememberSaveable { mutableStateOf(false) }
     if (!isFirstTime) {
         Scaffold(
             topBar = {
@@ -32,8 +32,6 @@ fun ConnectionsScreen() {
             )
 
         }
-    } else {
-        FirstRunPage(action = { isFirstTime = false })
     }
 }
 
