@@ -1,6 +1,7 @@
 package foundation.mee.android_client.views.connections
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -36,7 +37,13 @@ fun PartnerEntry(
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
-            .sizeIn(minHeight = 64.dp),
+            .sizeIn(minHeight = 64.dp)
+            .clickable(
+                enabled = hasEntry,
+                onClick = {
+                    navigator.navigate("${MANAGE.route}/${request.clientMetadata.name}")
+                }
+            ),
         color = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
     ) {
@@ -86,25 +93,22 @@ fun PartnerEntry(
                 }
             }
             if (hasEntry) {
-                IconButton(
-                    onClick = {navigator.navigate("${MANAGE.route}/${request.clientMetadata.name}") },
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        id = R.drawable.icon_chevron_right,
+                    ),
+                    contentDescription = "test",
+                    tint = ChevronRightIconColor,
                     modifier = modifier
                         .padding(end = 8.dp)
-                        .size(width = 7.dp, height = 14.dp)
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(
-                            id = R.drawable.icon_chevron_right,
-                        ),
-                        contentDescription = "test",
-                        tint = ChevronRightIconColor
-                    )
-                }
+                        .size(width = 9.dp, height = 16.dp)
+                )
             }
         }
     }
 
 }
+
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
