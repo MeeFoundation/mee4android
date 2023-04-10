@@ -27,8 +27,8 @@ import foundation.mee.android_client.navigation.MeeDestinations.*
 
 @Composable
 fun PartnerEntry(
-    modifier: Modifier = Modifier,
     request: ConsentRequest,
+    modifier: Modifier = Modifier,
     hasEntry: Boolean = false,
     viewModel: NavViewModel = hiltViewModel()
 ) {
@@ -69,9 +69,7 @@ fun PartnerEntry(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 ) {
-                    Row(
-
-                    ) {
+                    Row {
                         Text(
                             text = request.clientMetadata.name,
                             style = MaterialTheme.typography.h6,

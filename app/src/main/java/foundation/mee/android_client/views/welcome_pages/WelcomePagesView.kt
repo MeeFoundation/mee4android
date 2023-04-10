@@ -7,7 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
+import foundation.mee.android_client.navigation.MeeDestinations
+import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.views.buttons.RejectButton
 
@@ -23,9 +26,9 @@ fun WelcomePageFirst() {
 }
 
 @Composable
-fun WelcomePageSecond() {
+fun WelcomePageSecond(action: () -> Unit) {
     ScreenScaffold(image = R.drawable.welcome_screen2) {
-        RejectButton(title = "Get Started")
+        RejectButton(title = "Get Started", action = action)
     }
 }
 
@@ -41,6 +44,6 @@ fun WelcomePageFirstPreview() {
 @Composable
 fun WelcomePageSecondPreview() {
     MeeIdentityAgentTheme {
-        WelcomePageSecond()
+        WelcomePageSecond {}
     }
 }

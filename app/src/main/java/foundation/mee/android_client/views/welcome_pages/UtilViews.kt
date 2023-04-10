@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import foundation.mee.android_client.R
 import foundation.mee.android_client.models.WelcomePageEnum
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 
@@ -54,10 +53,13 @@ fun WelcomePageIconBullet(
 }
 
 @Composable
-fun WelcomePageSelector(page: Int) {
+fun WelcomePageSelector(
+    page: Int,
+    action: () -> Unit = {}
+) {
     when (page) {
         // TODO: Add new pages here
         WelcomePageEnum.FIRST_PAGE.pageNum -> WelcomePageFirst()
-        WelcomePageEnum.SECOND_PAGE.pageNum -> WelcomePageSecond()
+        WelcomePageEnum.SECOND_PAGE.pageNum -> WelcomePageSecond(action = action)
     }
 }
