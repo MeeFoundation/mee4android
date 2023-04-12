@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.WelcomePageEnum
+import foundation.mee.android_client.models.utils.*
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.MeeYellowColor
 import kotlinx.coroutines.launch
@@ -31,7 +32,7 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
                     bottom = 52.dp
                 )
         ) {
-            val pageCount = WelcomePageEnum.size()
+            val pageCount = size<WelcomePageEnum>()
             val pagerState = rememberPagerState()
 
             HorizontalPager(
@@ -51,15 +52,14 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
             ) {
                 val coroutineScope = rememberCoroutineScope()
 
-                if (pagerState.currentPage != WelcomePageEnum.firstPage().pageNum) {
+                if (pagerState.currentPage != head<WelcomePageEnum>().pageNum) {
                     WelcomePageIconButton(
                         imageIcon = R.drawable.welcome_screen_chevron_left,
                         action = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(
-                                    WelcomePageEnum.previousOrFirst(
-                                        pagerState.currentPage
-                                    )
+                                    fromInt<WelcomePageEnum>(pagerState.currentPage)
+                                        .previousOrFirst().pageNum
                                 )
                             }
                         }
@@ -76,7 +76,10 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
                     Modifier
                         .weight(1f)
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(space = 4.dp, alignment = Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        space = 4.dp,
+                        alignment = Alignment.CenterHorizontally
+                    ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     repeat(pageCount) { iteration ->
@@ -100,15 +103,14 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
                         .weight(1f)
                 )
 
-                if (pagerState.currentPage != WelcomePageEnum.lastPage().pageNum) {
+                if (pagerState.currentPage != tail<WelcomePageEnum>().pageNum) {
                     WelcomePageIconButton(
                         imageIcon = R.drawable.welcome_screen_chevron_right,
                         action = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(
-                                    WelcomePageEnum.nextOrLast(
-                                        pagerState.currentPage
-                                    )
+                                    fromInt<WelcomePageEnum>(pagerState.currentPage)
+                                        .nextOrLast().pageNum
                                 )
                             }
                         }
