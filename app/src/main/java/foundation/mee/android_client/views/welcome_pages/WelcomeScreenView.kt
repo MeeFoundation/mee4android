@@ -16,6 +16,7 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.models.WelcomePageEnum
 import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.NavViewModel
+import foundation.mee.android_client.models.utils.*
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.MeeYellowColor
 import kotlinx.coroutines.launch
@@ -37,7 +38,7 @@ fun WelcomeScreen(
                     bottom = 52.dp
                 )
         ) {
-            val pageCount = WelcomePageEnum.size()
+            val pageCount = size<WelcomePageEnum>()
             val pagerState = rememberPagerState()
             val navigator = viewModel.navigator
 
@@ -64,15 +65,14 @@ fun WelcomeScreen(
             ) {
                 val coroutineScope = rememberCoroutineScope()
 
-                if (pagerState.currentPage != WelcomePageEnum.firstPage().pageNum) {
+                if (pagerState.currentPage != head<WelcomePageEnum>().pageNum) {
                     WelcomePageIconButton(
                         imageIcon = R.drawable.welcome_screen_chevron_left,
                         action = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(
-                                    WelcomePageEnum.previousOrFirst(
-                                        pagerState.currentPage
-                                    )
+                                    fromInt<WelcomePageEnum>(pagerState.currentPage)
+                                        .previousOrFirst().pageNum
                                 )
                             }
                         }
@@ -116,15 +116,14 @@ fun WelcomeScreen(
                         .weight(1f)
                 )
 
-                if (pagerState.currentPage != WelcomePageEnum.lastPage().pageNum) {
+                if (pagerState.currentPage != tail<WelcomePageEnum>().pageNum) {
                     WelcomePageIconButton(
                         imageIcon = R.drawable.welcome_screen_chevron_right,
                         action = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(
-                                    WelcomePageEnum.nextOrLast(
-                                        pagerState.currentPage
-                                    )
+                                    fromInt<WelcomePageEnum>(pagerState.currentPage)
+                                        .nextOrLast().pageNum
                                 )
                             }
                         }
