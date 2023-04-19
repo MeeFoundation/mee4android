@@ -3,11 +3,6 @@ package foundation.mee.android_client.views.connections
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import foundation.mee.android_client.models.mobileApps
@@ -17,21 +12,18 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
 fun ConnectionsScreen() {
-    val isFirstTime: Boolean by rememberSaveable { mutableStateOf(false) }
-    if (!isFirstTime) {
-        Scaffold(
-            topBar = {
-                ConnectionsScreenTitle()
-            }
-        ) { padding ->
-            ConnectionsContent(
-                connections = sites,
-                mobileConnections = mobileApps,
-                partnerConnections = PartnersRegistry.shared,
-                modifier = Modifier.padding(padding),
-            )
-
+    Scaffold(
+        topBar = {
+            ConnectionsScreenTitle()
         }
+    ) { padding ->
+        ConnectionsContent(
+            connections = sites,
+            mobileConnections = mobileApps,
+            partnerConnections = PartnersRegistry.shared,
+            modifier = Modifier.padding(padding),
+        )
+
     }
 }
 

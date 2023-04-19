@@ -11,8 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.WelcomePageEnum
+import foundation.mee.android_client.navigation.MeeDestinations
+import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.models.utils.*
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.MeeYellowColor
@@ -20,7 +23,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WelcomeScreen(modifier: Modifier = Modifier) {
+fun WelcomeScreen(
+    modifier: Modifier = Modifier,
+    viewModel: NavViewModel = hiltViewModel()
+) {
     Surface(
         color = MeeYellowColor
     ) {
@@ -34,6 +40,7 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
         ) {
             val pageCount = size<WelcomePageEnum>()
             val pagerState = rememberPagerState()
+            val navigator = viewModel.navigator
 
             HorizontalPager(
                 pageCount = pageCount,
@@ -41,7 +48,13 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) { page ->
-                WelcomePageSelector(page)
+                WelcomePageSelector(
+                    page = page,
+                    action = {
+                        navigator.navController.popBackStack()
+                        navigator.navigate(MeeDestinations.CONNECTIONS.route)
+                    }
+                )
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,

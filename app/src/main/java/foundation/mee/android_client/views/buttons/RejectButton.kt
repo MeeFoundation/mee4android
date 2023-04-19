@@ -21,7 +21,10 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.publicSansFamily
 
 @Composable
-fun RejectButton(action: () -> Unit = {}, title: String) {
+fun RejectButton(
+    title: String,
+    action: () -> Unit = {}
+) {
     Button(
         onClick = action,
         border = BorderStroke(2.dp, MeeGreenPrimaryColor),
