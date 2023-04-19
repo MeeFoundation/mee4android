@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.mee.android_client.navigation.MeeNavGraph
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
+import foundation.mee.android_client.views.connections.ConnectionsScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
