@@ -19,14 +19,11 @@ fun showBiometricPrompt(
     activityContext: FragmentActivity,
     onSuccess: () -> Unit = {}
 ) {
-    // 2
     val promptInfo = biometryPromptBuilder(activityContext)
 
-    // 3
     val biometricPrompt = BiometricPrompt(
         activityContext,
         object : BiometricPrompt.AuthenticationCallback() {
-            // 4
             override fun onAuthenticationError(
                 errorCode: Int,
                 errString: CharSequence
@@ -34,25 +31,22 @@ fun showBiometricPrompt(
                 if (errorCode !in biometricsIgnoredErrors) {
                     Toast.makeText(
                         activityContext,
-                        "Err String",
+                        "Failed to authenticate: $errString",
                         Toast.LENGTH_LONG
                     ).show()
                 }
             }
 
-            // 5
             override fun onAuthenticationSucceeded(
                 result: BiometricPrompt.AuthenticationResult
             ) {
-//                viewModel.onBiometricUnlock()
-                    onSuccess()
+                onSuccess()
             }
 
-            // 6
             override fun onAuthenticationFailed() {
                 Toast.makeText(
                     activityContext,
-                    "Err Bio",
+                    "Unrecognized",
                     Toast.LENGTH_LONG
                 ).show()
             }

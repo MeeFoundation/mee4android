@@ -23,14 +23,11 @@ fun MeeWhiteScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-//        color = Color.White,
         horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arr
         modifier = modifier
             .fillMaxSize()
             .padding(start = 106.dp, end = 106.dp, top = 175.dp)
     ) {
-//        Image(painter = painterResource(id = R.drawable.mee_logo), contentDescription = null)
         Icon(
             painter = painterResource(id = R.drawable.mee_logo),
             contentDescription = null,

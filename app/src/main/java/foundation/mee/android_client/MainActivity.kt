@@ -31,89 +31,13 @@ class MainActivity : FragmentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
-//                    val dataStoreManager = MeeAndroidSettingsDataStore(context = LocalContext.current)
-//
-//                    val biometryAsked by dataStoreManager.getBiometricAuthAskedSetting().collectAsState(
-//                        initial = true
-//                    )
-//
-//                    var showedBiometry by remember {
-//                        mutableStateOf(false)
-//                    }
-//
-//                    val coroutineScope = rememberCoroutineScope()
-//
-//                    if (!biometryAsked) {
-//                        BiometryDialog(
-//                            onDismiss = {
-//                                coroutineScope.launch {
-//                                    dataStoreManager.saveBiometricAuthAskedSetting(false)
-//                                }
-//                            },
-//                            onAccept = {
-//                                coroutineScope.launch {
-//                                    dataStoreManager.saveBiometricAuthAskedSetting(true)
-//                                    dataStoreManager.saveBiometricAuthSetting(true)
-//                                }
-//                            },
-//                            onReject = {
-//                                coroutineScope.launch {
-//                                    dataStoreManager.saveBiometricAuthAskedSetting(true)
-//                                    dataStoreManager.saveBiometricAuthSetting(false)
-//                                }
-//                            },
-//                        )
-//                    }
-//
-//                    val biometryEnabled by dataStoreManager.getBiometricAuthEnabledSetting().collectAsState(
-//                        initial = false
-//                    )
-//
                     var loginSuccess by rememberSaveable { mutableStateOf(false) }
-
 
                     val ctx = LocalContext.current as FragmentActivity
 
                     BiometryHandler(activityContext = ctx, onSuccessfulAuth = {loginSuccess = true})
-//
-//
-//                    if (biometryEnabled and !showedBiometry) {
-//                        showBiometricPrompt(ctx, onSuccess = { loginSuccess = true })
-//                        showedBiometry = true
-//                    }
-//
-//                    println("biometryAsked is $biometryAsked")
-//                    println("biometryEnabled is $biometryEnabled")
-//
+
                     var showLoadingScreen by remember { mutableStateOf(true) }
-
-//                    var biometryDialogShow by remember {
-//                        mutableStateOf(true)
-//                    }
-
-//                    var biometryEnabled by remember {
-//                        mutableStateOf(false)
-//                    }
-
-                    LaunchedEffect(Unit) {
-//                        dataStoreManager.saveBiometricAuthAskedSetting(false)
-//                        dataStoreManager.saveBiometricAuthSetting(false)
-////                        biometryDialogShow = dataStoreManager.getBiometricAuthAskedSetting().first()
-////                        if (biometryDialogShow) {
-////                            BiometryDialog(
-////
-////                            )
-////                        }
-//                        biometryEnabled = dataStoreManager.getBiometricAuthEnabledSetting().first()
-//                        println("testVal is ${testVal}")
-//                        println("biometryEnabled is $biometryEnabled")
-//                        delay(2000)
-//                        println("biometryEnabled is $biometryEnabled")
-//                        if (testVal) {
-//                            showBiometricPrompt(ctx, onSuccess = { loginSuccess = true })
-//                        }
-                    }
 
                     if (loginSuccess) {
                         Box(modifier = Modifier.fillMaxSize()) {

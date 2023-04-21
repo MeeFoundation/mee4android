@@ -30,7 +30,6 @@ fun LoadingScreenWhitePage(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = if (fillTextBar) Arrangement.spacedBy(15.dp) else Arrangement.Center,
-//        verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.weight(278f))
         Row() {
@@ -48,7 +47,6 @@ fun LoadingScreenWhitePage(
         
 
         if (fillTextBar) {
-//            Spacer(modifier = Modifier.weight(15f))
             if (!text.isNullOrEmpty()) {
                 Text(
                     text = text,

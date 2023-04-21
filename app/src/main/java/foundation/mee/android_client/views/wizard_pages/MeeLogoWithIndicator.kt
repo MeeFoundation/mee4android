@@ -25,7 +25,6 @@ import kotlinx.coroutines.delay
 @Composable
 fun MeeLogoWithCircleIndicator(
     progress: Float,
-    scale: Float = 1f,
     modifierBox: Modifier = Modifier,
     modifierLogo: Modifier = Modifier,
     modifierCircle: Modifier = Modifier
@@ -33,7 +32,6 @@ fun MeeLogoWithCircleIndicator(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifierBox
-//            .size(width = 220.dp * scale, height = 220.dp * scale)
             .clip(shape = RoundedCornerShape(size = 3.dp))
             .background(color = MeeGreenPrimaryColor)
     ) {
@@ -42,7 +40,6 @@ fun MeeLogoWithCircleIndicator(
             contentDescription = null,
             tint = MeeProgressCircleColor,
             modifier = modifierLogo
-//            Modifier.scale(scale)
         )
         MeeCircleIndicator(progress, modifierCircle)
     }
@@ -55,16 +52,13 @@ fun MeeLogoWithCircleIndicatorPreview() {
     var currentProgress by remember {
         mutableStateOf(0f)
     }
-    var scale by remember {
-        mutableStateOf(1f)
-    }
+
     MeeIdentityAgentTheme {
-        MeeLogoWithCircleIndicator(currentProgress, scale)
+        MeeLogoWithCircleIndicator(currentProgress)
     }
     LaunchedEffect(key1 = currentProgress) {
         while (currentProgress < 1f) {
             currentProgress += 0.02f
-            scale += 0.02f
             delay(100)
         }
     }

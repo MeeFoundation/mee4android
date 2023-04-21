@@ -1,9 +1,5 @@
 package foundation.mee.android_client.views.wizard_pages
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
@@ -24,12 +20,10 @@ fun MeeCircleIndicator(
     modifier: Modifier = Modifier
 ) {
     CircularProgressIndicator(
-//    TestCircularIndicator(
         progress = progress,
         color = MeeProgressCircleColor,
         strokeWidth = 3.dp,
         modifier = modifier
-//            .fillMaxSize()
             .size(width = 171.dp, height = 171.dp)
     )
 }
