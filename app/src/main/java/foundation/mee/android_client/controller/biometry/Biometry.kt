@@ -35,6 +35,10 @@ fun showBiometricPrompt(
                         Toast.LENGTH_LONG
                     ).show()
                 }
+
+                if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
+                    // TODO: add fallback for the low level APIs here
+                }
             }
 
             override fun onAuthenticationSucceeded(

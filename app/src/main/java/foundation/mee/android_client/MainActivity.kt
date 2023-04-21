@@ -21,7 +21,6 @@ import foundation.mee.android_client.views.wizard_pages.LoadingScreenWithMeeLogo
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
-//    @Inject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
