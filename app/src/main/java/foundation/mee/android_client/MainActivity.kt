@@ -2,6 +2,8 @@ package foundation.mee.android_client
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -35,7 +37,13 @@ class MainActivity : FragmentActivity() {
 
                     val ctx = LocalContext.current as FragmentActivity
 
-                    BiometryHandler(activityContext = ctx, onSuccessfulAuth = {loginSuccess = true})
+                    val biometricManager = BiometricManager.from(this)
+
+                    if (biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS) {
+                        BiometryHandler(activityContext = ctx, onSuccessfulAuth = {loginSuccess = true})
+                    } else {
+                        loginSuccess = true
+                    }
 
                     var showLoadingScreen by remember { mutableStateOf(true) }
 
