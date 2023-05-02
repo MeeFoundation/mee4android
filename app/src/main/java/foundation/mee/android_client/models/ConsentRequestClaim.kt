@@ -23,6 +23,10 @@ data class ConsentRequestClaim(
     var retentionDuration: RetentionDuration? = RetentionDuration.UNTIL_CONNECTION_DELETION,
     var isRequired: Boolean = false,
     val type: ConsentEntryType,
+    var providedBy: String = "", //TODO
+    var isOn: Boolean = isRequired, //TODO
+    var forceOpen: Boolean? = false,
+    var isOpen: Boolean = forceOpen ?: false // TODO private
 ) {
     constructor(
         from: OidcClaimParams,
@@ -39,4 +43,20 @@ data class ConsentRequestClaim(
         isRequired = from.essential,
         type = ConsentEntryType.values().find { it.name == from.typ } ?: ConsentEntryType.string
     )
+
+    fun setIsOpen(isOpen: Boolean) {
+        forceOpen = if (isIncorrect()) true else isOpen
+    }
+
+    fun isIncorrect(): Boolean {
+        return if (type != ConsentEntryType.card) {
+            (isRequired || isOn) && value.isNullOrEmpty()
+        } else
+            true
+    }
+
+    fun getFieldName(): String {
+        return if (value.isNullOrEmpty()) name else value!!
+    }
 }
+
