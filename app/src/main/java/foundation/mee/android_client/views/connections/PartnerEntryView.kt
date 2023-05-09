@@ -23,6 +23,7 @@ import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.navigation.MeeDestinations.*
+import foundation.mee.android_client.views.components.NoRippleInteractionSource
 
 @Composable
 fun PartnerEntry(
@@ -87,10 +88,11 @@ fun PartnerEntry(
             }
             if (hasEntry) {
                 IconButton(
-                    onClick = {navigator.navigate("${MANAGE.route}/${request.clientMetadata.name}") },
+                    onClick = { navigator.navigate("${MANAGE.route}/${request.clientMetadata.name}") },
                     modifier = modifier
                         .padding(end = 8.dp)
-                        .size(width = 7.dp, height = 14.dp)
+                        .size(width = 7.dp, height = 14.dp),
+                    interactionSource = NoRippleInteractionSource()
                 ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(

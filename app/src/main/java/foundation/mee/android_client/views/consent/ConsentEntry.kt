@@ -1,38 +1,27 @@
 package foundation.mee.android_client.views.consent
 
-import android.util.Log
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
 import foundation.mee.android_client.helpers.getConsentEntryIconByType
-import foundation.mee.android_client.models.ConsentEntryType
 import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.ui.theme.*
-import foundation.mee.android_client.views.components.DatePicker
 import foundation.mee.android_client.views.components.Toggle
+import foundation.mee.android_client.views.components.clickableWithoutRipple
 
 
+// TODO вопрос modifier overscroll
 @Composable
 fun ConsentEntry(
     entry: ConsentRequestClaim,
@@ -42,36 +31,42 @@ fun ConsentEntry(
     onDurationPopupShow: () -> Unit
 ) {
 
-    var showDatePicker by rememberSaveable { mutableStateOf(false) }
-
     val onChange = {
         updateIsOn(entry.id, !entry.isOn)
+        updateIsOpen(entry.id, !entry.isOn)
     }
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { updateIsOpen(entry.id, !entry.isOpen) }) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(
-                        id = getConsentEntryIconByType(entry.type),
-                    ),
-                    contentDescription = "consentType",
-                    tint = if (!entry.isOn) ChevronRightIconColor else MeePrimary
-                )
-            }
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(
+                    id = getConsentEntryIconByType(entry.type),
+                ),
+                contentDescription = null,
+                tint = if (entry.isOn || entry.isRequired) MeePrimary else ChevronRightIconColor,
+                modifier = Modifier
+                    .height(18.dp)
+                    .width(18.dp)
+                    .clickableWithoutRipple {
+                        if (entry.isRequired || entry.isOn) {
+                            updateIsOpen(entry.id, !entry.isOpen)
+                        }
+                    }
+            )
         }
         Box(
             modifier = Modifier
                 .padding(start = 13.dp)
+                .weight(1f)
                 .border(
                     1.dp,
-                    if (entry.isOpen && entry.isOn) {
+                    if (entry.isOpen && (entry.isRequired || entry.isOn)) {
                         if (entry.isIncorrect()) {
                             DefaultRedLight
                         } else {
@@ -84,127 +79,49 @@ fun ConsentEntry(
                 )
         ) {
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if ((entry.isRequired && entry.isOpen) || (!entry.isRequired && entry.isOn)) {
-                    BasicTextField(
-                        value = entry.value ?: "",
-                        onValueChange = {
-                            updateValue(entry.id, it)
-                        },
-                        textStyle = TextStyle(
-                            fontFamily = publicSansFamily,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight(400),
-                            color =
-                            if (!entry.isOn) ChevronRightIconColor
-                            else {
-                                if (entry.isOpen)
-                                    PartnerEntryOnBackgroundColor
-                                else MeePrimary
-                            },
-                            textAlign = TextAlign.Left
-                        ),
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 11.dp)
-                            .focusable(),
-                        decorationBox = { innerTextField ->
-                            if (entry.value.isNullOrEmpty()) {
-                                Text(
-                                    text = entry.name,
-                                    fontFamily = publicSansFamily,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight(400),
-                                    color =
-                                    if (!entry.isOn)
-                                        ChevronRightIconColor
-                                    else {
-                                        if (entry.isOpen)
-                                            DefaultGray400
-                                        else MeePrimary
-                                    },
-                                    textAlign = TextAlign.Left
-                                )
-                            }
-                            innerTextField()
-                        }
-                    )
+                if ((entry.isRequired && entry.isOpen) || (!entry.isRequired && entry.isOn && entry.isOpen)) {
+                    ConsentSimpleEntryInput(entry = entry, updateValue = updateValue)
                 } else {
-                    TextButton(onClick = {
-                        updateIsOpen(entry.id, !entry.isOpen)
-                    }) {
-                        Text(
-                            text = entry.getFieldName(),
-                            color = if (entry.isRequired) MeeBrand else ChevronRightIconColor,
-                            fontFamily = publicSansFamily,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight(400)
-                        )
-                    }
-                }
-
-                if (entry.type == ConsentEntryType.date) {
-                    IconButton(
-                        onClick = {
-                            showDatePicker = true
-                        },
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(
-                                id = R.drawable.ic_calendar,
-                            ),
-                            contentDescription = null,
-                            tint = DefaultGray400,
-                            modifier = Modifier.width(14.dp)
-                        )
-                    }
+                    Text(
+                        text = entry.getFieldName(),
+                        color = if (entry.isRequired || entry.isOn) MeeBrand else ChevronRightIconColor,
+                        fontFamily = publicSansFamily,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight(400),
+                        modifier = Modifier
+                            .clickableWithoutRipple {
+                                if (entry.isRequired || entry.isOn) {
+                                    updateIsOpen(entry.id, !entry.isOpen)
+                                }
+                            }
+                            // TODO вопрос
+                            .padding(horizontal = 16.dp, vertical = 10.dp)
+                    )
                 }
 
             }
         }
         if (!entry.isRequired) {
-            Toggle(!entry.isOn, onChange)
+            Toggle(entry.isOn, onChange, modifier = Modifier.height(16.dp))
         } else {
-            IconButton(
-                onClick = {
-                    onDurationPopupShow()
-                },
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(
-                        id = R.drawable.icon_chevron_right,
-                    ),
-                    contentDescription = "consentChevronRight",
-                    tint = DefaultGray400,
-                    modifier = Modifier.width(14.dp)
-                )
-            }
-        }
-
-        // TODO валидация даты
-        // TODO datepicker question more than n years old
-        if (showDatePicker) {
-            DatePicker(value = entry.value, show = showDatePicker,
-                onValueChange = {
-                    updateValue(entry.id, it)
-                    showDatePicker = false
-                }, onDismiss = {
-                    showDatePicker = false
-                }
+            Icon(
+                imageVector = ImageVector.vectorResource(
+                    id = R.drawable.icon_chevron_right,
+                ),
+                contentDescription = null,
+                tint = DefaultGray400,
+                modifier = Modifier
+                    .padding(start = 27.dp)
+                    .width(18.dp)
+                    .clickableWithoutRipple {
+                        onDurationPopupShow()
+                    }
             )
+
         }
+
     }
 }
-
-
-/*
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-@Composable
-fun PreviewConsentEntry() {
-    MeeIdentityAgentTheme {
-        val consentRequestClaim = consentRequestMock.claims[0]
-        ConsentEntry(consentRequestClaim, isReadOnly = false) {}
-    }
-}
-
-*/

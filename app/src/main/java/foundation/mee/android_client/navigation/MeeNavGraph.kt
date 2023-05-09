@@ -1,6 +1,5 @@
 package foundation.mee.android_client.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -9,13 +8,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import foundation.mee.android_client.helpers.DEEP_LINK_URL_STRING
 import foundation.mee.android_client.navigation.MeeDestinations.*
 import foundation.mee.android_client.views.connections.ConnectionsScreen
 import foundation.mee.android_client.views.consent.ConsentPage
 import foundation.mee.android_client.views.manage.ManageConnection
-
-// TODO uri storage?
-val uri = "https://auth.mee.foundation"
 
 @Composable
 fun MeeNavGraph(
@@ -50,7 +47,7 @@ fun MeeNavGraph(
                 navArgument("consentData") { type = NavType.StringType }
             ),
             deepLinks = listOf(navDeepLink {
-                uriPattern = "${uri}/#/consent/{consentData}"
+                uriPattern = "${DEEP_LINK_URL_STRING}/#/consent/{consentData}"
             })
         )
         { backStackEntry ->

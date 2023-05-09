@@ -7,13 +7,11 @@ import androidx.compose.ui.platform.LocalContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 @Composable
 fun DatePicker(
     value: String?,
     onValueChange: (String) -> Unit = {},
     pattern: String = "yy/MM/dd",
-    show: Boolean,
     onDismiss: () -> Unit
 ) {
 
@@ -33,7 +31,10 @@ fun DatePicker(
     val dialog = DatePickerDialog(
         LocalContext.current,
         { _, year, month, dayOfMonth ->
-            onValueChange("$year/${month}/$dayOfMonth")
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            onValueChange(formatter.format(calendar.time))
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
@@ -48,8 +49,6 @@ fun DatePicker(
         }
     }
 
-    if (show) {
-        dialog.show()
-    }
+    dialog.show()
 
 }

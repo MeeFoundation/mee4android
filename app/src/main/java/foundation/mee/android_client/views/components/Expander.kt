@@ -1,7 +1,5 @@
-package foundation.mee.android_client.views.consent
+package foundation.mee.android_client.views.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
@@ -31,18 +29,12 @@ fun Expander(
     Surface(
         modifier = modifier
     ) {
-        Column(modifier = Modifier.clickable(
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() }
-        )
+        Column(modifier = Modifier.clickableWithoutRipple
         { onChangeExpanded() }) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .padding(horizontal = 8.dp)
-                    .padding(bottom = 22.dp)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = title,
@@ -50,7 +42,6 @@ fun Expander(
                     fontSize = 18.sp,
                     fontWeight = FontWeight(400),
                     color = PartnerEntryOnBackgroundColor,
-                    modifier = Modifier.padding(bottom = 22.dp)
                 )
                 Icon(
                     imageVector = if (isExpanded) {
@@ -74,18 +65,3 @@ fun Expander(
         }
     }
 }
-
-/*
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-@Composable
-fun ExpanderPreview() {
-    MeeIdentityAgentTheme {
-        Expander(
-            "Required"
-        ) {
-            consentRequestMock.claims.filter { x -> x.isRequired }.forEach { x ->
-                ConsentEntry(x, true) {}
-            }
-        }
-    }
-}*/

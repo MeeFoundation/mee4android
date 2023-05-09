@@ -25,7 +25,7 @@ fun RpAuthRequest(from: ConsentRequest): RpAuthRequest {
 
 fun OidcClientMetadata(from: PartnerMetadata): OidcClientMetadata =
     OidcClientMetadata(
-        from.type.name.lowercase(), //TODO lowercase
+        from.type.name.lowercase(), //TODO вопрос lowercase
         from.name,
         from.logoUrl,
         from.contacts,
@@ -48,5 +48,5 @@ fun OidcClaimParams(from: ConsentRequestClaim): OidcClaimParams =
         else RetentionDuration.UNTIL_CONNECTION_DELETION,
         from.businessPurpose,
         from.isSensitive,
-        from.value,   // TODO extend for card
+        from.value,
     )

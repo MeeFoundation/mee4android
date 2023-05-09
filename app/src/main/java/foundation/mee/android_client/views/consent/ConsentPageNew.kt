@@ -1,91 +1,74 @@
 package foundation.mee.android_client.views.consent
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
+import android.annotation.SuppressLint
 import android.view.Gravity
-import android.widget.Toast
+import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogWindowProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.getURLFromString
+import foundation.mee.android_client.helpers.CERTIFIED_URL_STRING
+import foundation.mee.android_client.helpers.showConsentToast
+import foundation.mee.android_client.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.ui.theme.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
+import foundation.mee.android_client.views.components.Expander
+import foundation.mee.android_client.views.components.NoRippleInteractionSource
 import uniffi.mee_agent.RpAuthResponseWrapper
-import androidx.compose.foundation.lazy.items
-import kotlinx.coroutines.launch
 
-
-// Scrollable index
-// TODO experimantal
-// TODO toast
-@OptIn(ExperimentalComposeUiApi::class)
+// TODO вопрос id string/uuid
+// TODO вопрос скролл
 @Composable
 fun ConsentPageNew(
     consentViewModel: ConsentViewModel = viewModel(),
     onAccept: (ConsentRequest) -> RpAuthResponseWrapper?
 ) {
-
-    // TODO
-    val cns by consentViewModel.uiState.collectAsState()
-    val data = cns.consent
+    val data by consentViewModel.uiState.collectAsState()
 
     val context = LocalContext.current
 
     val hasOptionalFields = data.claims.any { x -> !x.isRequired }
+
     val optionalClaims = data.claims.filter { x -> !x.isRequired }
     val requiredClaims = data.claims.filter { x -> x.isRequired }
 
-
-    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 3f)
 
     val state = rememberConsentPageNewState()
 
-    val toast = { ctx: Context, message: String ->
-        Toast.makeText(
-            ctx,
-            message,
-            Toast.LENGTH_SHORT
-        )
-    }
-
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .sizeIn(minHeight = 90.dp),
+        modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxSize()
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,58 +80,62 @@ fun ConsentPageNew(
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(
+                        top = 30.dp,
+                        bottom = 24.dp,
+                        // TODO вопрос
+                        start = 8.dp,
+                        end = 8.dp
+                    )
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter(model = "https://mee.foundation/favicon.png"), //TODO
+                        painter = rememberAsyncImagePainter(model = "https://mee.foundation/favicon.png"),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(width = 48.dp, height = 48.dp)
-                            .clip(shape = CircleShape),
+                        modifier = Modifier.size(48.dp)
                     )
-
                     Canvas(
                         Modifier
                             .weight(1f)
-                            .height(1.dp)
+                            .padding(horizontal = 4.dp)
                     ) {
                         drawLine(
                             color = MeePrimary,
                             start = Offset(0f, 0f),
                             end = Offset(size.width, 0f),
-                            pathEffect = pathEffect
+                            pathEffect = pathEffect,
+                            strokeWidth = 2f
                         )
                     }
-                    Image(
-                        painter = rememberAsyncImagePainter(model = R.drawable.mee_certified_logo),
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(width = 48.dp, height = 48.dp)
-                            .clip(shape = CircleShape),
-                    )
+                    IconButton(
+                        onClick = { state.showCertified = !state.showCertified },
+                        interactionSource = NoRippleInteractionSource()
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.mee_certified_logo),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
                     Canvas(
                         Modifier
                             .weight(1f)
-                            .height(1.dp)
+                            .padding(horizontal = 4.dp)
                     ) {
                         drawLine(
                             color = MeePrimary,
-                            start = Offset(1f, 0f),
+                            start = Offset(0f, 0f),
                             end = Offset(size.width, 0f),
-                            pathEffect = pathEffect
+                            pathEffect = pathEffect,
+                            strokeWidth = 2f
                         )
                     }
                     Image(
                         painter = rememberAsyncImagePainter(model = data.clientMetadata.logoUrl),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(width = 48.dp, height = 48.dp)
-                            .clip(shape = CircleShape),
+                        modifier = Modifier.size(48.dp)
                     )
                 }
                 Text(
@@ -158,7 +145,6 @@ fun ConsentPageNew(
                     fontWeight = FontWeight(700),
                     color = PartnerEntryOnBackgroundColor,
                     textAlign = TextAlign.Center,
-//                modifier = Modifier.paddingFromBaseline(bottom = 10.dp),
                 )
 
                 Text(
@@ -168,7 +154,6 @@ fun ConsentPageNew(
                     fontWeight = FontWeight(500),
                     color = MeePrimary,
                     textAlign = TextAlign.Center,
-//                modifier = Modifier.paddingFromBaseline(bottom = 10.dp)
                 )
                 Text(
                     text = "would like access to your information",
@@ -177,17 +162,24 @@ fun ConsentPageNew(
                     fontWeight = FontWeight(500),
                     color = ChevronRightIconColor,
                     textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(bottom = 36.dp)
+                        .padding(horizontal = 10.dp)
                 )
 
                 Expander(
                     title = "Required",
-                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-                    isExpanded = state.isRequiredSectionOpened, // TODO
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    isExpanded = state.isRequiredSectionOpened,
                     onChangeExpanded = {
                         state.isRequiredSectionOpened = !state.isRequiredSectionOpened
                     }
                 ) {
-                    LazyColumn(state = state.requiredListState) {
+                    LazyColumn(
+                        state = state.requiredListState,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
                         items(requiredClaims) { x ->
                             ConsentEntry(x,
                                 updateValue = { id, value ->
@@ -213,19 +205,22 @@ fun ConsentPageNew(
                 Divider(
                     color = DefaultGray200,
                     thickness = 1.dp,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
 
                 if (hasOptionalFields) {
                     Expander(
                         title = "Optional",
-                        modifier = Modifier.padding(top = 16.dp, bottom = 40.dp),
                         isExpanded = state.isOptionalSectionOpened,
                         onChangeExpanded = {
                             state.isOptionalSectionOpened = !state.isOptionalSectionOpened
                         }
                     ) {
-
-                        LazyColumn(state = state.optionalListState) {
+                        LazyColumn(
+                            state = state.optionalListState,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.padding(top = 16.dp)
+                        ) {
                             items(optionalClaims) {
                                 ConsentEntry(it,
                                     updateValue = { id, value ->
@@ -255,66 +250,63 @@ fun ConsentPageNew(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .background(color = PartnerEntryBackgroundColor)
+                    .sizeIn(maxHeight = 159.dp)
             ) {
-                TextButton(
-                    onClick = {
-                        try {
-                            // TODO onDecline
-                            linkToWebpage(context, Uri.parse(data.redirectUri))
-                        } catch (e: java.lang.Exception) {
-                            Log.e("consentPage", "Error while parsing uri")
-                            toast(context, "Unknown Error").show()
-
+                Row(modifier = Modifier.padding(top = 14.dp)) {
+                    RejectButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        "Decline",
+                    ) {
+                        val uri = state.onDeclineBuildUri(data.redirectUri)
+                        if (uri != null) {
+                            linkToWebpage(context, uri)
+                        } else {
+                            showConsentToast(context, "Unknown Error")
                         }
-                    },
-                    colors = ButtonDefaults.buttonColors(PartnerEntryBackgroundColor)
-                ) {
-                    Text(
-                        text = "Decline",
-                        color = MeePrimary,
-                        fontFamily = publicSansFamily,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight(700),
-                        textAlign = TextAlign.Center
-                    )
+                    }
                 }
-                OutlinedButton(
-                    onClick = {
-                        val incorrectId = state.incorrectClaimId(data.claims)
-                        if (incorrectId != null) { // TODO
-                            val required = data.claims.find { it.id == incorrectId }!!.isRequired
+                Row(modifier = Modifier.padding(bottom = 30.dp)) {
+                    PrimaryButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(51.dp),
+                        title = "Approve and Continue"
+                    ) {
+                        val incorrectClaim = state.findIncorrectClaim(data.claims)
+
+                        if (incorrectClaim != null) {
+                            val index = state.findIndexById(
+                                if (incorrectClaim.isRequired) requiredClaims else optionalClaims,
+                                incorrectClaim.id
+                            )
+
+                            state.scrollToPosition(index, incorrectClaim.isRequired)
+
                             consentViewModel.updateIsOpen(
-                                incorrectId,
+                                incorrectClaim.id,
                                 true
                             )
-                            val index = state.findIndexById(
-                                if (required) requiredClaims else optionalClaims,
-                                incorrectId
-                            )
-                            state.scrollToPosition(index, required)
                         } else {
                             val response = onAccept(data)
                             if (response != null) {
-                                onNext(response, data.redirectUri, context)
-                                Log.d("response", response.toString())
+                                try {
+                                    onNext(response, data.redirectUri, context)
+                                } catch (e: java.lang.Exception) {
+                                    showConsentToast(
+                                        context,
+                                        "Unknown error"
+                                    )
+                                }
                             } else {
-                                toast(context, "Connection failed. Please try again.").show()
+                                showConsentToast(context, "Connection failed. Please try again.")
                             }
                         }
-                    },
-                    colors = ButtonDefaults.buttonColors(MeePrimary),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text(
-                        text = "Approve and Continue",
-                        color = Color.White,
-                        fontFamily = publicSansFamily,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight(700),
-                        textAlign = TextAlign.Center
-                    )
+                    }
                 }
             }
         }
@@ -323,16 +315,17 @@ fun ConsentPageNew(
     if (state.shouldShowDurationPopup) {
         Dialog(
             onDismissRequest = {},
-            properties = DialogProperties(usePlatformDefaultWidth = false),
         ) {
-
             val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
             dialogWindowProvider.window.setGravity(Gravity.BOTTOM)
+            dialogWindowProvider.window.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                LocalView.current.layoutParams.height
+            )
 
             Surface(
                 modifier = Modifier.fillMaxWidth(1f)
             ) {
-                Box(modifier = Modifier.width(IntrinsicSize.Max))
                 if (state.shouldShowDurationPopup) {
                     ConsentDuration(
                         consentEntries = data.claims,
@@ -344,25 +337,46 @@ fun ConsentPageNew(
             }
         }
     }
-}
 
-fun linkToWebpage(context: Context, uri: Uri) {
-    val openURL = Intent(Intent.ACTION_VIEW)
-    openURL.data = uri
-    ContextCompat.startActivity(context, openURL, null)
-}
-
-/*
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-@Composable
-fun PreviewConsentPage() {
-    MeeIdentityAgentTheme {
-        ConsentPageNew(
-            consent = consentRequestMock,
-            authorizeRequest = { null }
-        )
+    if (state.showCertified) {
+        WebViewComposable(CERTIFIED_URL_STRING) {
+            state.showCertified = !state.showCertified
+        }
     }
 }
 
-*/
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+fun WebViewComposable(url: String, onClose: () -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White,
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .padding(bottom = 16.dp)
+        ) {
+            AndroidView(factory = {
+                WebView(it).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    webViewClient = WebViewClient()
+                    settings.javaScriptEnabled = true
+                    loadUrl(url)
+                }
+            }, update = {
+                it.loadUrl(url)
+            })
 
+            PrimaryButton(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .height(51.dp),
+                title = "Close"
+            ) { onClose() }
+        }
+    }
+}

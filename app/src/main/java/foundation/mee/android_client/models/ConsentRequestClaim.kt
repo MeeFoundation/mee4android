@@ -1,5 +1,6 @@
 package foundation.mee.android_client.models
 
+import android.os.Parcelable
 import uniffi.mee_agent.OidcClaimParams
 import uniffi.mee_agent.RetentionDuration
 
@@ -23,10 +24,8 @@ data class ConsentRequestClaim(
     var retentionDuration: RetentionDuration? = RetentionDuration.UNTIL_CONNECTION_DELETION,
     var isRequired: Boolean = false,
     val type: ConsentEntryType,
-    var providedBy: String = "", //TODO
-    var isOn: Boolean = isRequired, //TODO
-    var forceOpen: Boolean? = false,
-    var isOpen: Boolean = forceOpen ?: false // TODO private
+    var isOn: Boolean = false,
+    var isOpen: Boolean = false
 ) {
     constructor(
         from: OidcClaimParams,
@@ -43,10 +42,6 @@ data class ConsentRequestClaim(
         isRequired = from.essential,
         type = ConsentEntryType.values().find { it.name == from.typ } ?: ConsentEntryType.string
     )
-
-    fun setIsOpen(isOpen: Boolean) {
-        forceOpen = if (isIncorrect()) true else isOpen
-    }
 
     fun isIncorrect(): Boolean {
         return if (type != ConsentEntryType.card) {

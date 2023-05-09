@@ -16,12 +16,12 @@ data class PartnerMetadata(
                 displayUrl = from.clientName!!,
                 logoUrl = from.logoUri!!,
                 contacts = from.contacts,
-                // TODO jwks = from.jwks
+                // TODO вопрос jwks = from.jwks
             ) {
         val type = from.applicationType
 //        TODO: uncomment when type is ready
 //        require(type is String)
-        // TODO type lowercase
+        // TODO вопрос type lowercase
         this.type = ClientType.values().find { it.name == type } ?: ClientType.WEB
     }
 }
