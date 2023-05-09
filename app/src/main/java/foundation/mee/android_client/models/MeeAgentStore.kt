@@ -4,15 +4,14 @@ import uniffi.mee_agent.MeeAgent
 import uniffi.mee_agent.MeeAgentConfig
 import uniffi.mee_agent.MeeAgentDidRegistryConfig
 import uniffi.mee_agent.getAgent
-import androidx.activity.ComponentActivity
+import foundation.mee.android_client.utils.RpAuthRequest
 import uniffi.mee_agent.*
 
 
-class MeeAgentStore {
+class MeeAgentStore(appDir: String) {
     private val agent: MeeAgent
-    init {
 
-        var appDir = ComponentActivity().applicationInfo.dataDir + "/mee"
+    init {
         agent = getAgent(
             MeeAgentConfig(
                 appDir,
@@ -20,9 +19,10 @@ class MeeAgentStore {
                 MeeAgentDidRegistryConfig.DidKey
             )
         )
+        agent.initSelfCtx()
     }
 
-    fun getAllItems (): List<MeeContext> {
+    fun getAllItems(): List<MeeContext> {
         val contextsCore = agent.listMaterializedContexts();
         val contexts = contextsCore.filterIsInstance<MaterializedContext.RelyingParty>()
             .mapNotNull { rec ->
@@ -53,9 +53,16 @@ class MeeAgentStore {
                     return@mapNotNull meeContext
                 }
 
-            return@mapNotNull null
-        }
+                return@mapNotNull null
+            }
         return contexts
     }
 
+    fun authorize(item: ConsentRequest): RpAuthResponseWrapper? {
+        return try {
+            agent.authRelyingParty(RpAuthRequest(item))
+        } catch (e: java.lang.Exception) {
+            null
+        }
+    }
 }

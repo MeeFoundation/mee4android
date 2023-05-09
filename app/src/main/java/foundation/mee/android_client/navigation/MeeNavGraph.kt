@@ -7,13 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import foundation.mee.android_client.utils.DEEP_LINK_URL_STRING
 import foundation.mee.android_client.navigation.MeeDestinations.*
 import foundation.mee.android_client.views.connections.ConnectionsScreen
+import foundation.mee.android_client.views.consent.ConsentPage
 import foundation.mee.android_client.views.manage.ManageConnection
 import foundation.mee.android_client.views.welcome_pages.WelcomeScreen
-import foundation.mee.android_client.models.mobileApps
-import foundation.mee.android_client.models.sites
-
 
 @Composable
 fun MeeNavGraph(
@@ -49,6 +49,23 @@ fun MeeNavGraph(
             ManageConnection(
                 backStackEntry.arguments?.getString("connectionId") ?: "empty connectionId"
             )
+        }
+
+        composable(
+            "${CONSENT.route}/{consentData}",
+            arguments = listOf(
+                navArgument("consentData") { type = NavType.StringType }
+            ),
+            deepLinks = listOf(navDeepLink {
+                uriPattern = "${DEEP_LINK_URL_STRING}/#/consent/{consentData}"
+            })
+        )
+        { backStackEntry ->
+            val data = backStackEntry.arguments?.getString("consentData")
+
+            if (data != null) {
+                ConsentPage()
+            } else ConnectionsScreen()
         }
     }
 }

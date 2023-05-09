@@ -1,14 +1,12 @@
 package foundation.mee.android_client.models
 
-import uniffi.mee_agent.OidcScope
-import uniffi.mee_agent.OidcScopeWrapper
-import uniffi.mee_agent.Url
+import uniffi.mee_agent.*
 
 // TODO: Think about removing "" and adding Option type
 data class ConsentRequest(
     val id: String,
     val scope: OidcScopeWrapper,
-    val claims: List<ConsentRequestClaim>,
+    var claims: List<ConsentRequestClaim>, // TODO set var to val after scroll tests in ConsentViewModel
     val clientId: String = "",
     val nonce: String = "",
     val redirectUri: Url = "",
@@ -35,4 +33,25 @@ data class ConsentRequest(
         "",
         clientMetadata ?: from.clientMetadata
     )
+
+    constructor(
+        from: RpAuthRequest
+    ) : this(
+        from.redirectUri,
+        from.scope,
+        from.claims?.idToken?.let { claimsMapper(it) } ?: listOf(),
+        from.clientId ?: "",
+        from.nonce,
+        from.redirectUri,
+        false,
+        from.presentationDefinition,
+        PartnerMetadata(from.clientMetadata!!)
+    )
 }
+
+private fun claimsMapper(idToken: Map<String, OidcClaimParams?>): List<ConsentRequestClaim> {
+    return idToken.entries.mapNotNull { (key, value) ->
+        value?.let { ConsentRequestClaim(value, key) }
+    }
+}
+
