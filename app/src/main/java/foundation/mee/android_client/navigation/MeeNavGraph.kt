@@ -53,7 +53,6 @@ fun MeeNavGraph(
 
         composable(
             "${CONSENT.route}/{consentData}",
-            // arguments - list of arguments to associate with destination
             arguments = listOf(
                 navArgument("consentData") { type = NavType.StringType }
             ),
