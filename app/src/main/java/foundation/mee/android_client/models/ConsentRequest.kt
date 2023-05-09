@@ -6,7 +6,7 @@ import uniffi.mee_agent.*
 data class ConsentRequest(
     val id: String,
     val scope: OidcScopeWrapper,
-    var claims: List<ConsentRequestClaim>,
+    var claims: List<ConsentRequestClaim>, // TODO set var to val after scroll tests in ConsentViewModel
     val clientId: String = "",
     val nonce: String = "",
     val redirectUri: Url = "",
@@ -46,26 +46,6 @@ data class ConsentRequest(
         false,
         from.presentationDefinition,
         PartnerMetadata(from.clientMetadata!!)
-    )
-
-    constructor(
-        claims: List<ConsentRequestClaim>,
-        clientMetadata: PartnerMetadata,
-        nonce: String,
-        clientId: String,
-        redirectUri: String,
-        presentationDefinition: String?,
-        isCrossDeviceFlow: Boolean
-    ) : this(
-        scope = OidcScopeWrapper.Set(scope = listOf(OidcScope.OPENID)),
-        claims = claims,
-        clientMetadata = clientMetadata,
-        nonce = nonce,
-        clientId = clientId,
-        redirectUri = redirectUri,
-        presentationDefinition = presentationDefinition,
-        isCrossDeviceFlow = isCrossDeviceFlow,
-        id = redirectUri
     )
 }
 

@@ -2,11 +2,9 @@ package foundation.mee.android_client.views.consent
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import android.webkit.URLUtil
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import foundation.mee.android_client.linkToWebpage
+import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.models.MeeAgentStore
 import uniffi.mee_agent.RpAuthResponseWrapper
@@ -29,7 +27,6 @@ fun ConsentPage() {
     ConsentPageNew(onAccept = authorizeRequest)
 }
 
-// TODO+
 fun onNext(coreData: RpAuthResponseWrapper?, redirectUri: String, context: Context) {
     val uri = URI(redirectUri)
     val builder = Uri.Builder()

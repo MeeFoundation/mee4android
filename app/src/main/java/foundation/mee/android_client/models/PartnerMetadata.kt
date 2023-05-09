@@ -6,7 +6,7 @@ data class PartnerMetadata(
     val name: String,
     var displayUrl: String,
     var logoUrl: String,
-    var type: ClientType = ClientType.WEB,
+    var type: ClientType = ClientType.web,
     var contacts: List<String>,
     var jwks: List<String>? = null
 ) {
@@ -16,12 +16,11 @@ data class PartnerMetadata(
                 displayUrl = from.clientName!!,
                 logoUrl = from.logoUri!!,
                 contacts = from.contacts,
-                // TODO вопрос jwks = from.jwks
+                jwks = from.jwks
             ) {
         val type = from.applicationType
 //        TODO: uncomment when type is ready
 //        require(type is String)
-        // TODO вопрос type lowercase
-        this.type = ClientType.values().find { it.name == type } ?: ClientType.WEB
+        this.type = ClientType.values().find { it.name == type } ?: ClientType.web
     }
 }

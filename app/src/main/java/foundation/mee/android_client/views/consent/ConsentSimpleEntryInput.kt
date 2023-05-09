@@ -24,8 +24,8 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ConsentEntryType
 import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.ui.theme.*
-import foundation.mee.android_client.views.components.DatePicker
-import foundation.mee.android_client.views.components.clickableWithoutRipple
+import foundation.mee.android_client.ui.components.DatePicker
+import foundation.mee.android_client.ui.components.clickableWithoutRipple
 
 @Composable
 fun RowScope.ConsentSimpleEntryInput(

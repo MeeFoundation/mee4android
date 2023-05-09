@@ -1,4 +1,4 @@
-package foundation.mee.android_client.helpers
+package foundation.mee.android_client.utils
 
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.models.ConsentRequestClaim
@@ -25,7 +25,7 @@ fun RpAuthRequest(from: ConsentRequest): RpAuthRequest {
 
 fun OidcClientMetadata(from: PartnerMetadata): OidcClientMetadata =
     OidcClientMetadata(
-        from.type.name.lowercase(), //TODO вопрос lowercase
+        from.type.name,
         from.name,
         from.logoUrl,
         from.contacts,

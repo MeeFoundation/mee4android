@@ -4,7 +4,7 @@ import uniffi.mee_agent.MeeAgent
 import uniffi.mee_agent.MeeAgentConfig
 import uniffi.mee_agent.MeeAgentDidRegistryConfig
 import uniffi.mee_agent.getAgent
-import foundation.mee.android_client.helpers.RpAuthRequest
+import foundation.mee.android_client.utils.RpAuthRequest
 import uniffi.mee_agent.*
 
 

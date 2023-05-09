@@ -16,13 +16,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import foundation.mee.android_client.helpers.getConsentEntryIconByType
+import foundation.mee.android_client.utils.getConsentEntryIconByType
 import foundation.mee.android_client.models.ConsentRequestClaim
+import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.*
-import foundation.mee.android_client.views.components.clickableWithoutRipple
 import uniffi.mee_agent.RetentionDuration
 
-//  TODO вопрос id странное
 @Composable
 fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onComplete: () -> Unit) {
 

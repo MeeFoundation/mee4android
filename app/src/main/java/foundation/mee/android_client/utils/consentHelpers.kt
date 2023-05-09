@@ -1,4 +1,4 @@
-package foundation.mee.android_client.helpers
+package foundation.mee.android_client.utils
 
 import android.content.Context
 import android.widget.Toast

@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.ui.theme.publicSansFamily
 import foundation.mee.android_client.R
+import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.LabelLightSecondary
 import foundation.mee.android_client.ui.theme.SystemBlueLight
-import foundation.mee.android_client.views.components.clickableWithoutRipple
 
 @Composable
 fun ConsentDurationEntry(

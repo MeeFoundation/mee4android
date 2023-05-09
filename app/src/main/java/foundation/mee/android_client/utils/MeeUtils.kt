@@ -1,4 +1,4 @@
-package foundation.mee.android_client
+package foundation.mee.android_client.utils
 
 import android.content.Context
 import android.content.Intent

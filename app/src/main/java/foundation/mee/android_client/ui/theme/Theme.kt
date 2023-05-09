@@ -28,17 +28,16 @@ private val LightColorPalette = lightColors(
     */
 )
 
-// TODO вопрос темная тема: нужно ли добавить поддержку в консент скрин, где брать цвета
 @Composable
 fun MeeIdentityAgentTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
+    val colors = /* if (darkTheme) {
         DarkColorPalette
-    } else {
+    } else {*/
         LightColorPalette
-    }
+//    }
 
     MaterialTheme(
         colors = colors,

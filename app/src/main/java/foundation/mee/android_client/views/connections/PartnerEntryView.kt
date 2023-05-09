@@ -16,14 +16,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
-import foundation.mee.android_client.getURLFromString
+import foundation.mee.android_client.utils.getURLFromString
 import foundation.mee.android_client.models.meeContextMock
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.navigation.MeeDestinations.*
-import foundation.mee.android_client.views.components.NoRippleInteractionSource
+import foundation.mee.android_client.ui.components.NoRippleInteractionSource
 
 @Composable
 fun PartnerEntry(

@@ -1,4 +1,4 @@
-package foundation.mee.android_client.views.components
+package foundation.mee.android_client.ui.components
 
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults

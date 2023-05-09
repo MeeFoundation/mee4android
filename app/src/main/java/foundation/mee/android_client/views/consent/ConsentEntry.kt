@@ -14,14 +14,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
-import foundation.mee.android_client.helpers.getConsentEntryIconByType
+import foundation.mee.android_client.utils.getConsentEntryIconByType
 import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.ui.theme.*
-import foundation.mee.android_client.views.components.Toggle
-import foundation.mee.android_client.views.components.clickableWithoutRipple
+import foundation.mee.android_client.ui.components.Toggle
+import foundation.mee.android_client.ui.components.clickableWithoutRipple
 
-
-// TODO вопрос modifier overscroll
 @Composable
 fun ConsentEntry(
     entry: ConsentRequestClaim,
@@ -97,7 +95,6 @@ fun ConsentEntry(
                                     updateIsOpen(entry.id, !entry.isOpen)
                                 }
                             }
-                            // TODO вопрос
                             .padding(horizontal = 16.dp, vertical = 10.dp)
                     )
                 }

@@ -1,6 +1,5 @@
 package foundation.mee.android_client.models
 
-import android.os.Parcelable
 import uniffi.mee_agent.OidcClaimParams
 import uniffi.mee_agent.RetentionDuration
 

@@ -1,4 +1,4 @@
-package foundation.mee.android_client.ui.theme
+package foundation.mee.android_client.ui.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
@@ -12,7 +12,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import foundation.mee.android_client.views.components.NoRippleInteractionSource
+import foundation.mee.android_client.ui.theme.MeePrimary
+import foundation.mee.android_client.ui.theme.PartnerEntryBackgroundColor
+import foundation.mee.android_client.ui.theme.publicSansFamily
 
 @Composable
 fun PrimaryButton(

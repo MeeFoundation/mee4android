@@ -1,7 +1,6 @@
 package foundation.mee.android_client.views.consent
 
 import android.net.Uri
-import android.util.Log
 import android.webkit.URLUtil
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -51,7 +50,7 @@ class ConsentPageNewState(
         if (isIncorrectRequired) {
             isRequiredSectionOpened = true
         } else {
-            isRequiredSectionOpened = false // TODO вопрос
+            isRequiredSectionOpened = false
             isOptionalSectionOpened = true
         }
         return incorrectClaim

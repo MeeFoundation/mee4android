@@ -14,20 +14,21 @@ import uniffi.mee_agent.RetentionDuration
 import uniffi.mee_agent.rpAuthRequestFromJwt
 import javax.inject.Inject
 
-// TODO вопрос
 @HiltViewModel
 class ConsentViewModel @Inject constructor(
     stateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val argument = checkNotNull(stateHandle.get<String>("consentData"))
+
+    // TODO surround with try/catch while working on new core refactoring
     val cnsnt = ConsentRequest(rpAuthRequestFromJwt(argument))
 
 
     private val consent = cnsnt.let {
-        // TODO+ remove in the end
+        // Uncomment to test scroll
 
-        it.claims += ConsentRequestClaim(
+         /*it.claims += ConsentRequestClaim(
             id = "Date",
             name = "Date",
             code = "date",
@@ -39,7 +40,7 @@ class ConsentViewModel @Inject constructor(
             isRequired = true,
             type = ConsentEntryType.date
         )
-        /* it.claims += ConsentRequestClaim(
+         it.claims += ConsentRequestClaim(
              id = "sdf",
              name = "Date",
              code = "date",
@@ -98,7 +99,7 @@ class ConsentViewModel @Inject constructor(
              retentionDuration = RetentionDuration.EPHEMERAL,
              isRequired = true,
              type = ConsentEntryType.address
-         ) */
+         )
         it.claims += ConsentRequestClaim(
             id = "shktykefr",
             name = "Date",
@@ -146,7 +147,7 @@ class ConsentViewModel @Inject constructor(
             retentionDuration = RetentionDuration.EPHEMERAL,
             isRequired = false,
             type = ConsentEntryType.address
-        )
+        )*/
         it
     }
 

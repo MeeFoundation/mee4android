@@ -1,4 +1,4 @@
-package foundation.mee.android_client.views.components
+package foundation.mee.android_client.ui.components
 
 import android.app.DatePickerDialog
 import android.content.DialogInterface

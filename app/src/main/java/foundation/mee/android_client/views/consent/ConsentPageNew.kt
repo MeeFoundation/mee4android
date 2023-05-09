@@ -30,18 +30,19 @@ import androidx.compose.ui.window.DialogWindowProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
-import foundation.mee.android_client.getURLFromString
-import foundation.mee.android_client.helpers.CERTIFIED_URL_STRING
-import foundation.mee.android_client.helpers.showConsentToast
-import foundation.mee.android_client.linkToWebpage
+import foundation.mee.android_client.utils.getURLFromString
+import foundation.mee.android_client.utils.CERTIFIED_URL_STRING
+import foundation.mee.android_client.utils.showConsentToast
+import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
+import foundation.mee.android_client.ui.components.PrimaryButton
+import foundation.mee.android_client.ui.components.RejectButton
 import foundation.mee.android_client.ui.theme.*
-import foundation.mee.android_client.views.components.Expander
-import foundation.mee.android_client.views.components.NoRippleInteractionSource
+import foundation.mee.android_client.ui.components.Expander
+import foundation.mee.android_client.ui.components.NoRippleInteractionSource
 import uniffi.mee_agent.RpAuthResponseWrapper
+import java.lang.Exception
 
-// TODO вопрос id string/uuid
-// TODO вопрос скролл
 @Composable
 fun ConsentPageNew(
     consentViewModel: ConsentViewModel = viewModel(),
@@ -82,10 +83,7 @@ fun ConsentPageNew(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(
                         top = 30.dp,
-                        bottom = 24.dp,
-                        // TODO вопрос
-                        start = 8.dp,
-                        end = 8.dp
+                        bottom = 24.dp
                     )
                 ) {
                     Image(
@@ -296,7 +294,7 @@ fun ConsentPageNew(
                             if (response != null) {
                                 try {
                                     onNext(response, data.redirectUri, context)
-                                } catch (e: java.lang.Exception) {
+                                } catch (e: Exception) {
                                     showConsentToast(
                                         context,
                                         "Unknown error"

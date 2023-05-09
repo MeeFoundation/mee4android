@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import foundation.mee.android_client.helpers.DEEP_LINK_URL_STRING
+import foundation.mee.android_client.utils.DEEP_LINK_URL_STRING
 import foundation.mee.android_client.navigation.MeeDestinations.*
 import foundation.mee.android_client.views.connections.ConnectionsScreen
 import foundation.mee.android_client.views.consent.ConsentPage
@@ -43,6 +43,7 @@ fun MeeNavGraph(
 
         composable(
             "${CONSENT.route}/{consentData}",
+            // arguments - list of arguments to associate with destination
             arguments = listOf(
                 navArgument("consentData") { type = NavType.StringType }
             ),

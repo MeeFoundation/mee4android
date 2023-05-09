@@ -1,4 +1,4 @@
-package foundation.mee.android_client.views.components
+package foundation.mee.android_client.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
