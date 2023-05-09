@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import foundation.mee.android_client.ui.theme.MeePrimary
+import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.PartnerEntryBackgroundColor
 import foundation.mee.android_client.ui.theme.publicSansFamily
 
@@ -24,7 +24,7 @@ fun PrimaryButton(
 ) {
     OutlinedButton(
         onClick = { onClick() },
-        colors = ButtonDefaults.buttonColors(MeePrimary),
+        colors = ButtonDefaults.buttonColors(MeeGreenPrimaryColor),
         shape = RoundedCornerShape(10.dp),
         modifier = modifier,
         interactionSource = NoRippleInteractionSource()
@@ -54,7 +54,7 @@ fun RejectButton(
     ) {
         Text(
             text = title,
-            color = MeePrimary,
+            color = MeeGreenPrimaryColor,
             fontFamily = publicSansFamily,
             fontSize = 18.sp,
             fontWeight = FontWeight(700),

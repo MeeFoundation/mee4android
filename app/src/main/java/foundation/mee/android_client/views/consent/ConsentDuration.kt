@@ -138,7 +138,7 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
             ) {
                 Text(
                     text = "Cancel",
-                    color = MeePrimary,
+                    color = MeeGreenPrimaryColor,
                     fontFamily = publicSansFamily,
                     fontSize = 14.sp,
                     fontWeight = FontWeight(500),
@@ -148,7 +148,7 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
                 )
                 Text(
                     text = "Save",
-                    color = MeePrimary,
+                    color = MeeGreenPrimaryColor,
                     fontFamily = publicSansFamily,
                     fontSize = 14.sp,
                     fontWeight = FontWeight(500),

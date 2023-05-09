@@ -12,20 +12,18 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
 fun ConnectionsScreen() {
-    MeeIdentityAgentTheme {
-        Scaffold(
-            topBar = {
-                ConnectionsScreenTitle()
-            }
-        ) { padding ->
-            ConnectionsContent(
-                connections = sites,
-                mobileConnections = mobileApps,
-                partnerConnections = PartnersRegistry.shared,
-                modifier = Modifier.padding(padding),
-            )
-
+    Scaffold(
+        topBar = {
+            ConnectionsScreenTitle()
         }
+    ) { padding ->
+        ConnectionsContent(
+            connections = sites,
+            mobileConnections = mobileApps,
+            partnerConnections = PartnersRegistry.shared,
+            modifier = Modifier.padding(padding),
+        )
+
     }
 }
 
@@ -40,6 +38,14 @@ fun PreviewConnectionScreen() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewConnectionScreenDynamic() {
+    MeeIdentityAgentTheme {
+        ConnectionsScreen()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewConnectionScreenAnother() {
     MeeIdentityAgentTheme {
         ConnectionsScreen()
     }

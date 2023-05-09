@@ -47,7 +47,7 @@ fun ConsentEntry(
                     id = getConsentEntryIconByType(entry.type),
                 ),
                 contentDescription = null,
-                tint = if (entry.isOn || entry.isRequired) MeePrimary else ChevronRightIconColor,
+                tint = if (entry.isOn || entry.isRequired) MeeGreenPrimaryColor else ChevronRightIconColor,
                 modifier = Modifier
                     .height(18.dp)
                     .width(18.dp)
@@ -68,7 +68,7 @@ fun ConsentEntry(
                         if (entry.isIncorrect()) {
                             DefaultRedLight
                         } else {
-                            MeePrimary
+                            MeeGreenPrimaryColor
                         }
                     } else {
                         Color.Transparent

@@ -11,7 +11,8 @@ import foundation.mee.android_client.R
 val publicSansFamily = FontFamily(
     Font(R.font.publicsans_medium, FontWeight.Medium),
     Font(R.font.publicsans_semibold, FontWeight.SemiBold),
-    Font(R.font.publicsans_regular, FontWeight.Normal)
+    Font(R.font.publicsans_regular, FontWeight.Normal),
+    Font(R.font.publicsans_bold, FontWeight.Bold)
 )
 
 // Set of Material typography styles to start with

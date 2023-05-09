@@ -98,7 +98,7 @@ fun ConsentPageNew(
                             .padding(horizontal = 4.dp)
                     ) {
                         drawLine(
-                            color = MeePrimary,
+                            color = MeeGreenPrimaryColor,
                             start = Offset(0f, 0f),
                             end = Offset(size.width, 0f),
                             pathEffect = pathEffect,
@@ -122,7 +122,7 @@ fun ConsentPageNew(
                             .padding(horizontal = 4.dp)
                     ) {
                         drawLine(
-                            color = MeePrimary,
+                            color = MeeGreenPrimaryColor,
                             start = Offset(0f, 0f),
                             end = Offset(size.width, 0f),
                             pathEffect = pathEffect,
@@ -150,7 +150,7 @@ fun ConsentPageNew(
                     fontFamily = publicSansFamily,
                     fontSize = 18.sp,
                     fontWeight = FontWeight(500),
-                    color = MeePrimary,
+                    color = MeeGreenPrimaryColor,
                     textAlign = TextAlign.Center,
                 )
                 Text(

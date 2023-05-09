@@ -49,7 +49,7 @@ fun RowScope.ConsentSimpleEntryInput(
             else {
                 if (entry.isOpen)
                     PartnerEntryOnBackgroundColor
-                else MeePrimary
+                else MeeGreenPrimaryColor
             },
             textAlign = TextAlign.Left
         ),
@@ -69,7 +69,7 @@ fun RowScope.ConsentSimpleEntryInput(
                     else {
                         if (entry.isOpen)
                             DefaultGray400
-                        else MeePrimary
+                        else MeeGreenPrimaryColor
                     },
                     textAlign = TextAlign.Left
                 )
