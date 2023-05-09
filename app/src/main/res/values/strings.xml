@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Mee Identity Agent</string>
+    <string name="loading_white_page_1">Creating a context in the Mee Data Storage</string>
+    <string name="loading_white_page_2">Generating the context data encryption key</string>
+    <string name="loading_white_page_3">Generating unique device keys</string>
+    <string name="loading_white_page_4">"Generating the context-specific user indentifier "</string>
+    <string name="biometry_negative_button_text">Cancel</string>
+    <string name="biometry_title">Biometric authentication</string>
+    <string name="biometry_subtitle">Touch fingerprint sensor</string>
 </resources>
