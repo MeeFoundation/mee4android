@@ -1,6 +1,7 @@
 package foundation.mee.android_client
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
@@ -12,12 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.mee.android_client.controller.biometry.BiometryHandler
+import foundation.mee.android_client.effects.OnLifecycleEvent
 import foundation.mee.android_client.navigation.MeeNavGraph
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.views.MeeWhiteScreen
-import foundation.mee.android_client.views.wizard_pages.LoadingScreenWithMeeLogo
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
@@ -39,29 +41,33 @@ class MainActivity : FragmentActivity() {
                     val biometricManager = BiometricManager.from(this)
 
                     if (biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS) {
-                        BiometryHandler(activityContext = ctx, onSuccessfulAuth = {loginSuccess = true})
+                        BiometryHandler(
+                            activityContext = ctx,
+                            onSuccessfulAuth = { loginSuccess = true })
                     } else {
                         loginSuccess = true
                     }
-
-                    var showLoadingScreen by remember { mutableStateOf(true) }
+                    OnLifecycleEvent { owner, event ->
+                        Log.d("Lifecycle Event: ", event.toString())
+                        when (event) {
+                            Lifecycle.Event.ON_STOP -> {
+                                loginSuccess = false
+                            }
+                            else -> null
+                        }
+                    }
 
                     if (loginSuccess) {
                         Box(modifier = Modifier.fillMaxSize()) {
-                            if (!showLoadingScreen) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .zIndex(1f)
-                                ) {
-                                    MeeNavGraph()
-                                }
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .zIndex(1f)
+                            ) {
+                                MeeNavGraph()
                             }
-                            Box(modifier = Modifier
-                                .fillMaxSize()
-                                .zIndex(2f)) {
-                                LoadingScreenWithMeeLogo(endAction = {showLoadingScreen = false})
-                            }
+
                         }
                     } else {
                         MeeWhiteScreen()
