@@ -1,6 +1,7 @@
 package foundation.mee.android_client.controller.biometry
 
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
@@ -17,7 +18,7 @@ private val biometricsIgnoredErrors = listOf(
 
 fun showBiometricPrompt(
     activityContext: FragmentActivity,
-    onSuccess: () -> Unit = {}
+    onSuccess: (result: Boolean) -> Unit = {}
 ) {
     val promptInfo = biometryPromptBuilder(activityContext)
 
@@ -39,12 +40,13 @@ fun showBiometricPrompt(
                 if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
                     // TODO: add fallback for the low level APIs here
                 }
+                onSuccess(false)
             }
 
             override fun onAuthenticationSucceeded(
                 result: BiometricPrompt.AuthenticationResult
             ) {
-                onSuccess()
+                onSuccess(true)
             }
 
             override fun onAuthenticationFailed() {
@@ -56,5 +58,7 @@ fun showBiometricPrompt(
             }
         }
     )
+
     biometricPrompt.authenticate(promptInfo)
 }
+
