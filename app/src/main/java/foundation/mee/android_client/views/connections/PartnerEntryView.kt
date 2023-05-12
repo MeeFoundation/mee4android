@@ -17,24 +17,27 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
+import foundation.mee.android_client.models.*
 import foundation.mee.android_client.utils.getURLFromString
-import foundation.mee.android_client.models.meeContextMock
-import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.navigation.MeeDestinations.*
-import foundation.mee.android_client.ui.components.NoRippleInteractionSource
 
 @Composable
 fun PartnerEntry(
-    request: ConsentRequest,
+    connection: MeeConnection,
     modifier: Modifier = Modifier,
     hasEntry: Boolean = false,
     viewModel: NavViewModel = hiltViewModel()
 ) {
     val isCertified = true
     val navigator = viewModel.navigator
+    val clientMetadata = when (val conn = connection.value) {
+        is MeeConnectionType.Siop -> conn.value.clientMetadata
+        else -> null
+    }
+
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
@@ -42,7 +45,7 @@ fun PartnerEntry(
             .clickable(
                 enabled = hasEntry,
                 onClick = {
-                    navigator.navigate("${MANAGE.route}/${request.clientMetadata.name}")
+                    navigator.navigate("${MANAGE.route}/${connection.name}")
                 }
             ),
         color = MaterialTheme.colors.surface,
@@ -59,7 +62,9 @@ fun PartnerEntry(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(model = request.clientMetadata.logoUrl),
+                    painter = rememberAsyncImagePainter(
+                        model = clientMetadata?.logoUrl ?: "${connection.id}/favicon.ico"
+                    ),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
@@ -72,7 +77,7 @@ fun PartnerEntry(
                 ) {
                     Row {
                         Text(
-                            text = request.clientMetadata.name,
+                            text = clientMetadata?.name ?: connection.name,
                             style = MaterialTheme.typography.h6,
                         )
                         if (isCertified) {
@@ -86,7 +91,7 @@ fun PartnerEntry(
                         }
                     }
                     Text(
-                        text = getURLFromString(request.id)?.host ?: request.id,
+                        text = getURLFromString(connection.id)?.host ?: connection.id,
                         style = MaterialTheme.typography.caption
                     )
                 }
@@ -114,7 +119,7 @@ fun PartnerEntry(
 fun PreviewPrintConnectionSummary() {
     MeeIdentityAgentTheme {
         PartnerEntry(
-            request = ConsentRequest(from = meeContextMock),
+            connection = meConnectionMock,
             hasEntry = true,
         )
     }

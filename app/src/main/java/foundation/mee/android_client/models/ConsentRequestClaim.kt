@@ -43,10 +43,7 @@ data class ConsentRequestClaim(
     )
 
     fun isIncorrect(): Boolean {
-        return if (type != ConsentEntryType.card) {
-            (isRequired || isOn) && value.isNullOrEmpty()
-        } else
-            true
+        return (isRequired || isOn) && value.isNullOrEmpty()
     }
 
     fun getFieldName(): String {

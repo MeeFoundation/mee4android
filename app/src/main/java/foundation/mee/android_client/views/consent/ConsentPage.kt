@@ -11,7 +11,7 @@ import uniffi.mee_agent.RpAuthResponseWrapper
 import java.net.URI
 
 @Composable
-fun ConsentPage() {
+fun ConsentPage(consentRequest: ConsentRequest) {
 
     val context = LocalContext.current
 
@@ -24,7 +24,7 @@ fun ConsentPage() {
         agentStore.authorize(request)
     }
 
-    ConsentPageNew(onAccept = authorizeRequest)
+    ConsentPageNew(onAccept = authorizeRequest, consentViewModel = ConsentViewModel(consentRequest))
 }
 
 fun onNext(coreData: RpAuthResponseWrapper?, redirectUri: String, context: Context) {

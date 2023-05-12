@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.utils.getURLFromString
@@ -45,7 +44,7 @@ import java.lang.Exception
 
 @Composable
 fun ConsentPageNew(
-    consentViewModel: ConsentViewModel = viewModel(),
+    consentViewModel: ConsentViewModel,
     onAccept: (ConsentRequest) -> RpAuthResponseWrapper?
 ) {
     val data by consentViewModel.uiState.collectAsState()
@@ -87,7 +86,7 @@ fun ConsentPageNew(
                     )
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter(model = "https://mee.foundation/favicon.png"),
+                        painter = painterResource(R.drawable.mee_logo),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier.size(48.dp)

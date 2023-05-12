@@ -1,34 +1,21 @@
 package foundation.mee.android_client.views.consent
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import foundation.mee.android_client.models.ConsentEntryType
 import foundation.mee.android_client.models.ConsentRequest
-import foundation.mee.android_client.models.ConsentRequestClaim
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import uniffi.mee_agent.RetentionDuration
-import uniffi.mee_agent.rpAuthRequestFromJwt
-import javax.inject.Inject
 
-@HiltViewModel
-class ConsentViewModel @Inject constructor(
-    stateHandle: SavedStateHandle
+
+class ConsentViewModel (
+    cnsnt: ConsentRequest
 ) : ViewModel() {
-
-    val argument = checkNotNull(stateHandle.get<String>("consentData"))
-
-    // TODO surround with try/catch while working on new core refactoring
-    val cnsnt = ConsentRequest(rpAuthRequestFromJwt(argument))
-
 
     private val consent = cnsnt.let {
         // Uncomment to test scroll
 
-         /*it.claims += ConsentRequestClaim(
+      /*  it.claims += ConsentRequestClaim(
             id = "Date",
             name = "Date",
             code = "date",
@@ -40,66 +27,66 @@ class ConsentViewModel @Inject constructor(
             isRequired = true,
             type = ConsentEntryType.date
         )
-         it.claims += ConsentRequestClaim(
-             id = "sdf",
-             name = "Date",
-             code = "date",
-             attributeType = "https://schema.org/date",
-             businessPurpose = null,
-             isSensitive = true,
-             value = null,
-             retentionDuration = RetentionDuration.EPHEMERAL,
-             isRequired = true,
-             type = ConsentEntryType.string
-         )
-         it.claims += ConsentRequestClaim(
-             id = "shr",
-             name = "Date",
-             code = "date",
-             attributeType = "https://schema.org/date",
-             businessPurpose = null,
-             isSensitive = true,
-             value = null,
-             retentionDuration = RetentionDuration.EPHEMERAL,
-             isRequired = true,
-             type = ConsentEntryType.address
-         )
-         it.claims += ConsentRequestClaim(
-             id = "shwer",
-             name = "Date",
-             code = "date",
-             attributeType = "https://schema.org/date",
-             businessPurpose = null,
-             isSensitive = true,
-             value = null,
-             retentionDuration = RetentionDuration.EPHEMERAL,
-             isRequired = true,
-             type = ConsentEntryType.address
-         )
-         it.claims += ConsentRequestClaim(
-             id = "shefr",
-             name = "Date",
-             code = "date",
-             attributeType = "https://schema.org/date",
-             businessPurpose = null,
-             isSensitive = true,
-             value = null,
-             retentionDuration = RetentionDuration.EPHEMERAL,
-             isRequired = true,
-             type = ConsentEntryType.address
-         )
-         it.claims += ConsentRequestClaim(
-             id = "shsdtefr",
-             name = "Date",
-             code = "date",
-             attributeType = "https://schema.org/date",
-             businessPurpose = null,
-             isSensitive = true,
-             value = null,
-             retentionDuration = RetentionDuration.EPHEMERAL,
-             isRequired = true,
-             type = ConsentEntryType.address
-         )
+        it.claims += ConsentRequestClaim(
+            id = "sdf",
+            name = "Date",
+            code = "date",
+            attributeType = "https://schema.org/date",
+            businessPurpose = null,
+            isSensitive = true,
+            value = null,
+            retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
+            isRequired = true,
+            type = ConsentEntryType.string
+        )
+        it.claims += ConsentRequestClaim(
+            id = "shr",
+            name = "Date",
+            code = "date",
+            attributeType = "https://schema.org/date",
+            businessPurpose = null,
+            isSensitive = true,
+            value = null,
+            retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
+            isRequired = true,
+            type = ConsentEntryType.address
+        )
+        it.claims += ConsentRequestClaim(
+            id = "shwer",
+            name = "Date",
+            code = "date",
+            attributeType = "https://schema.org/date",
+            businessPurpose = null,
+            isSensitive = true,
+            value = null,
+            retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
+            isRequired = true,
+            type = ConsentEntryType.address
+        )
+        it.claims += ConsentRequestClaim(
+            id = "shefr",
+            name = "Date",
+            code = "date",
+            attributeType = "https://schema.org/date",
+            businessPurpose = null,
+            isSensitive = true,
+            value = null,
+            retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
+            isRequired = true,
+            type = ConsentEntryType.address
+        )
+        it.claims += ConsentRequestClaim(
+            id = "shsdtefr",
+            name = "Date",
+            code = "date",
+            attributeType = "https://schema.org/date",
+            businessPurpose = null,
+            isSensitive = true,
+            value = null,
+            retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
+            isRequired = true,
+            type = ConsentEntryType.address
+        )
         it.claims += ConsentRequestClaim(
             id = "shktykefr",
             name = "Date",
@@ -108,7 +95,7 @@ class ConsentViewModel @Inject constructor(
             businessPurpose = null,
             isSensitive = true,
             value = null,
-            retentionDuration = RetentionDuration.EPHEMERAL,
+            retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
             isRequired = false,
             type = ConsentEntryType.address
         )
@@ -120,7 +107,7 @@ class ConsentViewModel @Inject constructor(
             businessPurpose = null,
             isSensitive = true,
             value = null,
-            retentionDuration = RetentionDuration.EPHEMERAL,
+            retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
             isRequired = false,
             type = ConsentEntryType.address
         )
@@ -132,7 +119,7 @@ class ConsentViewModel @Inject constructor(
             businessPurpose = null,
             isSensitive = true,
             value = null,
-            retentionDuration = RetentionDuration.EPHEMERAL,
+            retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
             isRequired = false,
             type = ConsentEntryType.address
         )
@@ -144,7 +131,7 @@ class ConsentViewModel @Inject constructor(
             businessPurpose = null,
             isSensitive = true,
             value = null,
-            retentionDuration = RetentionDuration.EPHEMERAL,
+            retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
             isRequired = false,
             type = ConsentEntryType.address
         )*/

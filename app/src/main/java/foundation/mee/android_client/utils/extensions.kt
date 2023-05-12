@@ -18,7 +18,8 @@ fun RpAuthRequest(from: ConsentRequest): RpAuthRequest {
         from.nonce,
         from.clientId,
         from.redirectUri,
-        from.presentationDefinition
+        from.presentationDefinition,
+        from.responseType
     )
 
 }
@@ -29,7 +30,12 @@ fun OidcClientMetadata(from: PartnerMetadata): OidcClientMetadata =
         from.name,
         from.logoUrl,
         from.contacts,
-        from.jwks
+        from.jwks,
+        from.jwksUri,
+        from.idTokenSignedResponseAlg,
+        from.idTokenEncryptedResponseAlg,
+        from.idTokenEncryptedResponseEnc,
+        from.subjectSyntaxTypesSupported
     )
 
 
