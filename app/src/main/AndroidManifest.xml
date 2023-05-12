@@ -20,21 +20,21 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <!-- TODO: research of how to support lower API versions and use MeeIdentityAgent theme here (if possible) -->
-<!--            android:theme="@style/Theme.MeeIdentityAgent">-->
+            <!--            android:theme="@style/Theme.MeeIdentityAgent">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
-                    android:host="auth.mee.foundation" />
+                    android:host="auth.mee.foundation"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
     </application>

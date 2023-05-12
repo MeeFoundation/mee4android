@@ -56,7 +56,7 @@ android {
 apply plugin: 'org.mozilla.rust-android-gradle.rust-android'
 
 cargo {
-    module  = "../mee-core"       // Or whatever directory contains your Cargo.toml
+    module = "../mee-core"       // Or whatever directory contains your Cargo.toml
     libname = "uniffi_mee_agent"          // Or whatever matches Cargo.toml's [package] name.
     targets = ["arm64", "x86_64"]  // See bellow for a longer list of options
     targetDirectory = "../mee-core/target"
@@ -80,7 +80,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.5.3"
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    implementation  "androidx.hilt:hilt-navigation-compose:1.0.0"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
     implementation("androidx.biometric:biometric:1.1.0")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     testImplementation 'junit:junit:4.13.2'
@@ -99,9 +99,9 @@ tasks.whenTaskAdded { task ->
 
 android.applicationVariants.all { variant ->
     def t = tasks.register("generate${variant.name.capitalize()}UniFFIBindings", Exec) {
-        workingDir "${project.projectDir}"
+        workingDir '../mee-core'
         // Runs the bindings generation, note that you must have uniffi-bindgen installed and in your PATH environment variable
-        commandLine 'uniffi-bindgen', 'generate', "${rootDir}/mee-core/mee_agent/src/mee.udl", '--language', 'kotlin', '--out-dir', "${buildDir}/generated/source/uniffi/${variant.name}/java"
+        commandLine 'cargo', 'run', '--bin', 'mee_uniffi_bindgen', 'generate', "${rootDir}/mee-core/mee_agent/src/mee.udl", '--language', 'kotlin', '--out-dir', "${buildDir}/generated/source/uniffi/${variant.name}/java"
     }
     variant.javaCompileProvider.get().dependsOn(t)
     def sourceSet = variant.sourceSets.find { it.name == variant.name }

@@ -5,33 +5,31 @@ import uniffi.mee_agent.*
 // TODO: Think about removing "" and adding Option type
 data class ConsentRequest(
     val id: String,
-    val scope: OidcScopeWrapper,
+    val scope: OidcScopeList,
     var claims: List<ConsentRequestClaim>, // TODO set var to val after scroll tests in ConsentViewModel
     val clientId: String = "",
     val nonce: String = "",
     val redirectUri: Url = "",
     val isCrossDeviceFlow: Boolean = false,
     var presentationDefinition: String? = "",
-    val clientMetadata: PartnerMetadata
+    val clientMetadata: PartnerMetadata,
+    val responseType: OidcResponseType
 ) {
     // TODO: check for shallow-copy / deep-copy later on
     constructor(
         from: MeeContext,
-        clientId: String = "",
-        nonce: String = "",
-        redirectUri: String = "",
-        isCrossDeviceFlow: Boolean = false,
-        clientMetadata: PartnerMetadata? = null
+        consentRequest: ConsentRequest
     ) : this(
         from.id,
-        OidcScopeWrapper.Set(scope = listOf(OidcScope.OPENID)),
-        from.claims,
-        clientId,
-        nonce,
-        redirectUri,
-        isCrossDeviceFlow,
+        OidcScopeList(listOf()),
+        from.attributes,
+        consentRequest.clientId,
+        consentRequest.nonce,
+        consentRequest.redirectUri,
+        consentRequest.isCrossDeviceFlow,
         "",
-        clientMetadata ?: from.clientMetadata
+        consentRequest.clientMetadata,
+        OidcResponseType.ID_TOKEN
     )
 
     constructor(
@@ -40,12 +38,13 @@ data class ConsentRequest(
         from.redirectUri,
         from.scope,
         from.claims?.idToken?.let { claimsMapper(it) } ?: listOf(),
-        from.clientId ?: "",
+        from.clientId,
         from.nonce,
         from.redirectUri,
         false,
         from.presentationDefinition,
-        PartnerMetadata(from.clientMetadata!!)
+        PartnerMetadata(from.clientMetadata),
+        from.responseType
     )
 }
 

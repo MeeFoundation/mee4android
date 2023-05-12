@@ -11,20 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import foundation.mee.android_client.models.MeeConnection
 import foundation.mee.android_client.models.mobileApps
-import foundation.mee.android_client.models.ConsentRequest
-import foundation.mee.android_client.models.MeeContext
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
 fun ConsentsList(
     modifier: Modifier = Modifier,
     title: String,
-    meeContexts: List<MeeContext> = emptyList(),
+    meeConnections: List<MeeConnection> = emptyList(),
     hasEntry: Boolean = false
 ) {
-    Column(modifier = Modifier.padding(horizontal = 16.dp),
-    verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         Text(
             text = title,
             style = MaterialTheme.typography.h6,
@@ -33,9 +34,11 @@ fun ConsentsList(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(items = meeContexts) { context ->
-                PartnerEntry(request = ConsentRequest(from = context),
-                    hasEntry = hasEntry)
+            items(items = meeConnections) { connection ->
+                PartnerEntry(
+                    connection = connection,
+                    hasEntry = hasEntry
+                )
             }
         }
     }
@@ -45,6 +48,6 @@ fun ConsentsList(
 @Composable
 fun ConsentsListPreview() {
     MeeIdentityAgentTheme {
-        ConsentsList(title = "Sites", meeContexts = mobileApps)
+        ConsentsList(title = "Sites", meeConnections = mobileApps)
     }
 }
