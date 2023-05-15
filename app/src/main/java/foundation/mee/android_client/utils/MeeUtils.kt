@@ -15,6 +15,10 @@ fun getURLFromString(url: String): URL? {
     }
 }
 
+fun getHostname(url: String): String {
+    return getURLFromString(url)?.host ?: url
+}
+
 
 fun linkToWebpage(context: Context, uri: Uri) {
     val openURL = Intent(Intent.ACTION_VIEW)

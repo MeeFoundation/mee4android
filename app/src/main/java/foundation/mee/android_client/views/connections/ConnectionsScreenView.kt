@@ -4,23 +4,55 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import foundation.mee.android_client.models.mobileApps
-import foundation.mee.android_client.models.PartnersRegistry
-import foundation.mee.android_client.models.sites
+import foundation.mee.android_client.models.*
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
+import foundation.mee.android_client.utils.getHostname
 
 @Composable
 fun ConnectionsScreen() {
-    Scaffold(
-        topBar = {
-            ConnectionsScreenTitle()
+
+    val context = LocalContext.current
+    val appDir = context.applicationInfo.dataDir
+    val agentStore = MeeAgentStore("$appDir/mee")
+
+    val data = agentStore.getAllItems()
+
+    val existingPartnersWebApp =
+        data?.filter { x ->
+            when (val connType = x.value) {
+                is MeeConnectionType.Siop -> when (connType.value.clientMetadata.type) {
+                    ClientType.web -> agentStore.getLastConnectionConsentById(x.id) != null
+                    else -> false
+                }
+                else -> false
+            }
         }
-    ) { padding ->
+
+    val existingPartnersMobileApp =
+        data?.filter { x ->
+            when (val connType = x.value) {
+                is MeeConnectionType.Siop -> when (connType.value.clientMetadata.type) {
+                    ClientType.mobile -> agentStore.getLastConnectionConsentById(x.id) != null
+                    else -> false
+                }
+                else -> false
+            }
+        }
+
+    val otherPartnersWebApp =
+        PartnersRegistry.shared.filter { x ->
+            existingPartnersWebApp?.find { getHostname(it.id) == getHostname(x.id) } == null
+        }
+
+    Scaffold(topBar = {
+        ConnectionsScreenTitle()
+    }) { padding ->
         ConnectionsContent(
-            connections = sites,
-            mobileConnections = mobileApps,
-            partnerConnections = PartnersRegistry.shared,
+            connections = existingPartnersWebApp ?: listOf(),
+            mobileConnections = existingPartnersMobileApp ?: listOf(),
+            partnerConnections = otherPartnersWebApp,
             modifier = Modifier.padding(padding),
         )
 
