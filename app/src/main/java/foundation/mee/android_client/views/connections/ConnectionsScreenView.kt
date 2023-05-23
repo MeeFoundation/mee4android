@@ -5,22 +5,20 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import foundation.mee.android_client.models.mobileApps
-import foundation.mee.android_client.models.PartnersRegistry
-import foundation.mee.android_client.models.sites
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
 fun ConnectionsScreen() {
-    Scaffold(
-        topBar = {
-            ConnectionsScreenTitle()
-        }
-    ) { padding ->
+
+    val connectionsState = rememberConnectionsState()
+
+    Scaffold(topBar = {
+        ConnectionsScreenTitle()
+    }) { padding ->
         ConnectionsContent(
-            connections = sites,
-            mobileConnections = mobileApps,
-            partnerConnections = PartnersRegistry.shared,
+            connections = connectionsState.existingPartnersWebApp,
+            mobileConnections = connectionsState.existingPartnersMobileApp,
+            partnerConnections = connectionsState.otherPartnersWebApp,
             modifier = Modifier.padding(padding),
         )
 

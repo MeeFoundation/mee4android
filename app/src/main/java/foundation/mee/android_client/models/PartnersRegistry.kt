@@ -30,6 +30,37 @@ object PartnersRegistry {
                         subjectSyntaxType = ConnectionTypeSubject.DidKey("")
                     )
                 )
+            ),
+            MeeConnection(
+                id = "https://oldeyorktimes.com/",
+                name = "The Olde York Times",
+                value = MeeConnectionType.Siop(
+                    SiopConnectionType(
+                        redirectUri = "https://oldeyorktimes.com/",
+                        clientMetadata = PartnerMetadata(
+                            from = OidcClientMetadata(
+                                applicationType = null,
+                                clientName = "The Olde York Times",
+                                logoUri = "https://oldeyorktimes.com/favicon.png",
+                                contacts = emptyList(),
+                                jwks = null,
+                                jwksUri = null,
+                                idTokenSignedResponseAlg = null,
+                                idTokenEncryptedResponseAlg = null,
+                                idTokenEncryptedResponseEnc = null,
+                                subjectSyntaxTypesSupported = listOf()
+                            )
+                        ),
+                        subjectSyntaxType = ConnectionTypeSubject.DidKey("")
+                    )
+                )
+            ),
+            MeeConnection(
+                id = "https://google.com",
+                name = "Google Account",
+                value = MeeConnectionType.Gapi(
+                    GapiConnectionType(scopes = listOf())
+                )
             )
         )
     }

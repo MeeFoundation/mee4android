@@ -46,7 +46,7 @@ class MeeAgentStore(appDir: String) {
         }
     }
 
-    private fun getLastConnectionConsentById(id: String): MeeContext? {
+    fun getLastConnectionConsentById(id: String): MeeContext? {
         return try {
             val coreConsent = agent.siopLastConsentByConnectionId(connId = id)
             if (coreConsent != null) {

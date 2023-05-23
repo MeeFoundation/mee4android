@@ -1,8 +1,10 @@
 package foundation.mee.android_client
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.compose.foundation.layout.*
@@ -18,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import foundation.mee.android_client.controller.biometry.BiometryHandler
 import foundation.mee.android_client.effects.OnLifecycleEvent
 import foundation.mee.android_client.navigation.MeeNavGraph
+import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.views.MeeWhiteScreen
 
@@ -76,6 +79,13 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        val model: NavViewModel by viewModels()
+        model.navigator.navController.handleDeepLink(intent)
     }
 
 }

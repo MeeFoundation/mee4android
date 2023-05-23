@@ -29,12 +29,14 @@ fun Expander(
     Surface(
         modifier = modifier
     ) {
-        Column(modifier = Modifier.clickableWithoutRipple
-        { onChangeExpanded() }) {
+        Column {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickableWithoutRipple
+                    { onChangeExpanded() }
             ) {
                 Text(
                     text = title,
