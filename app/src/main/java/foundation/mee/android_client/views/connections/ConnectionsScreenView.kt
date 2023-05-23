@@ -4,55 +4,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import foundation.mee.android_client.models.*
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.utils.getHostname
 
 @Composable
 fun ConnectionsScreen() {
 
-    val context = LocalContext.current
-    val appDir = context.applicationInfo.dataDir
-    val agentStore = MeeAgentStore("$appDir/mee")
-
-    val data = agentStore.getAllItems()
-
-    val existingPartnersWebApp =
-        data?.filter { x ->
-            when (val connType = x.value) {
-                is MeeConnectionType.Siop -> when (connType.value.clientMetadata.type) {
-                    ClientType.web -> agentStore.getLastConnectionConsentById(x.id) != null
-                    else -> false
-                }
-                else -> false
-            }
-        }
-
-    val existingPartnersMobileApp =
-        data?.filter { x ->
-            when (val connType = x.value) {
-                is MeeConnectionType.Siop -> when (connType.value.clientMetadata.type) {
-                    ClientType.mobile -> agentStore.getLastConnectionConsentById(x.id) != null
-                    else -> false
-                }
-                else -> false
-            }
-        }
-
-    val otherPartnersWebApp =
-        PartnersRegistry.shared.filter { x ->
-            existingPartnersWebApp?.find { getHostname(it.id) == getHostname(x.id) } == null
-        }
+    val connectionsState = rememberConnectionsState()
 
     Scaffold(topBar = {
         ConnectionsScreenTitle()
     }) { padding ->
         ConnectionsContent(
-            connections = existingPartnersWebApp ?: listOf(),
-            mobileConnections = existingPartnersMobileApp ?: listOf(),
-            partnerConnections = otherPartnersWebApp,
+            connections = connectionsState.existingPartnersWebApp,
+            mobileConnections = connectionsState.existingPartnersMobileApp,
+            partnerConnections = connectionsState.otherPartnersWebApp,
             modifier = Modifier.padding(padding),
         )
 
