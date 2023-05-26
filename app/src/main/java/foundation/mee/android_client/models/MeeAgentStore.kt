@@ -1,18 +1,19 @@
 package foundation.mee.android_client.models
 
 import android.util.Log
-import uniffi.mee_agent.MeeAgent
-import uniffi.mee_agent.MeeAgentConfig
-import uniffi.mee_agent.MeeAgentDidRegistryConfig
-import uniffi.mee_agent.getAgent
 import foundation.mee.android_client.utils.RpAuthRequest
 import uniffi.mee_agent.*
+import java.io.File
 
 
 class MeeAgentStore(appDir: String) {
     private val agent: MeeAgent
 
     init {
+        val file: File = File(appDir)
+        if (!file.exists()) {
+            file.createNewFile()
+        }
         agent = getAgent(
             MeeAgentConfig(
                 appDir,

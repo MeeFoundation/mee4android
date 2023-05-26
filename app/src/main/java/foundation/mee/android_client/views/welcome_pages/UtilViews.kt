@@ -52,14 +52,3 @@ fun WelcomePageIconBullet(
     )
 }
 
-@Composable
-fun WelcomePageSelector(
-    page: Int,
-    action: () -> Unit = {}
-) {
-    when (page) {
-        // TODO: Add new pages here
-        WelcomePageEnum.FIRST_PAGE.pageNum -> WelcomePageFirst()
-        WelcomePageEnum.SECOND_PAGE.pageNum -> WelcomePageSecond(action = action)
-    }
-}

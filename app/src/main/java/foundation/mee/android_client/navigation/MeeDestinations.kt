@@ -4,5 +4,6 @@ enum class MeeDestinations(val route: String) {
     WELCOME_SCREEN("welcome_pages"),
     CONNECTIONS("connections"),
     MANAGE("manage"),
-    CONSENT("consent")
+    CONSENT("consent"),
+    INITIAL_FLOW("initial_flow")
 }
