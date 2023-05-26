@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +23,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.controller.biometry.BiometryHandler
+import foundation.mee.android_client.controller.biometry.BiometryState
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.NavViewModel
@@ -40,7 +43,6 @@ enum class InitialFlowSteps {
 fun InitialFlow(
     viewModel: NavViewModel = hiltViewModel(),
 ) {
-    val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
     var currentStep by remember {
         mutableStateOf(InitialFlowSteps.Initial)
@@ -48,7 +50,14 @@ fun InitialFlow(
     val navigator = viewModel.navigator
     val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
     val coroutineScope = rememberCoroutineScope()
-
+    val biometryEnabled by settingsDataStore.getBiometricAuthEnabledSetting().collectAsState(
+        initial = BiometryState.uninitialized
+    )
+    LaunchedEffect(biometryEnabled) {
+        if (biometryEnabled == BiometryState.disabled) {
+            currentStep = InitialFlowSteps.AllSet
+        }
+    }
     when (currentStep) {
         InitialFlowSteps.Initial -> {
             Box {

@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.mee.android_client.controller.biometry.BiometryHandler
+import foundation.mee.android_client.controller.biometry.BiometryState
 import foundation.mee.android_client.effects.OnLifecycleEvent
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.navigation.MeeNavGraph
@@ -35,6 +36,9 @@ class MainActivity : FragmentActivity() {
             val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
             val initialFlowDone by settingsDataStore.getInitialFlowDoneSetting().collectAsState(
                 initial = null
+            )
+            val biometryEnabled by settingsDataStore.getBiometricAuthEnabledSetting().collectAsState(
+                initial = BiometryState.uninitialized
             )
 
             MeeIdentityAgentTheme {
@@ -62,7 +66,10 @@ class MainActivity : FragmentActivity() {
                     }
 
                     if (initialFlowDone != null) {
-                        if (loginSuccess || initialFlowDone == false) {
+                        if (loginSuccess
+                            || initialFlowDone == false
+                            || biometryEnabled == BiometryState.disabled
+                        ) {
                             Box(modifier = Modifier.fillMaxSize()) {
 
                                 Box(
