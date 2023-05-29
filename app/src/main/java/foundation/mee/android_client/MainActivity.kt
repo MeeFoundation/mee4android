@@ -18,7 +18,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import foundation.mee.android_client.controller.biometry.BiometryHandler
+import foundation.mee.android_client.controller.biometry.BiometryState
 import foundation.mee.android_client.effects.OnLifecycleEvent
+import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.navigation.MeeNavGraph
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
@@ -31,6 +33,14 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
+            val initialFlowDone by settingsDataStore.getInitialFlowDoneSetting().collectAsState(
+                initial = null
+            )
+            val biometryEnabled by settingsDataStore.getBiometricAuthEnabledSetting().collectAsState(
+                initial = BiometryState.uninitialized
+            )
+
             MeeIdentityAgentTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -43,39 +53,48 @@ class MainActivity : FragmentActivity() {
 
                     val biometricManager = BiometricManager.from(this)
 
-                    if (biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS) {
-                        BiometryHandler(
-                            activityContext = ctx,
-                            onSuccessfulAuth = { loginSuccess = true })
-                    } else {
-                        loginSuccess = true
-                    }
+
                     OnLifecycleEvent { owner, event ->
                         Log.d("Lifecycle Event: ", event.toString())
                         when (event) {
                             Lifecycle.Event.ON_STOP -> {
                                 loginSuccess = false
                             }
+
                             else -> null
                         }
                     }
 
-                    if (loginSuccess) {
-                        Box(modifier = Modifier.fillMaxSize()) {
+                    if (initialFlowDone != null) {
+                        if (loginSuccess
+                            || initialFlowDone == false
+                            || biometryEnabled == BiometryState.disabled
+                        ) {
+                            Box(modifier = Modifier.fillMaxSize()) {
 
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .zIndex(1f)
-                            ) {
-                                MeeNavGraph()
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .zIndex(1f)
+                                ) {
+                                    MeeNavGraph(initialFlowDone = initialFlowDone == true)
+                                }
+
                             }
-
+                        } else {
+                            MeeWhiteScreen()
+                            if (
+                                biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
+                            ) {
+                                BiometryHandler(
+                                    activityContext = ctx,
+                                    onSuccessfulAuth = { loginSuccess = true })
+                            } else {
+                                loginSuccess = true
+                            }
                         }
-                    } else {
-                        MeeWhiteScreen()
-                    }
 //
+                    }
                 }
             }
         }

@@ -1,6 +1,7 @@
 package foundation.mee.android_client.controller.biometry
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
@@ -12,8 +13,16 @@ import androidx.lifecycle.LifecycleOwner
 import foundation.mee.android_client.effects.OnLifecycleEvent
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.views.BiometryDialog
+import foundation.mee.android_client.views.MeeWhiteScreen
 import kotlinx.coroutines.launch
 
+
+enum class BiometryState(val state: String) {
+    disabled("disabled"),
+    enabled("enabled"),
+    unsaved("unsaved"),
+    uninitialized("uninitialized")
+}
 @Composable
 fun BiometryHandler(
     activityContext: FragmentActivity,
@@ -21,10 +30,11 @@ fun BiometryHandler(
 ) {
     val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
 
-    val biometryAsked by settingsDataStore.getBiometricAuthAskedSetting().collectAsState(
-        initial = true
+    val biometryEnabled by settingsDataStore.getBiometricAuthEnabledSetting().collectAsState(
+        initial = BiometryState.uninitialized
     )
 
+    val coroutineScope = rememberCoroutineScope()
     var biometryAttempts by rememberSaveable {
         mutableStateOf(0)
     }
@@ -47,36 +57,35 @@ fun BiometryHandler(
             else -> null
         }
     }
+    Box {
+        MeeWhiteScreen()
 
-    val coroutineScope = rememberCoroutineScope()
-    if (!biometryAsked) {
-        BiometryDialog(
-            onDismiss = {
-                coroutineScope.launch {
-                    settingsDataStore.saveBiometricAuthAskedSetting(false)
-                }
-            },
-            onAccept = {
-                coroutineScope.launch {
-                    settingsDataStore.saveBiometricAuthAskedSetting(true)
-                    settingsDataStore.saveBiometricAuthSetting(true)
-                }
-            },
-            onReject = {
-                coroutineScope.launch {
-                    settingsDataStore.saveBiometricAuthAskedSetting(true)
-                    settingsDataStore.saveBiometricAuthSetting(false)
-                }
-            },
-        )
+        if (biometryEnabled == BiometryState.unsaved) {
+            BiometryDialog(
+                onDismiss = {
+                    coroutineScope.launch {
+                        settingsDataStore.saveBiometricAuthSetting(BiometryState.disabled)
+                    }
+                },
+                onAccept = {
+                    coroutineScope.launch {
+                        settingsDataStore.saveBiometricAuthSetting(BiometryState.enabled)
+                        biometryAttempts += 1
+                    }
+
+                },
+                onReject = {
+                    coroutineScope.launch {
+                        settingsDataStore.saveBiometricAuthSetting(BiometryState.disabled)
+                    }
+                },
+            )
+        }
     }
 
-    val biometryEnabled by settingsDataStore.getBiometricAuthEnabledSetting().collectAsState(
-        initial = false
-    )
 
     fun auth() {
-//        if (biometryEnabled) {
+        if (biometryEnabled == BiometryState.enabled) {
         showBiometricPrompt(activityContext, onSuccess = {
             if (it) {
                 onSuccessfulAuth()
@@ -84,7 +93,7 @@ fun BiometryHandler(
                 biometryAttempts += 1
             }
         })
-//        }
+        }
     }
 
     LaunchedEffect(biometryAttempts) {
