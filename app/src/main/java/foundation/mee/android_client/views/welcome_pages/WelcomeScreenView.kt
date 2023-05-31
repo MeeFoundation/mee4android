@@ -1,5 +1,6 @@
 package foundation.mee.android_client.views.welcome_pages
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -25,7 +26,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun WelcomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: NavViewModel = hiltViewModel()
+    viewModel: NavViewModel = hiltViewModel(),
+    screenImages: Array<Int>,
+    onNext: () -> Unit,
 ) {
     Surface(
         color = MeeYellowColor
@@ -40,7 +43,6 @@ fun WelcomeScreen(
         ) {
             val pageCount = size<WelcomePageEnum>()
             val pagerState = rememberPagerState()
-            val navigator = viewModel.navigator
 
             HorizontalPager(
                 pageCount = pageCount,
@@ -48,13 +50,12 @@ fun WelcomeScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) { page ->
-                WelcomePageSelector(
-                    page = page,
-                    action = {
-                        navigator.popBackStack()
-                        navigator.navigate(MeeDestinations.CONNECTIONS.route)
-                    }
+                WelcomePageTab(
+                    screenImages[page],
+                    isLast = page == screenImages.size - 1,
+                    onNext = onNext
                 )
+
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -138,7 +139,13 @@ fun WelcomeScreen(
 @Composable
 fun PagerIndicatorPreview() {
     MeeIdentityAgentTheme {
-        WelcomeScreen()
+        WelcomeScreen(
+            screenImages = arrayOf(
+                R.drawable.welcome_screen1,
+                R.drawable.welcome_screen2,
+            )) {
+
+        }
     }
 }
 
@@ -146,6 +153,12 @@ fun PagerIndicatorPreview() {
 @Composable
 fun PagerIndicatorFigmaScreenPreview() {
     MeeIdentityAgentTheme {
-        WelcomeScreen()
+        WelcomeScreen(
+            screenImages = arrayOf(
+                R.drawable.welcome_screen1,
+                R.drawable.welcome_screen2,
+            )) {
+
+        }
     }
 }

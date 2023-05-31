@@ -2,10 +2,6 @@ package foundation.mee.android_client.models
 
 import android.os.Environment
 import android.util.Log
-import uniffi.mee_agent.MeeAgent
-import uniffi.mee_agent.MeeAgentConfig
-import uniffi.mee_agent.MeeAgentDidRegistryConfig
-import uniffi.mee_agent.getAgent
 import foundation.mee.android_client.utils.RpAuthRequest
 import foundation.mee.android_client.utils.getHostname
 import uniffi.mee_agent.*
@@ -23,7 +19,6 @@ object MeeAgentStore {
         if (!file.exists()) {
             file.createNewFile()
         }
-
         agent = getAgent(
             MeeAgentConfig(
                 dsUrl,

@@ -20,68 +20,6 @@ import foundation.mee.android_client.views.animations.ConsentPageAnimation
 import kotlinx.coroutines.delay
 
 @Composable
-// TODO: use as a reference just in case
-fun LoadingScreensOld() {
-    var currentProgress by remember {
-        mutableStateOf(0f)
-    }
-    var currentIndex by remember {
-        mutableStateOf(0)
-    }
-    var isFinished by remember {
-        mutableStateOf(false)
-    }
-    val sizeBox by animateDpAsState(
-        targetValue = if (isFinished) 220.dp * 6 else 220.dp,
-        animationSpec = tween(durationMillis = 2000)
-    )
-
-    val alpha by animateFloatAsState(
-        targetValue = if (isFinished) 0f else 1f,
-        animationSpec = tween(durationMillis = 1000)
-    )
-
-    val scaleFactor by animateFloatAsState(
-        targetValue = if (isFinished) 6f else 1f,
-        animationSpec = tween(durationMillis = 2000)
-    )
-
-    LoadingScreenWhitePage(
-        progress = currentProgress,
-        text = loadingScreenTexts[currentIndex]?.let { stringResource(id = it) },
-        modifierBox = Modifier
-            .size(sizeBox),
-        modifierLogo = Modifier
-            .graphicsLayer(scaleX = scaleFactor, scaleY = scaleFactor)
-            .alpha(alpha = alpha),
-        modifierCircle = Modifier
-            .graphicsLayer(scaleX = scaleFactor, scaleY = scaleFactor)
-            .alpha(alpha = alpha)
-    )
-    LaunchedEffect(key1 = currentIndex) {
-        while (currentProgress < 1) {
-            currentIndex = if (currentProgress < 0.1) {
-                0
-            } else if (currentProgress < 0.4) {
-                1
-            } else if (currentProgress < 0.7) {
-                2
-            } else if (currentProgress < 0.9) {
-                3
-            } else {
-                4
-            }
-            delay(100)
-            currentProgress += 0.02f
-        }
-        if (currentProgress >= 1) {
-            isFinished = true
-        }
-
-    }
-}
-
-@Composable
 fun LoadingScreenWithMeeLogo(
     startDelay: Long = 0,
     circularIndicatorLoadSpeed: Int = 5000,
@@ -134,14 +72,6 @@ fun LoadingScreenWithMeeLogo(
             }
         }
         circularIndicatorFinished = true
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoadingScreensOldPreview() {
-    MeeIdentityAgentTheme {
-        LoadingScreensOld()
     }
 }
 
