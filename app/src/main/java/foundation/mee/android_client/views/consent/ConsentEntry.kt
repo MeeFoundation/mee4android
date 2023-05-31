@@ -23,10 +23,12 @@ import foundation.mee.android_client.ui.components.clickableWithoutRipple
 @Composable
 fun ConsentEntry(
     entry: ConsentRequestClaim,
-    updateValue: (String, String) -> Unit,
-    updateIsOn: (String, Boolean) -> Unit,
-    updateIsOpen: (String, Boolean) -> Unit,
-    onDurationPopupShow: () -> Unit
+    modifier: Modifier = Modifier,
+    isReadOnly: Boolean = false,
+    updateValue: (String, String) -> Unit = { _, _ -> },
+    updateIsOn: (String, Boolean) -> Unit = { _, _ -> },
+    updateIsOpen: (String, Boolean) -> Unit = { _, _ -> },
+    onDurationPopupShow: () -> Unit = {},
 ) {
 
     val onChange = {
@@ -37,7 +39,7 @@ fun ConsentEntry(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -47,12 +49,12 @@ fun ConsentEntry(
                     id = getConsentEntryIconByType(entry.type),
                 ),
                 contentDescription = null,
-                tint = if (entry.isOn || entry.isRequired) MeeGreenPrimaryColor else ChevronRightIconColor,
+                tint = if (entry.isOn || entry.isRequired || isReadOnly) MeeGreenPrimaryColor else ChevronRightIconColor,
                 modifier = Modifier
                     .height(18.dp)
                     .width(18.dp)
                     .clickableWithoutRipple {
-                        if (entry.isRequired || entry.isOn) {
+                        if ((entry.isRequired || entry.isOn) && !isReadOnly) {
                             updateIsOpen(entry.id, !entry.isOpen)
                         }
                     }
@@ -80,12 +82,12 @@ fun ConsentEntry(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if ((entry.isRequired && entry.isOpen) || (!entry.isRequired && entry.isOn && entry.isOpen)) {
+                if (!isReadOnly && (entry.isRequired && entry.isOpen) || (!entry.isRequired && entry.isOn && entry.isOpen)) {
                     ConsentSimpleEntryInput(entry = entry, updateValue = updateValue)
                 } else {
                     Text(
                         text = entry.getFieldName(),
-                        color = if (entry.isRequired || entry.isOn) MeeBrand else ChevronRightIconColor,
+                        color = if (entry.isRequired || entry.isOn || isReadOnly) MeeBrand else ChevronRightIconColor,
                         fontFamily = publicSansFamily,
                         fontSize = 18.sp,
                         fontWeight = FontWeight(400),
@@ -101,23 +103,25 @@ fun ConsentEntry(
 
             }
         }
-        if (!entry.isRequired) {
-            Toggle(entry.isOn, onChange, modifier = Modifier.height(16.dp))
-        } else {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    id = R.drawable.icon_chevron_right,
-                ),
-                contentDescription = null,
-                tint = DefaultGray400,
-                modifier = Modifier
-                    .padding(start = 27.dp)
-                    .width(18.dp)
-                    .clickableWithoutRipple {
-                        onDurationPopupShow()
-                    }
-            )
+        if (!isReadOnly) {
+            if (!entry.isRequired) {
+                Toggle(entry.isOn, onChange, modifier = Modifier.height(16.dp))
+            } else {
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        id = R.drawable.icon_chevron_right,
+                    ),
+                    contentDescription = null,
+                    tint = DefaultGray400,
+                    modifier = Modifier
+                        .padding(start = 27.dp)
+                        .width(18.dp)
+                        .clickableWithoutRipple {
+                            onDurationPopupShow()
+                        }
+                )
 
+            }
         }
 
     }

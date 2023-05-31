@@ -11,8 +11,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.NavViewModel
+import foundation.mee.android_client.ui.components.RejectButton
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.views.buttons.RejectButton
 
 @Composable
 fun WelcomePageFirst() {

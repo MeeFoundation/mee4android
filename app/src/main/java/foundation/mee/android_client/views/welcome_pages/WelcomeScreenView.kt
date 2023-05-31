@@ -51,7 +51,7 @@ fun WelcomeScreen(
                 WelcomePageSelector(
                     page = page,
                     action = {
-                        navigator.navController.popBackStack()
+                        navigator.popBackStack()
                         navigator.navigate(MeeDestinations.CONNECTIONS.route)
                     }
                 )

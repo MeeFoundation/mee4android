@@ -46,14 +46,12 @@ fun MeeNavGraph(
         }
 
         composable(
-            "${MANAGE.route}/{connectionId}",
-            arguments = listOf(navArgument("connectionId") {
+            "${MANAGE.route}/{connectionHostname}",
+            arguments = listOf(navArgument("connectionHostname") {
                 type = NavType.StringType
             })
-        ) { backStackEntry ->
-            ManageConnection(
-                backStackEntry.arguments?.getString("connectionId") ?: "empty connectionId"
-            )
+        ) {
+            ManageConnection()
         }
 
         composable(

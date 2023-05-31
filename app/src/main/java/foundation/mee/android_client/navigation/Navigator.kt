@@ -12,4 +12,8 @@ class Navigator @Inject constructor() {
     fun navigate(path: String) {
         navController.navigate(path)
     }
+
+    fun popBackStack(): Boolean {
+        return navController.popBackStack()
+    }
 }

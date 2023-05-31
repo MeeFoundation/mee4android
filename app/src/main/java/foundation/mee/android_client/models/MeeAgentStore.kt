@@ -1,21 +1,32 @@
 package foundation.mee.android_client.models
 
+import android.os.Environment
 import android.util.Log
 import uniffi.mee_agent.MeeAgent
 import uniffi.mee_agent.MeeAgentConfig
 import uniffi.mee_agent.MeeAgentDidRegistryConfig
 import uniffi.mee_agent.getAgent
 import foundation.mee.android_client.utils.RpAuthRequest
+import foundation.mee.android_client.utils.getHostname
 import uniffi.mee_agent.*
+import java.io.File
 
-
-class MeeAgentStore(appDir: String) {
+object MeeAgentStore {
     private val agent: MeeAgent
 
     init {
+        // TODO come up with the isolated path later and use MeeAndroidSettingsDataStore to save it
+        val docsAbsolutePath =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath
+        val dsUrl = "$docsAbsolutePath${File.separator}mee.sqlite"
+        val file = File(dsUrl)
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+
         agent = getAgent(
             MeeAgentConfig(
-                appDir,
+                dsUrl,
                 "ShouldBeReplacedWithGeneratedPassword",
                 null,
                 MeeAgentDidRegistryConfig.DidKey
@@ -57,6 +68,17 @@ class MeeAgentStore(appDir: String) {
         }
     }
 
+    fun getLastMeeContextById(id: String): MeeContext? {
+        return try {
+            val coreConsent = agent.siopLastConsentByConnectionId(connId = id)
+            if (coreConsent != null) {
+                MeeContext(coreConsent)
+            } else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     fun authorize(item: ConsentRequest): RpAuthResponseWrapper? {
         return try {
             agent.siopAuthRelyingParty(RpAuthRequest(item))
@@ -64,5 +86,28 @@ class MeeAgentStore(appDir: String) {
             Log.e("authorize", e.message.orEmpty())
             null
         }
+    }
+
+    private fun getConnectionById(id: String): MeeConnection? {
+        val items = getAllItems() ?: return null
+        return items.firstOrNull { it.id == id }
+    }
+
+    fun getConnectionByHostname(hostname: String): MeeConnection? {
+        val items = getAllItems() ?: return null
+        return items.firstOrNull { getHostname(it.id) == hostname }
+    }
+
+    fun removeItemByName(id: String): String? {
+        val item = getConnectionById(id)
+        if (item != null) {
+            return try {
+                agent.deleteOtherPartyConnection(id)
+                id
+            } catch (e: Exception) {
+                null
+            }
+        }
+        return null
     }
 }
