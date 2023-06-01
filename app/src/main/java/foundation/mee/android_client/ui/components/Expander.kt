@@ -2,11 +2,13 @@ package foundation.mee.android_client.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -21,13 +23,15 @@ import foundation.mee.android_client.ui.theme.publicSansFamily
 fun Expander(
     title: String,
     modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colors.surface,
     isExpanded: Boolean,
     onChangeExpanded: () -> Unit,
     content: @Composable () -> Unit
 ) {
 
     Surface(
-        modifier = modifier
+        modifier = modifier,
+        color = color
     ) {
         Column {
             Row(

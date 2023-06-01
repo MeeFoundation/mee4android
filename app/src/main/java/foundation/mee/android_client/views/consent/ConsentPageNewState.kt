@@ -79,7 +79,7 @@ class ConsentPageNewState(
                 .authority(uri.authority)
                 .path(uri.path)
                 .appendQueryParameter(
-                    "mee_auth_token",
+                    "id_token",
                     "error:user_cancelled,error_description:user%20declined%20the%20request"
                 )
                 .build()

@@ -1,21 +1,26 @@
 package foundation.mee.android_client.views.connections
 
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
 import foundation.mee.android_client.models.*
 import foundation.mee.android_client.utils.getHostname
 
 @Composable
-fun rememberConnectionsState(
-): ConnectionsState {
-    val context = LocalContext.current
-    val appDir = context.applicationInfo.dataDir
-    val agentStore = MeeAgentStore("$appDir/mee")
+fun rememberConnectionsState(): ConnectionsState {
 
-    val data = agentStore.getAllItems()
-    val existingPartnersWebApp = getExistingPartnersWeb(data, agentStore)
-    val existingPartnersMobileApp = getExistingPartnersMobile(data, agentStore)
-    val otherPartnersWebApp = getOtherPartners(existingPartnersWebApp)
+    val data = remember {
+        MeeAgentStore.getAllItems()
+    }
+    val existingPartnersWebApp = remember {
+        getExistingPartnersWeb(data)
+    }
+    val existingPartnersMobileApp =
+        remember {
+            getExistingPartnersMobile(data)
+        }
+    val otherPartnersWebApp =
+        remember {
+            getOtherPartners(existingPartnersWebApp)
+        }
 
 
     return remember {
@@ -35,13 +40,12 @@ class ConnectionsState(
 )
 
 fun getExistingPartnersWeb(
-    data: List<MeeConnection>?,
-    agentStore: MeeAgentStore
+    data: List<MeeConnection>?
 ): List<MeeConnection>? {
     return data?.filter { x ->
         when (val connType = x.value) {
             is MeeConnectionType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.web -> agentStore.getLastConnectionConsentById(x.id) != null
+                ClientType.web -> MeeAgentStore.getLastConnectionConsentById(x.id) != null
                 else -> false
             }
             else -> false
@@ -50,13 +54,12 @@ fun getExistingPartnersWeb(
 }
 
 fun getExistingPartnersMobile(
-    data: List<MeeConnection>?,
-    agentStore: MeeAgentStore
+    data: List<MeeConnection>?
 ): List<MeeConnection>? {
     return data?.filter { x ->
         when (val connType = x.value) {
             is MeeConnectionType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.mobile -> agentStore.getLastConnectionConsentById(x.id) != null
+                ClientType.mobile -> MeeAgentStore.getLastConnectionConsentById(x.id) != null
                 else -> false
             }
             else -> false

@@ -35,7 +35,7 @@ import foundation.mee.android_client.utils.showConsentToast
 import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.ui.components.PrimaryButton
-import foundation.mee.android_client.ui.components.RejectButton
+import foundation.mee.android_client.ui.components.DeclineButton
 import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.ui.components.Expander
 import foundation.mee.android_client.ui.components.NoRippleInteractionSource
@@ -253,7 +253,7 @@ fun ConsentPageNew(
                     .sizeIn(maxHeight = 159.dp)
             ) {
                 Row(modifier = Modifier.padding(top = 14.dp)) {
-                    RejectButton(
+                    DeclineButton(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),

@@ -1,7 +1,7 @@
 package foundation.mee.android_client.views.connections
 
+import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,9 @@ import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.navigation.MeeDestinations.*
+import foundation.mee.android_client.ui.components.clickableWithoutRipple
+import foundation.mee.android_client.utils.getHostname
+import foundation.mee.android_client.utils.linkToWebpage
 
 @Composable
 fun PartnerEntry(
@@ -37,17 +41,20 @@ fun PartnerEntry(
         is MeeConnectionType.Siop -> conn.value.clientMetadata
         else -> null
     }
+    val context = LocalContext.current
 
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
             .sizeIn(minHeight = 64.dp)
-            .clickable(
-                enabled = hasEntry,
-                onClick = {
-                    navigator.navigate("${MANAGE.route}/${connection.name}")
+            .clickableWithoutRipple {
+                if (hasEntry) {
+                    navigator.navigate("${MANAGE.route}/${getHostname(connection.id)}")
+                } else {
+                    val uri = Uri.parse(connection.id)
+                    linkToWebpage(context, uri)
                 }
-            ),
+            },
         color = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
     ) {
