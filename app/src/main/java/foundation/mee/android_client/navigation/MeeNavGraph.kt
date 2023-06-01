@@ -26,8 +26,6 @@ import foundation.mee.android_client.views.welcome_pages.WelcomePage
 import foundation.mee.android_client.views.welcome_pages.WelcomeScreen
 import uniffi.mee_agent.siopRpAuthRequestFromUrl
 
-const val AUTH_URI_PATTERN = "${DEEP_LINK_URL_STRING}/#/consent"
-
 @Composable
 fun MeeNavGraph(
     defaultStartDestination: String = CONNECTIONS.route, viewModel: NavViewModel = hiltViewModel(),
@@ -67,16 +65,21 @@ fun MeeNavGraph(
         }
 
         composable(
-            "${CONSENT.route}/{consentData}",
-            arguments = listOf(navArgument("consentData") { type = NavType.StringType }),
-            deepLinks = listOf(navDeepLink {
-                uriPattern = "${AUTH_URI_PATTERN}/{consentData}"
-            })
+            CONSENT.route,
+            arguments = listOf(
+                navArgument("params") { type = NavType.StringType }),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/authorize?{params}" },
+                navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/#/consent/{params}" }
+            )
         ) { backStackEntry ->
             val consentRequest = try {
-                val data = backStackEntry.arguments?.getString("consentData")
+                val data = backStackEntry.arguments?.getString("params")
                 if (data != null) {
-                    val siopUrl = buildLegacySiopUrl(AUTH_URI_PATTERN, data)
+                    // TODO refactor when Olde York Times will be supporting siop authorization
+                    val siopUrl = if (data.contains("request"))
+                        "${DEEP_LINK_URL_STRING}/authorize?${data}"
+                    else buildLegacySiopUrl("${DEEP_LINK_URL_STRING}/#/consent/", data)
                     val res = siopRpAuthRequestFromUrl(siopUrl)
                     ConsentRequest(res)
                 } else null
