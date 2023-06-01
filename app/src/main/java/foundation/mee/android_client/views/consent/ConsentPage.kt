@@ -26,7 +26,7 @@ fun onNext(coreData: RpAuthResponseWrapper?, redirectUri: String, context: Conte
     val result = builder.scheme(uri.scheme)
         .authority(uri.authority)
         .path(uri.path)
-        .appendQueryParameter("mee_auth_token", coreData?.openidResponse?.idToken)
+        .appendQueryParameter("id_token", coreData?.openidResponse?.idToken)
         .build()
 
     linkToWebpage(context, result)
