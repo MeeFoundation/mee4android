@@ -70,6 +70,7 @@ object MeeAgentStore {
                 MeeContext(coreConsent)
             } else null
         } catch (e: Exception) {
+            Log.e("getLastMeeContext", e.message.orEmpty())
             null
         }
     }
@@ -100,6 +101,7 @@ object MeeAgentStore {
                 agent.deleteOtherPartyConnection(id)
                 id
             } catch (e: Exception) {
+                Log.e("removeItem", e.message.orEmpty())
                 null
             }
         }
