@@ -1,11 +1,6 @@
 package foundation.mee.android_client.views.welcome_pages
 
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
