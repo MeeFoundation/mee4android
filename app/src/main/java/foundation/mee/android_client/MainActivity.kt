@@ -57,7 +57,7 @@ class MainActivity : FragmentActivity() {
                     OnLifecycleEvent { owner, event ->
                         Log.d("Lifecycle Event: ", event.toString())
                         when (event) {
-                            Lifecycle.Event.ON_STOP -> {
+                            Lifecycle.Event.ON_RESUME -> {
                                 loginSuccess = false
                             }
 
@@ -102,9 +102,9 @@ class MainActivity : FragmentActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-
         val model: NavViewModel by viewModels()
         model.navigator.navController.handleDeepLink(intent)
+        setIntent(null)
     }
 
 }
