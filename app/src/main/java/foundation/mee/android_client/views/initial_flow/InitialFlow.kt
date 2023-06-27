@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.fragment.app.FragmentActivity
@@ -26,6 +27,7 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.controller.biometry.BiometryHandler
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.navigation.NavViewModel
+import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.views.MeeWhiteScreen
 import foundation.mee.android_client.views.welcome_pages.WelcomeScreen
 import kotlinx.coroutines.launch
@@ -144,6 +146,30 @@ fun InitialFlow(
                         currentStep = InitialFlowSteps.Initial
                     }
                 }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 375, heightDp = 812)
+@Composable
+fun InitialFlowPreview() {
+    MeeIdentityAgentTheme {
+        Box {
+            MeeWhiteScreen(modifier = Modifier.zIndex(2f), isFaded = true)
+            Column(
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier
+                    .zIndex(1f)
+                    .fillMaxHeight(),
+            ) {
+                BottomMessage(
+                    icon = painterResource(R.drawable.mee_guy_icon),
+                    iconSize = 60.dp,
+                    title = "Set up biometrics",
+                    message = "Mee uses biometrics to make sure that you are the only person who can open the app.",
+                    onNext = {}
+                )
             }
         }
     }

@@ -26,7 +26,6 @@ fun PrimaryButton(
     title: String,
     fontWeight: FontWeight = FontWeight(700),
     fontSize: TextUnit = 18.sp,
-    textModifier: Modifier = Modifier,
     shape: RoundedCornerShape = RoundedCornerShape(10.dp),
     onClick: () -> Unit
 ) {
@@ -43,8 +42,7 @@ fun PrimaryButton(
             fontFamily = publicSansFamily,
             fontSize = fontSize,
             fontWeight = fontWeight,
-            textAlign = TextAlign.Center,
-            modifier = textModifier
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -55,7 +53,6 @@ fun DeclineButton(
     title: String,
     fontWeight: FontWeight = FontWeight(700),
     fontSize: TextUnit = 18.sp,
-    textModifier: Modifier = Modifier,
     backgroundColor: Color = PartnerEntryBackgroundColor,
     onClick: () -> Unit
 ) {
@@ -71,8 +68,7 @@ fun DeclineButton(
             fontFamily = publicSansFamily,
             fontSize = fontSize,
             fontWeight = fontWeight,
-            textAlign = TextAlign.Center,
-            modifier = textModifier
+            textAlign = TextAlign.Center
         )
     }
 }

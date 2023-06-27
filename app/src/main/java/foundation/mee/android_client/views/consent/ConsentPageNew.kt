@@ -303,6 +303,7 @@ fun ConsentPageNew(
                             if (response != null) {
                                 try {
                                     onNext(response, data.redirectUri, context)
+                                    navigateToMainScreen()
                                 } catch (e: Exception) {
                                     showConsentToast(
                                         context,
