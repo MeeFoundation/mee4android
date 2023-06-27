@@ -3,9 +3,11 @@ package foundation.mee.android_client.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Base64
 import androidx.core.content.ContextCompat
 import java.net.URI
 import java.net.URL
+import java.security.SecureRandom
 
 fun getURLFromString(url: String): URL? {
     return try {
@@ -36,4 +38,11 @@ fun buildLegacySiopUrl(uriPattern: String, data: String): String {
         .appendQueryParameter("scope", "openid")
         .appendQueryParameter("request", data)
         .build().toString()
+}
+
+fun generateSecret(length: Int): String {
+    val random = SecureRandom()
+    val bytes = ByteArray(length)
+    random.nextBytes(bytes)
+    return Base64.encodeToString(bytes, Base64.DEFAULT)
 }

@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.utils.getURLFromString
@@ -34,6 +35,8 @@ import foundation.mee.android_client.utils.CERTIFIED_URL_STRING
 import foundation.mee.android_client.utils.showConsentToast
 import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
+import foundation.mee.android_client.navigation.MeeDestinations
+import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.components.PrimaryButton
 import foundation.mee.android_client.ui.components.DeclineButton
 import foundation.mee.android_client.ui.theme.*
@@ -45,9 +48,15 @@ import java.lang.Exception
 @Composable
 fun ConsentPageNew(
     consentViewModel: ConsentViewModel,
+    viewModel: NavViewModel = hiltViewModel(),
     onAccept: (ConsentRequest) -> RpAuthResponseWrapper?
 ) {
     val data by consentViewModel.uiState.collectAsState()
+    val navigator = viewModel.navigator
+
+    fun navigateToMainScreen() {
+        navigator.navigate(MeeDestinations.CONNECTIONS.route)
+    }
 
     val context = LocalContext.current
 
@@ -265,6 +274,7 @@ fun ConsentPageNew(
                         } else {
                             showConsentToast(context, "Unknown Error")
                         }
+                        navigateToMainScreen()
                     }
                 }
                 Row(modifier = Modifier.padding(bottom = 30.dp)) {

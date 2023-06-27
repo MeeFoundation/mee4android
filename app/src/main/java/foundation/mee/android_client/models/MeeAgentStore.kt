@@ -1,33 +1,52 @@
 package foundation.mee.android_client.models
 
-import android.os.Environment
+import android.app.Application
 import android.util.Log
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import foundation.mee.android_client.models.settings.SharedPreferencesHelper
 import foundation.mee.android_client.utils.RpAuthRequest
+import foundation.mee.android_client.utils.generateSecret
 import foundation.mee.android_client.utils.getHostname
 import uniffi.mee_agent.*
 import java.io.File
+import javax.inject.Inject
 
-object MeeAgentStore {
-    private val agent: MeeAgent
+private const val MEE_KEYCHAIN_SECRET_NAME = "MEE_KEYCHAIN_SECRET_NAME"
+
+@ActivityRetainedScoped
+class MeeAgentStore @Inject constructor(
+    context: Application
+) {
+    private lateinit var agent: MeeAgent
 
     init {
         // TODO come up with the isolated path later and use MeeAndroidSettingsDataStore to save it
-        val docsAbsolutePath =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath
-        val dsUrl = "$docsAbsolutePath${File.separator}mee.sqlite"
-        val file = File(dsUrl)
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-        agent = getAgent(
-            MeeAgentConfig(
-                dsUrl,
-                "ShouldBeReplacedWithGeneratedPassword",
-                null,
-                MeeAgentDidRegistryConfig.DidKey
+        try {
+            val docsAbsolutePath = context.applicationInfo.dataDir
+            val dsUrl = "$docsAbsolutePath${File.separator}mee.sqlite"
+            val file = File(dsUrl)
+            if (!file.exists()) {
+                file.createNewFile()
+            }
+
+            val prefs = SharedPreferencesHelper(context)
+            var value = prefs.getString(MEE_KEYCHAIN_SECRET_NAME)
+            if (value == null) {
+                value = generateSecret(30)
+                prefs.setString(MEE_KEYCHAIN_SECRET_NAME, value)
+            }
+            agent = getAgent(
+                MeeAgentConfig(
+                    dsUrl,
+                    value,
+                    null,
+                    MeeAgentDidRegistryConfig.DidKey
+                )
             )
-        )
-        agent.initUserAccount()
+            agent.initUserAccount()
+        } catch (e: Exception) {
+            Log.e("Unable to init Mee Agent", e.message.orEmpty())
+        }
     }
 
     fun getAllItems(): List<MeeConnection>? {

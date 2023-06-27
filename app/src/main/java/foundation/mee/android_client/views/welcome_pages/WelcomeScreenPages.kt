@@ -8,10 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import foundation.mee.android_client.R
-import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
 fun ScreenScaffold(
@@ -24,6 +21,7 @@ fun ScreenScaffold(
         modifier = modifier
             .padding(start = 16.dp, end = 16.dp)
     ) {
+        // TODO fix in older versions
         Image(
             painter = painterResource(id = image),
             contentDescription = null,

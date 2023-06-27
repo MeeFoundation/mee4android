@@ -3,18 +3,19 @@ package foundation.mee.android_client.views.consent
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
-import foundation.mee.android_client.models.MeeAgentStore
 import uniffi.mee_agent.RpAuthResponseWrapper
 import java.net.URI
 
 @Composable
-fun ConsentPage(consentRequest: ConsentRequest) {
+fun ConsentPage(consentRequest: ConsentRequest, meeAgentViewModel: MeeAgentViewModel = hiltViewModel()) {
 
     val authorizeRequest = { data: ConsentRequest ->
         val request = clearConsentsListFromDisabledOptionals(data)
-        MeeAgentStore.authorize(request)
+        meeAgentViewModel.meeAgentStore.authorize(request)
     }
 
     ConsentPageNew(onAccept = authorizeRequest, consentViewModel = ConsentViewModel(consentRequest))

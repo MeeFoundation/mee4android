@@ -6,10 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.NavViewModel
-import foundation.mee.android_client.navigation.Navigator
 
 @Composable
 fun ManageConnection(
@@ -31,15 +29,10 @@ fun ManageConnection(
                     meeConnection = pair.first,
                     meeContext = pair.second,
                     onRemoveConnection = {
-                        removeConnection(it, navigator)
+                        manageConnectionViewModel.removeConnection(it, navigator)
                     }
                 )
             }
         }
     }
-}
-
-fun removeConnection(id: String, navigator: Navigator) {
-    MeeAgentStore.removeItemByName(id)
-    navigator.popBackStack()
 }
