@@ -1,18 +1,9 @@
 package foundation.mee.android_client.views.initial_flow
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -32,24 +23,98 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import foundation.mee.android_client.R
+import foundation.mee.android_client.ui.components.DeclineButton
+import foundation.mee.android_client.ui.components.PrimaryButton
 import foundation.mee.android_client.ui.theme.DurationPopupBackground
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.SystemBlueLight
 import foundation.mee.android_client.ui.theme.publicSansFamily
 import foundation.mee.android_client.views.MeeWhiteScreen
-import foundation.mee.android_client.views.animations.ConsentPageAnimation
 
 @Composable
 fun BottomMessage(icon: Painter, iconSize: Dp, title: String, message: String, onNext: () -> Unit) {
-    Surface(color = DurationPopupBackground,
-        modifier = Modifier.clip(RoundedCornerShape(topEnd = 13.dp , topStart = 13.dp))) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(top = 16.dp)
-            .padding(bottom = 50.dp)
-            .padding(horizontal = 16.dp)
+    BaseBottomMessage(icon = icon, iconSize = iconSize, title = title, message = message) {
+        Button(
+            onClick = onNext,
+            shape = RoundedCornerShape(size = 13.dp),
+            elevation = null,
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+            modifier = Modifier
+                .padding(0.dp)
+                .height(60.dp)
+                .fillMaxWidth()
+        ) {
+            Surface(color = Color.White) {
+                Text(
+                    text = "Continue",
+                    fontFamily = publicSansFamily,
+                    fontWeight = FontWeight(600),
+                    color = SystemBlueLight,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun RestrictBottomMessage(
+    icon: Painter,
+    iconSize: Dp,
+    title: String,
+    message: String,
+    onNextSecondaryButton: () -> Unit,
+    onNextPrimaryButton: () -> Unit
+) {
+    BaseBottomMessage(icon = icon, iconSize = iconSize, title = title, message = message) {
+        DeclineButton(
+            modifier = Modifier
+                .padding(0.dp)
+                .height(60.dp)
+                .fillMaxWidth(),
+            title = "Close",
+            fontWeight = FontWeight(600),
+            fontSize = 20.sp,
+            backgroundColor = Color.Transparent
+        ) {
+            onNextSecondaryButton()
+        }
+        PrimaryButton(
+            title = "Settings",
+            modifier = Modifier
+                .padding(0.dp)
+                .height(60.dp)
+                .fillMaxWidth(),
+            fontWeight = FontWeight(600),
+            fontSize = 20.sp,
+            shape = RoundedCornerShape(size = 13.dp)
+        ) {
+            onNextPrimaryButton()
+        }
+    }
+}
+
+
+@Composable
+fun BaseBottomMessage(
+    icon: Painter,
+    iconSize: Dp,
+    title: String,
+    message: String,
+    content: @Composable () -> Unit
+) {
+    Surface(
+        color = DurationPopupBackground,
+        modifier = Modifier.clip(RoundedCornerShape(topEnd = 13.dp, topStart = 13.dp))
     ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .padding(bottom = 50.dp)
+                .padding(horizontal = 16.dp)
+        ) {
             Image(
                 painter = icon,
                 contentDescription = null,
@@ -58,14 +123,17 @@ fun BottomMessage(icon: Painter, iconSize: Dp, title: String, message: String, o
                     .size(iconSize)
                     .padding(top = 8.dp)
             )
-            Text(text = title,
+            Text(
+                text = title,
                 fontFamily = publicSansFamily,
                 fontWeight = FontWeight(700),
                 color = Color.Black,
                 fontSize = 34.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp))
-            Text(text = message,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            Text(
+                text = message,
                 fontFamily = publicSansFamily,
                 fontWeight = FontWeight(400),
                 color = Color.Black,
@@ -75,29 +143,8 @@ fun BottomMessage(icon: Painter, iconSize: Dp, title: String, message: String, o
                     .padding(top = 8.dp)
                     .padding(bottom = 64.dp)
             )
-            Button(onClick = onNext,
-                shape = RoundedCornerShape(size = 13.dp),
-                elevation = null,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-                modifier = Modifier
-                    .padding(0.dp)
-                    .height(60.dp)
-                    .fillMaxWidth()
-            ) {
-                Surface(color = Color.White) {
-                    Text(text = "Continue",
-                        fontFamily = publicSansFamily,
-                        fontWeight = FontWeight(600),
-                        color = SystemBlueLight,
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center,
-
-                    )
-                }
-
-            }
+            content()
         }
-
     }
 }
 
@@ -116,8 +163,8 @@ fun BottomMessagePreview() {
                 BottomMessage(
                     icon = painterResource(R.drawable.mee_guy_icon),
                     iconSize = 60.dp,
-                    title = "Set up your Privacy Agent",
-                    message = "To store your data, Mee contains a secure data vault, which is protected by Biometry. Please set up Biometry.",
+                    title = "Set up biometrics",
+                    message = "Mee uses biometrics to make sure that you are the only person who can open the app.",
                     onNext = {}
                 )
             }

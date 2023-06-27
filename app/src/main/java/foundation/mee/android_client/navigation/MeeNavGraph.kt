@@ -1,10 +1,6 @@
 package foundation.mee.android_client.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,9 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ConsentRequest
-import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.utils.DEEP_LINK_URL_STRING
 import foundation.mee.android_client.navigation.MeeDestinations.*
 import foundation.mee.android_client.utils.buildLegacySiopUrl
@@ -23,7 +17,6 @@ import foundation.mee.android_client.views.consent.ConsentPage
 import foundation.mee.android_client.views.initial_flow.InitialFlow
 import foundation.mee.android_client.views.manage.ManageConnection
 import foundation.mee.android_client.views.welcome_pages.WelcomePage
-import foundation.mee.android_client.views.welcome_pages.WelcomeScreen
 import uniffi.mee_agent.siopRpAuthRequestFromUrl
 
 @Composable
@@ -31,7 +24,6 @@ fun MeeNavGraph(
     defaultStartDestination: String = CONNECTIONS.route, viewModel: NavViewModel = hiltViewModel(),
     initialFlowDone: Boolean
 ) {
-    val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
     val controller = rememberNavController()
     viewModel.navigator.navController = controller
 

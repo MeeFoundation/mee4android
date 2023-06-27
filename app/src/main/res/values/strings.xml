@@ -5,6 +5,6 @@
     <string name="loading_white_page_3">Generating unique device keys</string>
     <string name="loading_white_page_4">"Generating the context-specific user indentifier "</string>
     <string name="biometry_negative_button_text">Cancel</string>
-    <string name="biometry_title">Biometric authentication</string>
-    <string name="biometry_subtitle">Touch fingerprint sensor</string>
+    <string name="biometry_title">Device Authentication</string>
+    <string name="biometry_subtitle">Provide device credentials</string>
 </resources>

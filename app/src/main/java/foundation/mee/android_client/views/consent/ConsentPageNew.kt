@@ -271,7 +271,6 @@ fun ConsentPageNew(
                         val uri = state.onDeclineBuildUri(data.redirectUri)
                         if (uri != null) {
                             linkToWebpage(context, uri)
-
                         } else {
                             showConsentToast(context, "Unknown Error")
                         }

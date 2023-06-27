@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
@@ -23,12 +24,15 @@ import foundation.mee.android_client.ui.theme.publicSansFamily
 fun PrimaryButton(
     modifier: Modifier = Modifier,
     title: String,
+    fontWeight: FontWeight = FontWeight(700),
+    fontSize: TextUnit = 18.sp,
+    shape: RoundedCornerShape = RoundedCornerShape(10.dp),
     onClick: () -> Unit
 ) {
     OutlinedButton(
         onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(MeeGreenPrimaryColor),
-        shape = RoundedCornerShape(10.dp),
+        shape = shape,
         modifier = modifier,
         interactionSource = NoRippleInteractionSource()
     ) {
@@ -36,8 +40,8 @@ fun PrimaryButton(
             text = title,
             color = Color.White,
             fontFamily = publicSansFamily,
-            fontSize = 18.sp,
-            fontWeight = FontWeight(700),
+            fontSize = fontSize,
+            fontWeight = fontWeight,
             textAlign = TextAlign.Center
         )
     }
@@ -47,11 +51,14 @@ fun PrimaryButton(
 fun DeclineButton(
     modifier: Modifier = Modifier,
     title: String,
+    fontWeight: FontWeight = FontWeight(700),
+    fontSize: TextUnit = 18.sp,
+    backgroundColor: Color = PartnerEntryBackgroundColor,
     onClick: () -> Unit
 ) {
     TextButton(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(PartnerEntryBackgroundColor),
+        colors = ButtonDefaults.buttonColors(backgroundColor),
         modifier = modifier,
         interactionSource = NoRippleInteractionSource()
     ) {
@@ -59,8 +66,8 @@ fun DeclineButton(
             text = title,
             color = MeeGreenPrimaryColor,
             fontFamily = publicSansFamily,
-            fontSize = 18.sp,
-            fontWeight = FontWeight(700),
+            fontSize = fontSize,
+            fontWeight = fontWeight,
             textAlign = TextAlign.Center
         )
     }

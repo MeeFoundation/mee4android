@@ -4,12 +4,15 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.models.MeeConnection
 import foundation.mee.android_client.models.MeeContext
+import foundation.mee.android_client.navigation.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 sealed class ConnectionDataState<out T> {
@@ -19,9 +22,10 @@ sealed class ConnectionDataState<out T> {
     object None : ConnectionDataState<Nothing>()
 }
 
-
-class ManageConnectionViewModel(
+@HiltViewModel
+class ManageConnectionViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val meeAgentStore: MeeAgentStore
 ) : ViewModel() {
 
     private val _screenData =
@@ -37,9 +41,9 @@ class ManageConnectionViewModel(
     private fun loadData() {
         try {
             val hostname: String = checkNotNull(savedStateHandle["connectionHostname"])
-            val meeConnection = MeeAgentStore.getConnectionByHostname(hostname)
+            val meeConnection = meeAgentStore.getConnectionByHostname(hostname)
             if (meeConnection != null) {
-                val meeContext = MeeAgentStore.getLastMeeContextById(meeConnection.id)
+                val meeContext = meeAgentStore.getLastMeeContextById(meeConnection.id)
                 _screenData.value =
                     ConnectionDataState.Success(Pair(meeConnection, meeContext))
             } else {
@@ -51,4 +55,8 @@ class ManageConnectionViewModel(
         }
     }
 
+    fun removeConnection(id: String, navigator: Navigator) {
+        meeAgentStore.removeItemByName(id)
+        navigator.popBackStack()
+    }
 }
