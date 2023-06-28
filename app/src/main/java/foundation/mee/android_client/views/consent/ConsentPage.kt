@@ -28,6 +28,7 @@ fun onNext(coreData: RpAuthResponseWrapper?, redirectUri: String, context: Conte
         .authority(uri.authority)
         .path(uri.path)
         .appendQueryParameter("id_token", coreData?.openidResponse?.idToken)
+        .encodedFragment(uri.fragment)
         .build()
 
     linkToWebpage(context, result)
