@@ -126,4 +126,12 @@ class MeeAgentStore @Inject constructor(
         }
         return null
     }
+
+    fun isReturningUser(id: String): Boolean = getConnectionById(id) != null
+
+    fun recoverRequest(consentRequest: ConsentRequest): RpAuthResponseWrapper? {
+        return getLastConnectionConsentById(consentRequest.id)?.let { contextData ->
+            ConsentRequest(contextData, consentRequest)
+        }?.let { request -> authorize(request) }
+    }
 }

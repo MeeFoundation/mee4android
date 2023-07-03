@@ -21,18 +21,17 @@ import uniffi.mee_agent.siopRpAuthRequestFromUrl
 
 @Composable
 fun MeeNavGraph(
-    defaultStartDestination: String = CONNECTIONS.route, viewModel: NavViewModel = hiltViewModel(),
-    initialFlowDone: Boolean
+    defaultStartDestination: String = CONNECTIONS.route,
+    viewModel: NavViewModel = hiltViewModel(),
+    initialFlowDone: Boolean,
+    hadConnectionsBefore: Boolean
 ) {
     val controller = rememberNavController()
     viewModel.navigator.navController = controller
 
-    // TODO: change in the future when mee-core integration happens
-    val connectionsNum: Int = 0 // TODO: sites.size + mobileApps.size to remove WelcomeScreen
-
     val startDestination: String =
         if (!initialFlowDone) INITIAL_FLOW.route
-        else if (connectionsNum == 0) WELCOME_SCREEN.route
+        else if (!hadConnectionsBefore) WELCOME_SCREEN.route
         else defaultStartDestination
 
     NavHost(

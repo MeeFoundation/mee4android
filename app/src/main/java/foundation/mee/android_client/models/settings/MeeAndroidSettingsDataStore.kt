@@ -15,6 +15,7 @@ class MeeAndroidSettingsDataStore (val context: Context) {
 
     companion object {
         val INITIAL_FLOW_DONE = booleanPreferencesKey("INITIAL_FLOW_DONE")
+        val HAD_CONNECTIONS_BEFORE = booleanPreferencesKey("HAD_CONNECTIONS_BEFORE")
     }
 
     suspend fun saveInitialFlowDoneSetting(flag: Boolean) {
@@ -25,5 +26,15 @@ class MeeAndroidSettingsDataStore (val context: Context) {
 
     fun getInitialFlowDoneSetting() = context.dataStore.data.map {
         it[INITIAL_FLOW_DONE]?:false
+    }
+
+    suspend fun saveHadConnectionsBeforeSetting(flag: Boolean) {
+        context.dataStore.edit {
+            it[HAD_CONNECTIONS_BEFORE] = flag
+        }
+    }
+
+    fun getHadConnectionsBeforeSetting() = context.dataStore.data.map {
+        it[HAD_CONNECTIONS_BEFORE]?:false
     }
 }

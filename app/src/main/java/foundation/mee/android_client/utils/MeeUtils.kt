@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Base64
-import androidx.core.content.ContextCompat
 import java.net.URI
 import java.net.URL
 import java.security.SecureRandom
@@ -25,7 +24,7 @@ fun getHostname(url: String): String {
 fun linkToWebpage(context: Context, uri: Uri) {
     val openURL = Intent(Intent.ACTION_VIEW)
     openURL.data = uri
-    ContextCompat.startActivity(context, openURL, null)
+    context.startActivity(openURL)
 }
 
 fun buildLegacySiopUrl(uriPattern: String, data: String): String {

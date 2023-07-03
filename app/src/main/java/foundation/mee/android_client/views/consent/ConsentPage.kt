@@ -1,24 +1,62 @@
 package foundation.mee.android_client.views.consent
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
-import androidx.compose.runtime.Composable
+import android.util.Log
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
+import foundation.mee.android_client.models.MeeAgentStore
+import foundation.mee.android_client.utils.showConsentToast
+import foundation.mee.android_client.views.animations.ConsentPageAnimation
 import uniffi.mee_agent.RpAuthResponseWrapper
 import java.net.URI
 
 @Composable
-fun ConsentPage(consentRequest: ConsentRequest, meeAgentViewModel: MeeAgentViewModel = hiltViewModel()) {
+fun ConsentPage(
+    consentRequest: ConsentRequest,
+    meeAgentStore: MeeAgentStore = hiltViewModel<MeeAgentViewModel>().meeAgentStore
+) {
+    val context = LocalContext.current
+    val activity = context as Activity
 
     val authorizeRequest = { data: ConsentRequest ->
         val request = clearConsentsListFromDisabledOptionals(data)
-        meeAgentViewModel.meeAgentStore.authorize(request)
+        meeAgentStore.authorize(request)
     }
 
-    ConsentPageNew(onAccept = authorizeRequest, consentViewModel = ConsentViewModel(consentRequest))
+    val isReturningUser by rememberSaveable {
+        mutableStateOf(meeAgentStore.isReturningUser(consentRequest.id))
+    }
+
+    if (isReturningUser) {
+        val response = meeAgentStore.recoverRequest(consentRequest)
+        if (response != null) {
+            ConsentPageAnimation {
+                try {
+                    onNext(response, consentRequest.redirectUri, context)
+                } catch (e: Exception) {
+                    Log.e("Connection failed", e.message.orEmpty())
+                    showConsentToast(context, "Connection failed. Please try again")
+                }
+                //TODO choose
+                // navigator.navigate(MeeDestinations.CONNECTIONS.route)
+                activity.finishAffinity()
+            }
+        } else {
+            showConsentToast(context, "Connection failed. Please try again")
+        }
+    } else {
+        ConsentPageNew(
+            onAccept = authorizeRequest,
+            consentViewModel = ConsentViewModel(consentRequest)
+        )
+    }
 }
 
 fun onNext(coreData: RpAuthResponseWrapper?, redirectUri: String, context: Context) {

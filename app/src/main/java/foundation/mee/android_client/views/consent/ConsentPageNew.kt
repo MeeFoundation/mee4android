@@ -1,6 +1,7 @@
 package foundation.mee.android_client.views.consent
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.view.Gravity
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -30,20 +31,20 @@ import androidx.compose.ui.window.DialogWindowProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
-import foundation.mee.android_client.utils.getURLFromString
-import foundation.mee.android_client.utils.CERTIFIED_URL_STRING
-import foundation.mee.android_client.utils.showConsentToast
-import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
-import foundation.mee.android_client.navigation.MeeDestinations
+import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.navigation.NavViewModel
-import foundation.mee.android_client.ui.components.PrimaryButton
 import foundation.mee.android_client.ui.components.DeclineButton
-import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.ui.components.Expander
 import foundation.mee.android_client.ui.components.NoRippleInteractionSource
+import foundation.mee.android_client.ui.components.PrimaryButton
+import foundation.mee.android_client.ui.theme.*
+import foundation.mee.android_client.utils.CERTIFIED_URL_STRING
+import foundation.mee.android_client.utils.getURLFromString
+import foundation.mee.android_client.utils.linkToWebpage
+import foundation.mee.android_client.utils.showConsentToast
+import kotlinx.coroutines.launch
 import uniffi.mee_agent.RpAuthResponseWrapper
-import java.lang.Exception
 
 @Composable
 fun ConsentPageNew(
@@ -54,11 +55,8 @@ fun ConsentPageNew(
     val data by consentViewModel.uiState.collectAsState()
     val navigator = viewModel.navigator
 
-    fun navigateToMainScreen() {
-        navigator.navigate(MeeDestinations.CONNECTIONS.route)
-    }
-
     val context = LocalContext.current
+    val activity = context as Activity
 
     val hasOptionalFields = data.claims.any { x -> !x.isRequired }
 
@@ -66,6 +64,13 @@ fun ConsentPageNew(
     val requiredClaims = data.claims.filter { x -> x.isRequired }
 
     val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 3f)
+
+    val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
+    val hadConnectionsBefore by settingsDataStore.getHadConnectionsBeforeSetting()
+        .collectAsState(
+            initial = false
+        )
+    val coroutineScope = rememberCoroutineScope()
 
     val state = rememberConsentPageNewState()
 
@@ -274,7 +279,7 @@ fun ConsentPageNew(
                         } else {
                             showConsentToast(context, "Unknown Error")
                         }
-                        navigateToMainScreen()
+                        navigator.navigateToMainScreen()
                     }
                 }
                 Row(modifier = Modifier.padding(bottom = 30.dp)) {
@@ -303,7 +308,14 @@ fun ConsentPageNew(
                             if (response != null) {
                                 try {
                                     onNext(response, data.redirectUri, context)
-                                    navigateToMainScreen()
+                                    if (!hadConnectionsBefore) {
+                                        coroutineScope.launch {
+                                            settingsDataStore.saveHadConnectionsBeforeSetting(flag = true)
+                                        }
+                                    }
+                                    // TODO choose
+//                                    navigateToMainScreen()
+                                    activity.finishAffinity()
                                 } catch (e: Exception) {
                                     showConsentToast(
                                         context,
