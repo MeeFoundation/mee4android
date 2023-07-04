@@ -44,8 +44,6 @@ fun ConsentPage(
                     Log.e("Connection failed", e.message.orEmpty())
                     showConsentToast(context, "Connection failed. Please try again")
                 }
-                //TODO choose
-                // navigator.navigate(MeeDestinations.CONNECTIONS.route)
                 activity.finishAffinity()
             }
         } else {

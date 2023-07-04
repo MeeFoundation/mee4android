@@ -313,8 +313,6 @@ fun ConsentPageNew(
                                             settingsDataStore.saveHadConnectionsBeforeSetting(flag = true)
                                         }
                                     }
-                                    // TODO choose
-//                                    navigateToMainScreen()
                                     activity.finishAffinity()
                                 } catch (e: Exception) {
                                     showConsentToast(
