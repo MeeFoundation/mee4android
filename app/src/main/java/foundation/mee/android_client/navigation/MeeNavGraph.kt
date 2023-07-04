@@ -1,5 +1,7 @@
 package foundation.mee.android_client.navigation
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -72,7 +74,9 @@ fun MeeNavGraph(
                         "${DEEP_LINK_URL_STRING}/authorize?${data}"
                     else buildLegacySiopUrl("${DEEP_LINK_URL_STRING}/#/consent/", data)
                     val res = siopRpAuthRequestFromUrl(siopUrl)
-                    ConsentRequest(res)
+                    val respondTo = Uri.parse(siopUrl).getQueryParameter("respondTo")
+                    val isCrossDeviceFlow = respondTo != null && respondTo == "proxy"
+                    ConsentRequest(res, isCrossDeviceFlow)
                 } else null
             } catch (e: Exception) {
                 null

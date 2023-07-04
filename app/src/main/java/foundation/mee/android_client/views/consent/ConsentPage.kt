@@ -14,7 +14,13 @@ import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.utils.showConsentToast
 import foundation.mee.android_client.views.animations.ConsentPageAnimation
+import foundation.mee.android_client.service.WebService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import uniffi.mee_agent.RpAuthResponseWrapper
+import java.io.IOException
 import java.net.URI
 
 @Composable
@@ -39,7 +45,7 @@ fun ConsentPage(
         if (response != null) {
             ConsentPageAnimation {
                 try {
-                    onNext(response, consentRequest.redirectUri, context)
+                    onNext(response, consentRequest.redirectUri, context, consentRequest.nonce, consentRequest.isCrossDeviceFlow)
                 } catch (e: Exception) {
                     Log.e("Connection failed", e.message.orEmpty())
                     showConsentToast(context, "Connection failed. Please try again")
@@ -57,17 +63,52 @@ fun ConsentPage(
     }
 }
 
-fun onNext(coreData: RpAuthResponseWrapper?, redirectUri: String, context: Context) {
-    val uri = URI(redirectUri)
-    val builder = Uri.Builder()
-    val result = builder.scheme(uri.scheme)
-        .authority(uri.authority)
-        .path(uri.path)
-        .appendQueryParameter("id_token", coreData?.openidResponse?.idToken)
-        .encodedFragment(uri.fragment)
-        .build()
+fun onNext(
+    coreData: RpAuthResponseWrapper?,
+    redirectUri: String,
+    context: Context,
+    nonce: String,
+    isCrossDeviceFlow: Boolean
+) {
+    if (!isCrossDeviceFlow) {
+        val uri = URI(redirectUri)
+        val builder = Uri.Builder()
+        val result = builder.scheme(uri.scheme)
+            .authority(uri.authority)
+            .path(uri.path)
+            .appendQueryParameter("id_token", coreData?.openidResponse?.idToken)
+            .encodedFragment(uri.fragment)
+            .build()
+        linkToWebpage(context, result)
+    } else {
 
-    linkToWebpage(context, result)
+        val idToken = coreData?.openidResponse?.idToken
+        if (idToken == null) {
+            showConsentToast(
+                context,
+                "Connection failed. Please try again."
+            )
+            return
+        }
+        GlobalScope.launch {
+            try {
+                WebService().passConsentOverRelay(nonce, idToken)
+                withContext(Dispatchers.Main) {
+                    showConsentToast(
+                        context,
+                        "The connection has been set up!"
+                    )
+                }
+
+            } catch (e: IOException) {
+                withContext(Dispatchers.Main) {
+                    showConsentToast(context, "Connection failed. Please try again.")
+                }
+
+            }
+
+        }
+    }
 }
 
 
