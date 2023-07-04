@@ -71,6 +71,8 @@ class ConsentPageNewState(
         return list.indexOfFirst { it.id == incorrectId }
     }
 
+    val ERROR_DECLINED = "error:user_cancelled,error_description:user%20declined%20the%20request"
+
     fun onDeclineBuildUri(redirectUri: String?): Uri? {
         if (URLUtil.isValidUrl(redirectUri)) {
             val uri = URI(redirectUri)

@@ -68,6 +68,10 @@ fun ConsentPageNew(
         navigator.navigate(MeeDestinations.CONNECTIONS.route)
     }
 
+    fun cleanConsent() {
+        if (data.isCrossDeviceFlow) navigateToMainScreen() else activity.finishAffinity()
+    }
+
     val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 3f)
 
     val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
@@ -278,13 +282,17 @@ fun ConsentPageNew(
                             .padding(bottom = 16.dp),
                         "Decline",
                     ) {
-                        val uri = state.onDeclineBuildUri(data.redirectUri)
-                        if (uri != null) {
-                            linkToWebpage(context, uri)
-                        } else {
-                            showConsentToast(context, "Unknown Error")
+                        try {
+                            onNext(state.ERROR_DECLINED, data.redirectUri, context, data.nonce, data.isCrossDeviceFlow, true)
+
+                        } catch (e: Exception) {
+                            showConsentToast(
+                                context,
+                                "Unknown error"
+                            )
                         }
-                        activity.finishAffinity()
+
+                        cleanConsent()
                     }
                 }
                 Row(modifier = Modifier.padding(bottom = 30.dp)) {
@@ -312,13 +320,13 @@ fun ConsentPageNew(
                             val response = onAccept(data)
                             if (response != null) {
                                 try {
-                                    onNext(response, data.redirectUri, context, data.nonce, data.isCrossDeviceFlow)
+                                    onNext(response.openidResponse.idToken, data.redirectUri, context, data.nonce, data.isCrossDeviceFlow, false)
                                     if (!hadConnectionsBefore) {
                                         coroutineScope.launch {
                                             settingsDataStore.saveHadConnectionsBeforeSetting(flag = true)
                                         }
                                     }
-                                    if (data.isCrossDeviceFlow) navigateToMainScreen() else activity.finishAffinity()
+                                    cleanConsent()
                                     
                                 } catch (e: Exception) {
                                     showConsentToast(
