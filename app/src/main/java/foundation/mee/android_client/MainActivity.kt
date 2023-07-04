@@ -40,6 +40,11 @@ class MainActivity : FragmentActivity() {
             val initialFlowDone by settingsDataStore.getInitialFlowDoneSetting().collectAsState(
                 initial = null
             )
+            val hadConnectionsBefore by settingsDataStore.getHadConnectionsBeforeSetting()
+                .collectAsState(
+                    initial = false
+                )
+
             val coroutineScope = rememberCoroutineScope()
 
             MeeIdentityAgentTheme {
@@ -81,7 +86,10 @@ class MainActivity : FragmentActivity() {
                                         .fillMaxSize()
                                         .zIndex(1f)
                                 ) {
-                                    MeeNavGraph(initialFlowDone = initialFlowDone == true)
+                                    MeeNavGraph(
+                                        initialFlowDone = initialFlowDone == true,
+                                        hadConnectionsBefore = hadConnectionsBefore
+                                    )
                                 }
 
                             }
