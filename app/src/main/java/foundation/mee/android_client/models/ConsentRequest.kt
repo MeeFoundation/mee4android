@@ -33,7 +33,8 @@ data class ConsentRequest(
     )
 
     constructor(
-        from: RpAuthRequest
+        from: RpAuthRequest,
+        isCrossDeviceFlow: Boolean
     ) : this(
         from.redirectUri,
         from.scope,
@@ -41,7 +42,7 @@ data class ConsentRequest(
         from.clientId,
         from.nonce,
         from.redirectUri,
-        false,
+        isCrossDeviceFlow,
         from.presentationDefinition,
         PartnerMetadata(from.clientMetadata),
         from.responseType

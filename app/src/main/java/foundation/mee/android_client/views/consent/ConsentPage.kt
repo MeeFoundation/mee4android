@@ -12,18 +12,36 @@ import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.models.MeeAgentStore
+import foundation.mee.android_client.navigation.MeeDestinations
+import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.utils.showConsentToast
 import foundation.mee.android_client.views.animations.ConsentPageAnimation
-import uniffi.mee_agent.RpAuthResponseWrapper
+import foundation.mee.android_client.service.WebService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.net.URI
 
 @Composable
 fun ConsentPage(
     consentRequest: ConsentRequest,
-    meeAgentStore: MeeAgentStore = hiltViewModel<MeeAgentViewModel>().meeAgentStore
+    meeAgentStore: MeeAgentStore = hiltViewModel<MeeAgentViewModel>().meeAgentStore,
+    viewModel: NavViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val activity = context as Activity
+
+    val navigator = viewModel.navigator
+
+    fun navigateToMainScreen() {
+        navigator.navigate(MeeDestinations.CONNECTIONS.route)
+    }
+
+    fun cleanConsent() {
+        if (consentRequest.isCrossDeviceFlow) navigateToMainScreen() else activity.finishAffinity()
+    }
 
     val authorizeRequest = { data: ConsentRequest ->
         val request = clearConsentsListFromDisabledOptionals(data)
@@ -39,12 +57,12 @@ fun ConsentPage(
         if (response != null) {
             ConsentPageAnimation {
                 try {
-                    onNext(response, consentRequest.redirectUri, context)
+                    onNext(response.openidResponse.idToken, consentRequest.redirectUri, context, consentRequest.nonce, consentRequest.isCrossDeviceFlow, false)
+                    cleanConsent()
                 } catch (e: Exception) {
                     Log.e("Connection failed", e.message.orEmpty())
                     showConsentToast(context, "Connection failed. Please try again")
                 }
-                activity.finishAffinity()
             }
         } else {
             showConsentToast(context, "Connection failed. Please try again")
@@ -57,19 +75,52 @@ fun ConsentPage(
     }
 }
 
-fun onNext(coreData: RpAuthResponseWrapper?, redirectUri: String, context: Context) {
-    val uri = URI(redirectUri)
-    val builder = Uri.Builder()
-    val result = builder.scheme(uri.scheme)
-        .authority(uri.authority)
-        .path(uri.path)
-        .appendQueryParameter("id_token", coreData?.openidResponse?.idToken)
-        .encodedFragment(uri.fragment)
-        .build()
+fun onNext(
+    idToken: String?,
+    redirectUri: String,
+    context: Context,
+    nonce: String,
+    isCrossDeviceFlow: Boolean,
+    isDecline: Boolean
+) {
+    if (!isCrossDeviceFlow) {
+        val uri = URI(redirectUri)
+        val builder = Uri.Builder()
+        val result = builder.scheme(uri.scheme)
+            .authority(uri.authority)
+            .path(uri.path)
+            .appendQueryParameter("id_token", idToken)
+            .encodedFragment(uri.fragment)
+            .build()
+        linkToWebpage(context, result)
+    } else {
+        if (idToken == null) {
+            showConsentToast(
+                context,
+                "Connection failed. Please try again."
+            )
+            return
+        }
+        GlobalScope.launch {
+            try {
+                WebService().passConsentOverRelay(nonce, idToken)
+                withContext(Dispatchers.Main) {
+                    showConsentToast(
+                        context,
+                        if (isDecline) "Connection declined." else "The connection has been set up!"
+                    )
+                }
 
-    linkToWebpage(context, result)
+            } catch (e: IOException) {
+                withContext(Dispatchers.Main) {
+                    showConsentToast(context, "Connection failed. Please try again.")
+                }
+
+            }
+
+        }
+    }
 }
-
 
 fun clearConsentsListFromDisabledOptionals(data: ConsentRequest): ConsentRequest {
     data.claims.map { claim ->
