@@ -16,8 +16,4 @@ class Navigator @Inject constructor() {
     fun popBackStack(): Boolean {
         return navController.popBackStack()
     }
-
-    fun navigateToMainScreen() {
-        navController.navigate(MeeDestinations.CONNECTIONS.route)
-    }
 }

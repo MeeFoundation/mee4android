@@ -28,12 +28,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
-import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.components.DeclineButton
 import foundation.mee.android_client.ui.components.Expander
 import foundation.mee.android_client.ui.components.NoRippleInteractionSource
@@ -49,11 +47,9 @@ import uniffi.mee_agent.RpAuthResponseWrapper
 @Composable
 fun ConsentPageNew(
     consentViewModel: ConsentViewModel,
-    viewModel: NavViewModel = hiltViewModel(),
     onAccept: (ConsentRequest) -> RpAuthResponseWrapper?
 ) {
     val data by consentViewModel.uiState.collectAsState()
-    val navigator = viewModel.navigator
 
     val context = LocalContext.current
     val activity = context as Activity
@@ -279,7 +275,7 @@ fun ConsentPageNew(
                         } else {
                             showConsentToast(context, "Unknown Error")
                         }
-                        navigator.navigateToMainScreen()
+                        activity.finishAffinity()
                     }
                 }
                 Row(modifier = Modifier.padding(bottom = 30.dp)) {
