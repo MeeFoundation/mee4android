@@ -1,6 +1,5 @@
 package foundation.mee.android_client.views.consent
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,8 +29,6 @@ import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.models.CreditCard
 import foundation.mee.android_client.ui.theme.*
 
-val emptyCreditCardValue = CreditCard(number = null, cvc = null, expirationDate = null)
-
 @Composable
 private fun Placeholder(text: String) {
     Text(
@@ -59,15 +56,16 @@ fun RowScope.ConsentCardEntryInput(
     entry: ConsentRequestClaim,
     updateValue: (String, String) -> Unit,
 ) {
+    val emptyCreditCardValue = CreditCard(number = null, cvc = null, expirationDate = null)
     val moshi: Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
     val jsonAdapter: JsonAdapter<CreditCard> = moshi.adapter()
 
     var creditCardEntryValues by remember {
-        mutableStateOf(emptyCreditCardValue)
+        mutableStateOf(emptyCreditCardValue.copy())
     }
 
     LaunchedEffect(key1 = entry) {
-        creditCardEntryValues = entry.getCardTypeFields() ?: emptyCreditCardValue
+        creditCardEntryValues = entry.getCardTypeFields() ?: emptyCreditCardValue.copy()
     }
 
     fun updateValue() {
