@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
+import foundation.mee.android_client.models.ConsentEntryType
 import foundation.mee.android_client.utils.getConsentEntryIconByType
 import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.ui.theme.*
@@ -83,7 +84,11 @@ fun ConsentEntry(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (!isReadOnly && (entry.isRequired && entry.isOpen) || (!entry.isRequired && entry.isOn && entry.isOpen)) {
-                    ConsentSimpleEntryInput(entry = entry, updateValue = updateValue)
+                    if (entry.type == ConsentEntryType.card) {
+                        ConsentCardEntryInput(entry = entry, updateValue = updateValue)
+                    } else {
+                        ConsentSimpleEntryInput(entry = entry, updateValue = updateValue)
+                    }
                 } else {
                     Text(
                         text = entry.getFieldName(),
