@@ -1,12 +1,14 @@
 package foundation.mee.android_client.views.consent
 
 import android.util.Log
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.TextField
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -14,34 +16,42 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import foundation.mee.android_client.models.ConsentRequestClaim
+import foundation.mee.android_client.models.CreditCard
 import foundation.mee.android_client.ui.theme.*
-import java.lang.Exception
 
-data class CreditCard(
-    var number: String? = null,
-    var exp: String? = null,
-    var cvc: String? = null,
-)
+val emptyCreditCardValue = CreditCard(number = null, cvc = null, expirationDate = null)
 
-enum class CreditCardFieldType {
-    number,
-    exp,
-    cvc
+@Composable
+private fun Placeholder(text: String) {
+    Text(
+        text = text,
+        fontFamily = publicSansFamily,
+        fontSize = 18.sp,
+        fontWeight = FontWeight(400),
+        color = DefaultGray400,
+        textAlign = TextAlign.Left,
+    )
 }
 
-val emptyCreditCardValue = CreditCard(number = null, cvc = null, exp = null)
+private val textStyle = TextStyle(
+    fontFamily = publicSansFamily,
+    fontSize = 18.sp,
+    fontWeight = FontWeight(400),
+    textAlign = TextAlign.Left
+)
+
+
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
@@ -57,79 +67,71 @@ fun RowScope.ConsentCardEntryInput(
     }
 
     LaunchedEffect(key1 = entry) {
-        Log.d("value: ", entry.value ?: "")
-        try {
-            val parsedValue = entry.value?.let { jsonAdapter.fromJson(it) }
-            if (parsedValue != null) {
-                creditCardEntryValues = parsedValue
-            }
-        } catch (e: IllegalArgumentException) {
+        creditCardEntryValues = entry.getCardTypeFields() ?: emptyCreditCardValue
+    }
 
-        }
-
+    fun updateValue() {
+        val updatedValueStringified = jsonAdapter.toJson(creditCardEntryValues)
+        updateValue(entry.id, updatedValueStringified)
     }
 
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 11.dp)
+            .background(Color.Transparent),
+        verticalArrangement = Arrangement.spacedBy(11.dp)
+
     ) {
-        TextField(
+        BasicTextField(
             value = creditCardEntryValues?.number ?: "",
             onValueChange = {
                 creditCardEntryValues?.number = it
-                val updatedValueStringified = jsonAdapter.toJson(creditCardEntryValues)
-                updateValue(entry.id, updatedValueStringified)
+                updateValue()
             },
-            textStyle = TextStyle(
-                fontFamily = publicSansFamily,
-                fontSize = 18.sp,
-                fontWeight = FontWeight(400),
-                color = if (!entry.isOn && !entry.isRequired) ChevronRightIconColor
-                else {
-                    if (entry.isOpen) PartnerEntryOnBackgroundColor
-                    else MeeGreenPrimaryColor
-                },
-                textAlign = TextAlign.Left
-            ),
+            textStyle = textStyle,
+            decorationBox = { innerTextField ->
+                if (creditCardEntryValues.number.isNullOrEmpty()) {
+                    Placeholder("Card number")
+                }
+                innerTextField()
+            }
         )
-        TextField(
-            value = creditCardEntryValues?.cvc ?: "",
-            onValueChange = {
-                creditCardEntryValues?.cvc = it
-                val updatedValueStringified = jsonAdapter.toJson(creditCardEntryValues)
-                updateValue(entry.id, updatedValueStringified)
-            },
-            textStyle = TextStyle(
-                fontFamily = publicSansFamily,
-                fontSize = 18.sp,
-                fontWeight = FontWeight(400),
-                color = if (!entry.isOn && !entry.isRequired) ChevronRightIconColor
-                else {
-                    if (entry.isOpen) PartnerEntryOnBackgroundColor
-                    else MeeGreenPrimaryColor
-                },
-                textAlign = TextAlign.Left
-            ),
-        )
-        TextField(
-            value = creditCardEntryValues?.exp ?: "",
-            onValueChange = {
-                creditCardEntryValues?.exp = it
-                val updatedValueStringified = jsonAdapter.toJson(creditCardEntryValues)
-                updateValue(entry.id, updatedValueStringified)
-            },
-            textStyle = TextStyle(
-                fontFamily = publicSansFamily,
-                fontSize = 18.sp,
-                fontWeight = FontWeight(400),
-                color = if (!entry.isOn && !entry.isRequired) ChevronRightIconColor
-                else {
-                    if (entry.isOpen) PartnerEntryOnBackgroundColor
-                    else MeeGreenPrimaryColor
-                },
-                textAlign = TextAlign.Left
-            ),
-        )
+        Row {
+            Column(Modifier.weight(1f)) {
+                BasicTextField(
+                    value = creditCardEntryValues?.cvc ?: "",
+                    onValueChange = {
+                        creditCardEntryValues?.cvc = it
+                        updateValue()
+                    },
+                    textStyle = textStyle,
+                    decorationBox = { innerTextField ->
+                        if (creditCardEntryValues.cvc.isNullOrEmpty()) {
+                            Placeholder("CVC")
+                        }
+                        innerTextField()
+                    }
+                )
+            }
+
+            Column(Modifier.weight(1f)) {
+                BasicTextField(
+                    value = creditCardEntryValues?.expirationDate ?: "",
+                    onValueChange = {
+                        creditCardEntryValues?.expirationDate = it
+                        updateValue()
+                    },
+                    textStyle = textStyle,
+                    decorationBox = { innerTextField ->
+                        if (creditCardEntryValues.expirationDate.isNullOrEmpty()) {
+                            Placeholder("MM/YY")
+                        }
+                        innerTextField()
+                    }
+                )
+            }
+        }
+
     }
 
 }
