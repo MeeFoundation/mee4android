@@ -22,6 +22,7 @@ import foundation.mee.android_client.effects.OnLifecycleEvent
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.navigation.MeeNavGraph
 import foundation.mee.android_client.navigation.NavViewModel
+import foundation.mee.android_client.service.ReferrerClient
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.views.MeeWhiteScreen
 import kotlinx.coroutines.launch
@@ -42,7 +43,7 @@ class MainActivity : FragmentActivity() {
             )
             val hadConnectionsBefore by settingsDataStore.getHadConnectionsBeforeSetting()
                 .collectAsState(
-                    initial = false
+                    initial = null
                 )
 
             val coroutineScope = rememberCoroutineScope()
@@ -76,6 +77,16 @@ class MainActivity : FragmentActivity() {
                         }
                     }
 
+                    if (hadConnectionsBefore != null) {
+                        if (hadConnectionsBefore == false) {
+                            ReferrerClient(ctx).getReferrerUrl {
+                                coroutineScope.launch {
+                                    settingsDataStore.saveReferrerUrlSetting(it)
+                                }
+                            }
+                        }
+                    }
+
                     if (initialFlowDone != null) {
                         if (loginSuccess || initialFlowDone == false
                         ) {
@@ -88,7 +99,7 @@ class MainActivity : FragmentActivity() {
                                 ) {
                                     MeeNavGraph(
                                         initialFlowDone = initialFlowDone == true,
-                                        hadConnectionsBefore = hadConnectionsBefore
+                                        hadConnectionsBefore = hadConnectionsBefore == true
                                     )
                                 }
 
