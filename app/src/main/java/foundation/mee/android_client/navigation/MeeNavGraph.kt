@@ -1,7 +1,5 @@
 package foundation.mee.android_client.navigation
 
-import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -10,16 +8,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.utils.DEEP_LINK_URL_STRING
 import foundation.mee.android_client.navigation.MeeDestinations.*
-import foundation.mee.android_client.utils.buildLegacySiopUrl
+import foundation.mee.android_client.utils.buildConsentRequestFromUrl
 import foundation.mee.android_client.views.connections.ConnectionsScreen
 import foundation.mee.android_client.views.consent.ConsentPage
 import foundation.mee.android_client.views.initial_flow.InitialFlow
 import foundation.mee.android_client.views.manage.ManageConnection
 import foundation.mee.android_client.views.welcome_pages.WelcomePage
-import uniffi.mee_agent.siopRpAuthRequestFromUrl
 
 @Composable
 fun MeeNavGraph(
@@ -62,25 +58,24 @@ fun MeeNavGraph(
             arguments = listOf(
                 navArgument("params") { type = NavType.StringType }),
             deepLinks = listOf(
-                navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/authorize?{params}" },
-                navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/#/consent/{params}" }
+                navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/authorize?{params}" }
             )
         ) { backStackEntry ->
-            val consentRequest = try {
-                val data = backStackEntry.arguments?.getString("params")
-                if (data != null) {
-                    // TODO refactor when Olde York Times will be supporting siop authorization
-                    val siopUrl = if (data.contains("request"))
-                        "${DEEP_LINK_URL_STRING}/authorize?${data}"
-                    else buildLegacySiopUrl("${DEEP_LINK_URL_STRING}/#/consent/", data)
-                    val res = siopRpAuthRequestFromUrl(siopUrl)
-                    val respondTo = Uri.parse(siopUrl).getQueryParameter("respondTo")
-                    val isCrossDeviceFlow = respondTo != null && respondTo == "proxy"
-                    ConsentRequest(res, isCrossDeviceFlow)
-                } else null
-            } catch (e: Exception) {
-                null
-            }
+            val params = backStackEntry.arguments?.getString("params")
+            val siopUrl = "${DEEP_LINK_URL_STRING}/authorize?${params}"
+            val consentRequest = buildConsentRequestFromUrl(siopUrl)
+
+            if (consentRequest != null) {
+                ConsentPage(consentRequest)
+            } else ConnectionsScreen()
+        }
+
+        composable(
+            route = "${CONTEXT_RECOVERY_FLOW.route}/{params}", arguments = listOf(
+                navArgument("params") { type = NavType.StringType })
+        ) {
+            val params = it.arguments?.getString("params")
+            val consentRequest = params?.let { buildConsentRequestFromUrl(it) }
 
             if (consentRequest != null) {
                 ConsentPage(consentRequest)
