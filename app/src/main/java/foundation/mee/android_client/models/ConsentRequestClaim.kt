@@ -13,6 +13,7 @@ data class CreditCard(
     var expirationDate: String? = null,
     var cvc: String? = null,
 )
+
 enum class ConsentEntryType(val type: String) {
     string("string"),
     date("date"),
@@ -53,12 +54,17 @@ data class ConsentRequestClaim(
     )
 
     fun isIncorrect(): Boolean {
+        if (type == ConsentEntryType.card) {
+            val cardFields = getCardTypeFields()
+            return (isRequired || isOn) && (cardFields?.number.isNullOrEmpty() || cardFields?.cvc.isNullOrEmpty() || cardFields?.expirationDate.isNullOrEmpty())
+        }
         return (isRequired || isOn) && value.isNullOrEmpty()
     }
 
     fun getCardTypeFields(): CreditCard? {
         try {
             val moshi: Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+
             @OptIn(ExperimentalStdlibApi::class)
             val jsonAdapter: JsonAdapter<CreditCard> = moshi.adapter()
             val parsedValue = value?.let { jsonAdapter.fromJson(it) }
@@ -67,6 +73,7 @@ data class ConsentRequestClaim(
             return null
         }
     }
+
     fun getFieldName(): String {
         var primaryValue = value
         if (type == ConsentEntryType.card) {
