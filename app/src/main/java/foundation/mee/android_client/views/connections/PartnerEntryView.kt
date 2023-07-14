@@ -5,7 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.*
 import foundation.mee.android_client.utils.getURLFromString
@@ -33,7 +35,8 @@ fun PartnerEntry(
     connection: MeeConnection,
     modifier: Modifier = Modifier,
     hasEntry: Boolean = false,
-    viewModel: NavViewModel = hiltViewModel()
+    viewModel: NavViewModel = hiltViewModel(),
+    agentViewModel: MeeAgentViewModel = hiltViewModel(),
 ) {
     val isCertified = true
     val navigator = viewModel.navigator
@@ -43,6 +46,10 @@ fun PartnerEntry(
     }
     val context = LocalContext.current
 
+    var showCompatibleWarning by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
@@ -51,8 +58,13 @@ fun PartnerEntry(
                 if (hasEntry) {
                     navigator.navigate("${MANAGE.route}/${getHostname(connection.id)}")
                 } else {
-                    val uri = Uri.parse(connection.id)
-                    linkToWebpage(context, uri)
+                    when (connection.value) {
+                        is MeeConnectionType.Gapi -> showCompatibleWarning = true
+                        else -> {
+                            val uri = Uri.parse(connection.id)
+                            linkToWebpage(context, uri)
+                        }
+                    }
                 }
             },
         color = MaterialTheme.colors.surface,
@@ -118,6 +130,13 @@ fun PartnerEntry(
         }
     }
 
+    if (showCompatibleWarning) {
+        WarningPopup(onDismiss = { showCompatibleWarning = false }) {
+            showCompatibleWarning = false
+            val url = agentViewModel.meeAgentStore.getGoogleIntegrationUrl()
+            url?.let { linkToWebpage(context, Uri.parse(it)) }
+        }
+    }
 }
 
 

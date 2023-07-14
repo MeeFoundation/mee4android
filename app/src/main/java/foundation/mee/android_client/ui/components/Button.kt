@@ -1,8 +1,7 @@
 package foundation.mee.android_client.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -15,10 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
-import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.ui.theme.PartnerEntryBackgroundColor
-import foundation.mee.android_client.ui.theme.publicSansFamily
+import foundation.mee.android_client.ui.theme.*
 
 @Composable
 fun PrimaryButton(
@@ -95,6 +91,33 @@ fun RejectButton(
             fontSize = 18.sp,
             letterSpacing = 0.45.sp
         )
+    }
+}
+
+@Composable
+fun MainButton(
+    action: () -> Unit = {}
+) {
+    Button(
+        onClick = action,
+        shape = RoundedCornerShape(size = 13.dp),
+        elevation = null,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+        modifier = Modifier
+            .padding(0.dp)
+            .height(60.dp)
+            .fillMaxWidth()
+    ) {
+        Surface(color = Color.White) {
+            Text(
+                text = "Continue",
+                fontFamily = publicSansFamily,
+                fontWeight = FontWeight(600),
+                color = SystemBlueLight,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 

@@ -134,4 +134,21 @@ class MeeAgentStore @Inject constructor(
             ConsentRequest(contextData, consentRequest)
         }?.let { request -> authorize(request) }
     }
+
+    fun getGoogleIntegrationUrl(): Url? {
+        return try {
+            agent.googleApiProviderCreateOauthBrowsableUrl()
+        } catch (e: Exception) {
+            Log.e("getGoogleIntegrationUrl", e.message.orEmpty())
+            null
+        }
+    }
+
+    fun createGoogleConnection (url: String) {
+        try {
+            agent.googleApiProviderCreateOauthConnection(url)
+        } catch (e: Exception) {
+            Log.e("createGoogleConnection", e.message.orEmpty())
+        }
+    }
 }

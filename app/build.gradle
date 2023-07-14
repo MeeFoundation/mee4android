@@ -63,6 +63,8 @@ cargo {
     apiLevel = 23
     exec { spec, toolchain ->
         spec.environment("RANLIB", "~/Library/Android/sdk/ndk/${android.ndkVersion}/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-ranlib")
+        spec.environment("GOOGLE_API_CLIENT_ID", "211039582599-hmmovsfo59081bt9k19kd3k7927nettq.apps.googleusercontent.com")
+        spec.environment("GOOGLE_API_REDIRECT_URI", "com.googleusercontent.apps.211039582599-hmmovsfo59081bt9k19kd3k7927nettq:/oauth2redirect")
     }
 }
 
