@@ -139,7 +139,7 @@ fun InitialFlow(
                         iconSize = 60.dp,
                         title = "Please set up device credentials!",
                         message = "Mee is you.\n" +
-                                "We need to detect and authenticate your identity to make sure it’s you who is trying to access the Mee Identity Agent.",
+                                "We need to detect and authenticate your identity to make sure it’s you who is trying to access the Mee Smartwallet.",
                         onNextSecondaryButton = { activity?.finishAffinity() }
                     ) {
                         context.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))

@@ -12,6 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Mee Identity Agent"
+rootProject.name = "Mee Smartwallet"
 include ':app'
 
