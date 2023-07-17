@@ -42,7 +42,6 @@ import foundation.mee.android_client.ui.components.PrimaryButton
 import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.utils.CERTIFIED_URL_STRING
 import foundation.mee.android_client.utils.getURLFromString
-import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.utils.showConsentToast
 import kotlinx.coroutines.launch
 import uniffi.mee_agent.RpAuthResponseWrapper

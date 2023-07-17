@@ -1,6 +1,7 @@
 package foundation.mee.android_client.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,12 +9,15 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.theme.*
 
 @Composable
@@ -118,6 +122,35 @@ fun MainButton(
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+@Composable
+fun MeeCertifiedButton(
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickableWithoutRipple {
+                onClick()
+            }) {
+        Image(
+            painter = painterResource(R.drawable.mee_certified_logo),
+            contentDescription = null,
+            modifier = Modifier
+                .height(20.dp)
+                .width(20.dp)
+                .padding(end = 5.dp)
+        )
+        Text(
+            text = "Mee-certified?",
+            fontFamily = publicSansFamily,
+            fontWeight = FontWeight(500),
+            color = MeeBrand,
+            fontSize = 14.sp,
+            textAlign = TextAlign.Center,
+            textDecoration = TextDecoration.Underline
+        )
     }
 }
 
