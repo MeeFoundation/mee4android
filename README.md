@@ -1,6 +1,6 @@
 <div align="center">
   <br>
-    <img src="https://docs-dev.mee.foundation/_astro/logo-dark.6a561cc8.svg" width="200px">
+    <img src="readme_logo.svg" width="200px">
     <h1>Mee Foundation</h1>
 </div>
 <br>
@@ -34,9 +34,9 @@ Any user who installed the Mee Smartwallet app can sign in or sign up to website
 * End user is an entity for whom identity info is requested.
 * Holder is an entity that receives credentials and has control over them to present them to the RP.
 
-In our case, the RPs are Mee-compatible partner websites (such as https://mee.foundation). Holder is the Mee Smartwallet app.
+In our case, the RPs are partner websites (such as [mee.foundation](https://mee.foundation)). Holder is the Mee Smartwallet app.
 
-When the user clicks "Connect with Mee" on a Mee-compatible partner website, OIDC Request data is passed to the Mee Smartwallet app and a user interface generated, requesting the data claims required.
+When the user clicks "Connect with Mee" on a partner website, OIDC Request data is passed to the Mee Smartwallet app and a user interface generated, requesting the data claims required.
 
 When the user approves the requested data to be shared, the Mee Smartwallet generates an [OIDC Response](https://openid.net/specs/openid-connect-core-1_0.html#SelfIssuedResponse), encrypts and signs the data and then passes it back to the Relying Party.
 
@@ -79,18 +79,18 @@ At Mee Smartwallet, we use **Kotlin** for development and **Gradle** as our buil
 
 The overall project structure is standard, including a [main](app/src/main) directory containing:
 - [AndroidManifest.xml](app/src/main/AndroidManifest.xml)
-- `Kotlin code sources` in a [foundation/mee/android_client](app/src/main/java/foundation/mee/android_client)  
-- `application resources`, such as drawable files in a [res/](app/src/main/res/) directory
+- `Kotlin code sources` in a [foundation/mee/android_client/](app/src/main/java/foundation/mee/android_client)  
+- `application resources`, such as drawable files in a [res/](app/src/main/res) directory
 
 The Kotlin code sources overview:
 - [controller/biometry/](app/src/main/java/foundation/mee/android_client/controller/biometry) lock screen authentication logic
-- [effects/](app/src/main/java/foundation/mee/android_client/effects/) side-effects, i.e. related to the lifecycle
-- [models/](app/src/main/java/foundation/mee/android_client/models/) data models and the utils related
-- [navigation/](app/src/main/java/foundation/mee/android_client/navigation/) everything related to the app navigation
-- [service/](app/src/main/java/foundation/mee/android_client/service/) web services and clients (i.e. InstallReferrerClient)
-- [ui/](app/src/main/java/foundation/mee/android_client/ui/) shared UI components (i.e. buttons)
-- [utils/](app/src/main/java/foundation/mee/android_client/utils/) set of common helpers
-- [views/](app/src/main/java/foundation/mee/android_client/views/) application views
+- [effects/](app/src/main/java/foundation/mee/android_client/effects) side-effects, i.e. related to the lifecycle
+- [models/](app/src/main/java/foundation/mee/android_client/models) data models and the utils related
+- [navigation/](app/src/main/java/foundation/mee/android_client/navigation) everything related to the app navigation
+- [service/](app/src/main/java/foundation/mee/android_client/service) web services and clients (i.e. InstallReferrerClient)
+- [ui/](app/src/main/java/foundation/mee/android_client/ui) shared UI components (i.e. buttons)
+- [utils/](app/src/main/java/foundation/mee/android_client/utils) set of common helpers
+- [views/](app/src/main/java/foundation/mee/android_client/views) application views
 - [MainActivity.kt](app/src/main/java/foundation/mee/android_client/MainActivity.kt) 
 - [MainApplication.kt](app/src/main/java/foundation/mee/android_client/MainApplication.kt)
 - [MeeAgentViewModel.kt](app/src/main/java/foundation/mee/android_client/MeeAgentViewModel.kt)
