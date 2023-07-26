@@ -1,15 +1,13 @@
 package foundation.mee.android_client.views.consent
 
-import android.net.Uri
-import android.webkit.URLUtil
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import foundation.mee.android_client.models.ConsentRequestClaim
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.net.URI
 
+const val ERROR_DECLINED = "error:user_cancelled,error_description:user%20declined%20the%20request"
 
 @Composable
 fun rememberConsentPageNewState(
@@ -69,23 +67,5 @@ class ConsentPageNewState(
 
     fun findIndexById(list: List<ConsentRequestClaim>, incorrectId: String): Int {
         return list.indexOfFirst { it.id == incorrectId }
-    }
-
-    val ERROR_DECLINED = "error:user_cancelled,error_description:user%20declined%20the%20request"
-
-    fun onDeclineBuildUri(redirectUri: String?): Uri? {
-        if (URLUtil.isValidUrl(redirectUri)) {
-            val uri = URI(redirectUri)
-            val builder = Uri.Builder()
-            return builder.scheme(uri.scheme)
-                .authority(uri.authority)
-                .path(uri.path)
-                .appendQueryParameter(
-                    "id_token",
-                    "error:user_cancelled,error_description:user%20declined%20the%20request"
-                )
-                .build()
-        }
-        return null
     }
 }

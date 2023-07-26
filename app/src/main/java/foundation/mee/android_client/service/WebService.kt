@@ -15,10 +15,10 @@ import java.net.URL
 const val baseUrl: String = "https://relay-dev.mee.foundation"
 
 class WebService {
-    private var client: OkHttpClient = OkHttpClient();
+    private var client: OkHttpClient = OkHttpClient()
 
     suspend fun passConsentOverRelay(id: String, data: String) {
-        val url = URL(baseUrl + "/put")
+        val url = URL("$baseUrl/put")
         val jsonObject = JSONObject()
         jsonObject.put("session_id", id)
         jsonObject.put("oidc_response", data)

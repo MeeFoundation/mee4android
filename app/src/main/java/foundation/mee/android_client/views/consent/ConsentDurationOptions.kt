@@ -1,23 +1,24 @@
 package foundation.mee.android_client.views.consent
 
+import foundation.mee.android_client.R
 import uniffi.mee_agent.RetentionDuration
 
 data class ConsentDurationOption(
-    val name: String,
-    val description: String,
+    val name: Int,
+    val description: Int,
     val value: RetentionDuration
 )
 
 
 val ConsentDurationOptions = listOf(
     ConsentDurationOption(
-        "While using app",
-        "Shared with provider’s app during usage;\ndeleted by provider afterwards",
+        R.string.consent_duration_while_using_name,
+        R.string.consent_duration_while_using_desc,
         RetentionDuration.WHILE_USING_APP
     ),
     ConsentDurationOption(
-        "Until connection deletion",
-        "Shared with provider’s app until connection\nis deleted; removed by provider afterwards",
+        R.string.consent_duration_until_deletion_name,
+        R.string.consent_duration_until_deletion_desc,
         RetentionDuration.UNTIL_CONNECTION_DELETION
     )
 )

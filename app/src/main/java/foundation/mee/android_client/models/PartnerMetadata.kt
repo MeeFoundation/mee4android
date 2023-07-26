@@ -32,8 +32,6 @@ data class PartnerMetadata(
                 subjectSyntaxTypesSupported = from.subjectSyntaxTypesSupported
             ) {
         val type = from.applicationType
-//        TODO: uncomment when type is ready
-//        require(type is String)
         this.type = ClientType.values().find { it.name == type } ?: ClientType.web
     }
 }

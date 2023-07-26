@@ -1,7 +1,6 @@
 package foundation.mee.android_client.views.consent
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.view.Gravity
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -21,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,13 +28,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
-import foundation.mee.android_client.navigation.MeeDestinations
-import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.components.DeclineButton
 import foundation.mee.android_client.ui.components.Expander
 import foundation.mee.android_client.ui.components.NoRippleInteractionSource
@@ -42,37 +39,26 @@ import foundation.mee.android_client.ui.components.PrimaryButton
 import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.utils.CERTIFIED_URL_STRING
 import foundation.mee.android_client.utils.getURLFromString
-import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.utils.showConsentToast
 import kotlinx.coroutines.launch
 import uniffi.mee_agent.RpAuthResponseWrapper
 
+val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 3f)
+
 @Composable
 fun ConsentPageNew(
     consentViewModel: ConsentViewModel,
-    viewModel: NavViewModel = hiltViewModel(),
+    onCleanConsent: () -> Unit,
     onAccept: (ConsentRequest) -> RpAuthResponseWrapper?
 ) {
     val data by consentViewModel.uiState.collectAsState()
-    val navigator = viewModel.navigator
 
     val context = LocalContext.current
-    val activity = context as Activity
 
     val hasOptionalFields = data.claims.any { x -> !x.isRequired }
 
     val optionalClaims = data.claims.filter { x -> !x.isRequired }
     val requiredClaims = data.claims.filter { x -> x.isRequired }
-
-    fun navigateToMainScreen() {
-        navigator.navigate(MeeDestinations.CONNECTIONS.route)
-    }
-
-    fun cleanConsent() {
-        if (data.isCrossDeviceFlow) navigateToMainScreen() else activity.finishAffinity()
-    }
-
-    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 3f)
 
     val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
     val hadConnectionsBefore by settingsDataStore.getHadConnectionsBeforeSetting()
@@ -176,7 +162,7 @@ fun ConsentPageNew(
                     textAlign = TextAlign.Center,
                 )
                 Text(
-                    text = "would like access to your information",
+                    text = stringResource(R.string.consent_screen_would_like_access),
                     fontFamily = publicSansFamily,
                     fontSize = 18.sp,
                     fontWeight = FontWeight(500),
@@ -188,7 +174,7 @@ fun ConsentPageNew(
                 )
 
                 Expander(
-                    title = "Required",
+                    title = stringResource(R.string.consent_screen_required),
                     modifier = Modifier.padding(bottom = 16.dp),
                     isExpanded = state.isRequiredSectionOpened,
                     onChangeExpanded = {
@@ -230,7 +216,7 @@ fun ConsentPageNew(
 
                 if (hasOptionalFields) {
                     Expander(
-                        title = "Optional",
+                        title = stringResource(R.string.consent_screen_optional),
                         isExpanded = state.isOptionalSectionOpened,
                         onChangeExpanded = {
                             state.isOptionalSectionOpened = !state.isOptionalSectionOpened
@@ -280,19 +266,25 @@ fun ConsentPageNew(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
-                        "Decline",
+                        stringResource(R.string.decline_button_text),
                     ) {
                         try {
-                            onNext(state.ERROR_DECLINED, data.redirectUri, context, data.nonce, data.isCrossDeviceFlow, true)
+                            onNext(
+                                ERROR_DECLINED,
+                                data.redirectUri,
+                                context,
+                                data.nonce,
+                                data.isCrossDeviceFlow,
+                                true
+                            )
 
                         } catch (e: Exception) {
                             showConsentToast(
                                 context,
-                                "Unknown error"
+                                R.string.unknown_error_toast
                             )
                         }
-
-                        cleanConsent()
+                        onCleanConsent()
                     }
                 }
                 Row(modifier = Modifier.padding(bottom = 30.dp)) {
@@ -300,7 +292,7 @@ fun ConsentPageNew(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(51.dp),
-                        title = "Approve and Continue"
+                        title = stringResource(R.string.approve_button_text)
                     ) {
                         val incorrectClaim = state.findIncorrectClaim(data.claims)
 
@@ -320,22 +312,31 @@ fun ConsentPageNew(
                             val response = onAccept(data)
                             if (response != null) {
                                 try {
-                                    onNext(response.openidResponse.idToken, data.redirectUri, context, data.nonce, data.isCrossDeviceFlow, false)
+                                    onNext(
+                                        response.openidResponse.idToken,
+                                        data.redirectUri,
+                                        context,
+                                        data.nonce,
+                                        data.isCrossDeviceFlow,
+                                        false
+                                    )
                                     if (!hadConnectionsBefore) {
                                         coroutineScope.launch {
                                             settingsDataStore.saveHadConnectionsBeforeSetting(flag = true)
                                         }
                                     }
-                                    cleanConsent()
-                                    
+                                    onCleanConsent()
                                 } catch (e: Exception) {
                                     showConsentToast(
                                         context,
-                                        "Unknown error"
+                                        R.string.unknown_error_toast
                                     )
                                 }
                             } else {
-                                showConsentToast(context, "Connection failed. Please try again.")
+                                showConsentToast(
+                                    context,
+                                    R.string.connection_failed_toast
+                                )
                             }
                         }
                     }
@@ -407,7 +408,7 @@ fun WebViewComposable(url: String, onClose: () -> Unit) {
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .height(51.dp),
-                title = "Close"
+                title = stringResource(R.string.close_button_text)
             ) { onClose() }
         }
     }

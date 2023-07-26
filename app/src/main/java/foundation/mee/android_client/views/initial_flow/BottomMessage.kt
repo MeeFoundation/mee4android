@@ -17,6 +17,7 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,7 @@ fun BottomMessage(icon: Painter, iconSize: Dp, title: String, message: String, o
         ) {
             Surface(color = Color.White) {
                 Text(
-                    text = "Continue",
+                    text = stringResource(R.string.continue_button_text),
                     fontFamily = publicSansFamily,
                     fontWeight = FontWeight(600),
                     color = SystemBlueLight,
@@ -73,7 +74,7 @@ fun RestrictBottomMessage(
                 .padding(0.dp)
                 .height(60.dp)
                 .fillMaxWidth(),
-            title = "Close",
+            title = stringResource(R.string.close_button_text),
             fontWeight = FontWeight(600),
             fontSize = 20.sp,
             backgroundColor = Color.Transparent
@@ -81,7 +82,7 @@ fun RestrictBottomMessage(
             onNextSecondaryButton()
         }
         PrimaryButton(
-            title = "Settings",
+            title = stringResource(R.string.settings_button_text),
             modifier = Modifier
                 .padding(0.dp)
                 .height(60.dp)
@@ -163,8 +164,8 @@ fun BottomMessagePreview() {
                 BottomMessage(
                     icon = painterResource(R.drawable.mee_guy_icon),
                     iconSize = 60.dp,
-                    title = "Set up biometrics",
-                    message = "Mee uses biometrics to make sure that you are the only person who can open the app.",
+                    title = stringResource(id = R.string.biometry_initial_step_title),
+                    message = stringResource(id = R.string.biometry_initial_step_message),
                     onNext = {}
                 )
             }

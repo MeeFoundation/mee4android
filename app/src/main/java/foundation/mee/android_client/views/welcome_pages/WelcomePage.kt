@@ -9,13 +9,12 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.navigation.MeeDestinations.*
 import foundation.mee.android_client.navigation.NavViewModel
+import foundation.mee.android_client.navigation.Navigator
 
 @Composable
 fun WelcomePage(
-    viewModel: NavViewModel = hiltViewModel(),
+    navigator: Navigator = hiltViewModel<NavViewModel>().navigator,
 ) {
-    val navigator = viewModel.navigator
-
     val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
 
     val referrerUrl by settingsDataStore.getReferrerUrlSetting()
@@ -36,7 +35,7 @@ fun WelcomePage(
         if (referrerUrl != null) {
             navigator.navigate("${CONTEXT_RECOVERY_FLOW.route}/${referrerUrl}")
         } else {
-            navigator.navigate(CONNECTIONS.route)
+            navigator.navigateToMainScreen()
         }
     }
 }

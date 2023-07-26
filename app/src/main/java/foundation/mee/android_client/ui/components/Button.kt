@@ -9,6 +9,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import foundation.mee.android_client.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -101,7 +103,7 @@ fun RejectButton(
 @Preview(showBackground = true)
 @Composable
 fun RejectButtonPreview() {
-    MeeIdentityAgentTheme() {
-        RejectButton(title = "Get Started")
+    MeeIdentityAgentTheme {
+        RejectButton(title = stringResource(R.string.get_started_button_title))
     }
 }

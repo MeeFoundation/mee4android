@@ -6,19 +6,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.NavViewModel
+import foundation.mee.android_client.navigation.Navigator
 
 @Composable
 fun ManageConnection(
     manageConnectionViewModel: ManageConnectionViewModel = hiltViewModel(),
-    navViewModel: NavViewModel = hiltViewModel()
+    navigator: Navigator = hiltViewModel<NavViewModel>().navigator
 ) {
     val loadState = manageConnectionViewModel.screenData.collectAsState()
-    val navigator = navViewModel.navigator
 
     when (loadState.value) {
-        is ConnectionDataState.None -> navigator.navigate(MeeDestinations.CONNECTIONS.route)
+        is ConnectionDataState.None -> navigator.navigateToMainScreen()
         is ConnectionDataState.Success -> {
             val pair = (loadState.value as ConnectionDataState.Success).data
             Scaffold(topBar = {

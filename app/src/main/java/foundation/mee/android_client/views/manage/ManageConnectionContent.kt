@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,7 @@ fun ManageConnectionContent(
                 .border(border = BorderStroke(2.dp, MeeGreenPrimaryColor))
         )
         Expander(
-            title = "Required info shared",
+            title = stringResource(R.string.manage_connection_required_expander),
             color = Color.White,
             modifier = Modifier.padding(bottom = 16.dp),
             isExpanded = state.isRequiredSectionOpened,
@@ -73,7 +74,7 @@ fun ManageConnectionContent(
 
         if (state.hasOptionalFields) {
             Expander(
-                title = "Optional info shared",
+                title = stringResource(R.string.manage_connection_optional_expander),
                 modifier = Modifier.padding(top = 16.dp),
                 color = Color.White,
                 isExpanded = state.isOptionalSectionOpened,
@@ -115,7 +116,7 @@ fun ManageConnectionContent(
                     .padding(start = 16.dp, top = 12.dp, end = 19.dp, bottom = 12.dp)
             ) {
                 Text(
-                    text = "Delete Connection",
+                    text = stringResource(R.string.manage_connection_delete_button),
                     fontFamily = publicSansFamily,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Normal,

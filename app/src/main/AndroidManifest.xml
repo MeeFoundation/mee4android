@@ -20,11 +20,9 @@
             android:name=".MainActivity"
             android:exported="true"
             android:excludeFromRecents="true"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <!-- TODO: research of how to support lower API versions and use MeeIdentityAgent theme here (if possible) -->
-            <!--            android:theme="@style/Theme.MeeIdentityAgent">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

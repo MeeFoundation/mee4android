@@ -3,6 +3,7 @@ package foundation.mee.android_client.controller.biometry
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
+import foundation.mee.android_client.R
 
 private val biometricsIgnoredErrors = listOf(
     BiometricPrompt.ERROR_NEGATIVE_BUTTON,
@@ -27,7 +28,7 @@ fun showBiometricPrompt(
                 if (errorCode !in biometricsIgnoredErrors) {
                     Toast.makeText(
                         activityContext,
-                        "Failed to authenticate: $errString",
+                        "${activityContext.getString(R.string.biometry_auth_error_toast)} $errString",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -47,7 +48,7 @@ fun showBiometricPrompt(
             override fun onAuthenticationFailed() {
                 Toast.makeText(
                     activityContext,
-                    "Unrecognized",
+                    activityContext.getString(R.string.biometry_unrecognized_error_toast),
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -56,4 +57,3 @@ fun showBiometricPrompt(
 
     biometricPrompt.authenticate(promptInfo)
 }
-
