@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import foundation.mee.android_client.models.WelcomePageEnum
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 
 @Composable
@@ -22,7 +21,7 @@ fun WelcomePageIconButton(
     IconButton(
         onClick = action,
         modifier = modifier
-            .size(width = 7.dp, height = 12.dp) // defaulted to this size after import from figma
+            .size(width = 7.dp, height = 12.dp)
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(

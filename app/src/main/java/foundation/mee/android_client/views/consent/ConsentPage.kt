@@ -12,15 +12,13 @@ import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.utils.linkToWebpage
 import foundation.mee.android_client.models.ConsentRequest
 import foundation.mee.android_client.models.MeeAgentStore
-import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.NavViewModel
+import foundation.mee.android_client.navigation.Navigator
+import foundation.mee.android_client.R
 import foundation.mee.android_client.utils.showConsentToast
 import foundation.mee.android_client.views.animations.ConsentPageAnimation
 import foundation.mee.android_client.service.WebService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.IOException
 import java.net.URI
 
@@ -28,20 +26,13 @@ import java.net.URI
 fun ConsentPage(
     consentRequest: ConsentRequest,
     meeAgentStore: MeeAgentStore = hiltViewModel<MeeAgentViewModel>().meeAgentStore,
-    viewModel: NavViewModel = hiltViewModel(),
+    navigator: Navigator = hiltViewModel<NavViewModel>().navigator
 ) {
     val context = LocalContext.current
     val activity = context as Activity
 
-    val navigator = viewModel.navigator
-
-    fun navigateToMainScreen() {
-        navigator.navigate(MeeDestinations.CONNECTIONS.route)
-    }
-
-    fun cleanConsent() {
-        if (consentRequest.isCrossDeviceFlow) navigateToMainScreen() else activity.finishAffinity()
-    }
+    val cleanConsent =
+        { if (consentRequest.isCrossDeviceFlow) navigator.navigateToMainScreen() else activity.finishAffinity() }
 
     val authorizeRequest = { data: ConsentRequest ->
         val request = clearConsentsListFromDisabledOptionals(data)
@@ -57,24 +48,33 @@ fun ConsentPage(
         if (response != null) {
             ConsentPageAnimation {
                 try {
-                    onNext(response.openidResponse.idToken, consentRequest.redirectUri, context, consentRequest.nonce, consentRequest.isCrossDeviceFlow, false)
+                    onNext(
+                        response.openidResponse.idToken,
+                        consentRequest.redirectUri,
+                        context,
+                        consentRequest.nonce,
+                        consentRequest.isCrossDeviceFlow,
+                        false
+                    )
                     cleanConsent()
                 } catch (e: Exception) {
                     Log.e("Connection failed", e.message.orEmpty())
-                    showConsentToast(context, "Connection failed. Please try again")
+                    showConsentToast(context, R.string.connection_failed_toast)
                 }
             }
         } else {
-            showConsentToast(context, "Connection failed. Please try again")
+            showConsentToast(context, R.string.connection_failed_toast)
         }
     } else {
         ConsentPageNew(
             onAccept = authorizeRequest,
+            onCleanConsent = cleanConsent,
             consentViewModel = ConsentViewModel(consentRequest)
         )
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 fun onNext(
     idToken: String?,
     redirectUri: String,
@@ -97,7 +97,7 @@ fun onNext(
         if (idToken == null) {
             showConsentToast(
                 context,
-                "Connection failed. Please try again."
+                R.string.connection_failed_toast
             )
             return
         }
@@ -107,13 +107,13 @@ fun onNext(
                 withContext(Dispatchers.Main) {
                     showConsentToast(
                         context,
-                        if (isDecline) "Connection declined." else "The connection has been set up!"
+                        if (isDecline) R.string.connection_declined_toast else R.string.connection_success_toast
                     )
                 }
 
             } catch (e: IOException) {
                 withContext(Dispatchers.Main) {
-                    showConsentToast(context, "Connection failed. Please try again.")
+                    showConsentToast(context, R.string.connection_failed_toast)
                 }
 
             }

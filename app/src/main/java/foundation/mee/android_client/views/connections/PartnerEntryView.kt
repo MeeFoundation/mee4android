@@ -24,6 +24,7 @@ import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.navigation.MeeDestinations.*
+import foundation.mee.android_client.navigation.Navigator
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.utils.getHostname
 import foundation.mee.android_client.utils.linkToWebpage
@@ -33,10 +34,9 @@ fun PartnerEntry(
     connection: MeeConnection,
     modifier: Modifier = Modifier,
     hasEntry: Boolean = false,
-    viewModel: NavViewModel = hiltViewModel()
+    navigator: Navigator = hiltViewModel<NavViewModel>().navigator
 ) {
     val isCertified = true
-    val navigator = viewModel.navigator
     val clientMetadata = when (val conn = connection.value) {
         is MeeConnectionType.Siop -> conn.value.clientMetadata
         else -> null

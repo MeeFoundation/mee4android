@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import foundation.mee.android_client.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,8 +31,7 @@ fun ConnectionsScreenTitle() {
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                // TODO: extract to string resource???
-                text = "Connections",
+                text = stringResource(R.string.connections_screen_title),
                 fontFamily = publicSansFamily,
                 fontSize = 17.sp,
                 fontWeight = FontWeight(600),
@@ -48,7 +49,7 @@ fun ConnectionsScreenTitle() {
 @Preview(showBackground = true)
 @Composable
 fun ConnectionsScreenTitlePreview() {
-    MeeIdentityAgentTheme() {
+    MeeIdentityAgentTheme {
         ConnectionsScreenTitle()
     }
 }

@@ -3,13 +3,9 @@ package foundation.mee.android_client.views.wizard_pages
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import foundation.mee.android_client.R
-import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.MeeProgressCircleColor
 import kotlinx.coroutines.delay

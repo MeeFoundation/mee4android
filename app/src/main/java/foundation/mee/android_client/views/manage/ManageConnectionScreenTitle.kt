@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment.Companion.BottomStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -61,7 +62,7 @@ fun ManageConnectionScreenTitle(
                             .height(17.dp)
                     )
                     Text(
-                        text = "Back",
+                        text = stringResource(R.string.back_button_text),
                         fontFamily = publicSansFamily,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
@@ -75,7 +76,7 @@ fun ManageConnectionScreenTitle(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = "Manage Connection",
+                        text = stringResource(R.string.manage_connection_title),
                         fontFamily = publicSansFamily,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.SemiBold,

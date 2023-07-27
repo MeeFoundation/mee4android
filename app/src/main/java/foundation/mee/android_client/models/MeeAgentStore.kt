@@ -20,7 +20,6 @@ class MeeAgentStore @Inject constructor(
     private lateinit var agent: MeeAgent
 
     init {
-        // TODO come up with the isolated path later and use MeeAndroidSettingsDataStore to save it
         try {
             val docsAbsolutePath = context.applicationInfo.dataDir
             val dsUrl = "$docsAbsolutePath${File.separator}mee.sqlite"
@@ -55,18 +54,6 @@ class MeeAgentStore @Inject constructor(
             connectionsCore.map { MeeConnection(it) }
         } catch (e: Exception) {
             Log.e("error getting all connections: ", e.message.orEmpty())
-            null
-        }
-    }
-
-    fun getAllContexts(): List<MeeContext>? {
-        return try {
-            val connectionsCore = agent.otherPartyConnections()
-            val contexts = connectionsCore
-                .mapNotNull { getLastConnectionConsentById(it.id) }
-            contexts
-        } catch (e: Exception) {
-            Log.e("error getting all contexts: ", e.message.orEmpty())
             null
         }
     }
