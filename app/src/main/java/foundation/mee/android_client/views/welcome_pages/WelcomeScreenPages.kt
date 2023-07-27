@@ -14,14 +14,13 @@ import androidx.compose.ui.unit.dp
 fun ScreenScaffold(
     @DrawableRes image: Int,
     modifier: Modifier = Modifier,
-    bottomBar: @Composable() (() -> Unit)
+    bottomBar: @Composable (() -> Unit)
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        // TODO fix in older versions
         Image(
             painter = painterResource(id = image),
             contentDescription = null,

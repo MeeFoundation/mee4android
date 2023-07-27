@@ -1,12 +1,11 @@
 package foundation.mee.android_client.views.wizard_pages
 
-import androidx.compose.foundation.background
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,7 +22,7 @@ fun LoadingScreenWhitePage(
     progress: Float,
     fillTextBar: Boolean = true,
     text: String?,
-    modifierBox: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifierBox: Modifier = Modifier,
     modifierLogo: Modifier = Modifier,
     modifierCircle: Modifier = Modifier
 ) {
@@ -32,7 +31,7 @@ fun LoadingScreenWhitePage(
         verticalArrangement = if (fillTextBar) Arrangement.spacedBy(15.dp) else Arrangement.Center,
     ) {
         Spacer(modifier = Modifier.weight(278f))
-        Row() {
+        Row {
 
             Spacer(modifier = Modifier.weight(1f))
             MeeLogoWithCircleIndicator(
@@ -85,7 +84,7 @@ fun LoadingScreenWhitePage(
 @Preview(showBackground = true)
 @Composable
 fun LoadingScreenWhitePagePreview() {
-    MeeIdentityAgentTheme() {
+    MeeIdentityAgentTheme {
         LoadingScreenWhitePage(
             progress = 0.75f,
             text = stringResource(id = R.string.loading_white_page_1)
@@ -96,7 +95,7 @@ fun LoadingScreenWhitePagePreview() {
 @Preview(showBackground = true)
 @Composable
 fun LoadingScreenWhitePageNullPreview() {
-    MeeIdentityAgentTheme() {
+    MeeIdentityAgentTheme {
         LoadingScreenWhitePage(
             progress = 0.95f,
             text = null

@@ -9,8 +9,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeConnection
 import foundation.mee.android_client.models.mobileApps
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
@@ -48,6 +50,6 @@ fun ConsentsList(
 @Composable
 fun ConsentsListPreview() {
     MeeIdentityAgentTheme {
-        ConsentsList(title = "Sites", meeConnections = mobileApps)
+        ConsentsList(title = stringResource(R.string.connections_list_sites_mobile_apps), meeConnections = mobileApps)
     }
 }

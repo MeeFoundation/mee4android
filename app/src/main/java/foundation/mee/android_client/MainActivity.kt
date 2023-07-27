@@ -73,7 +73,7 @@ class MainActivity : FragmentActivity() {
                                 loginSuccess = false
 
                             }
-                            else -> null
+                            else -> {}
                         }
                     }
 
@@ -125,17 +125,4 @@ class MainActivity : FragmentActivity() {
         setIntent(null)
     }
 
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-//@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MeeIdentityAgentTheme {
-        Greeting("Mee")
-    }
 }

@@ -15,10 +15,10 @@ fun getConsentEntryIconByType(entryType: ConsentEntryType): Int {
     }
 }
 
-fun showConsentToast(ctx: Context, message: String) {
+fun showConsentToast(ctx: Context, message: Int) {
     Toast.makeText(
         ctx,
-        message,
+        ctx.getString(message),
         Toast.LENGTH_SHORT
     ).show()
 }

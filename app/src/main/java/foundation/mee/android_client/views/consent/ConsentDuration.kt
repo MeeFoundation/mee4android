@@ -11,11 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import foundation.mee.android_client.R
 import foundation.mee.android_client.utils.getConsentEntryIconByType
 import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
@@ -45,7 +47,7 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = "Metadata",
+                text = stringResource(R.string.consent_metadata),
                 fontFamily = publicSansFamily,
                 fontSize = 17.sp,
                 fontWeight = FontWeight(700),
@@ -93,7 +95,7 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
                         .padding(top = 24.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
                 ) {
                     Text(
-                        text = "STORAGE DURATION",
+                        text = stringResource(R.string.consent_storage_duration_text),
                         fontFamily = publicSansFamily,
                         fontSize = 12.sp,
                         fontWeight = FontWeight(400),
@@ -106,8 +108,8 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
                 ) {
                     ConsentDurationOptions.forEach { durationElement ->
                         ConsentDurationEntry(
-                            text = durationElement.name,
-                            description = durationElement.description,
+                            text = stringResource(durationElement.name),
+                            description = stringResource(durationElement.description),
                             selected = durationElement.value == storageDuration,
                             modifier = Modifier.padding(
                                 start = 16.dp,
@@ -137,7 +139,7 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
                     .padding(bottom = 90.dp, end = 28.dp)
             ) {
                 Text(
-                    text = "Cancel",
+                    text = stringResource(R.string.negative_button_text),
                     color = MeeGreenPrimaryColor,
                     fontFamily = publicSansFamily,
                     fontSize = 14.sp,
@@ -147,7 +149,7 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
                         .clickableWithoutRipple { onComplete() }
                 )
                 Text(
-                    text = "Save",
+                    text = stringResource(R.string.save_button_text),
                     color = MeeGreenPrimaryColor,
                     fontFamily = publicSansFamily,
                     fontSize = 14.sp,

@@ -1,6 +1,6 @@
 package foundation.mee.android_client.controller.biometry
 
- import androidx.compose.runtime.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
@@ -29,7 +29,7 @@ fun BiometryHandler(
                 appIsActive = false
             }
 
-            else -> null
+            else -> {}
         }
     }
 
@@ -49,17 +49,5 @@ fun BiometryHandler(
             auth()
         }
     }
-
-
-
-//    TODO: uncomment in case of debugging
-//    println("biometryAsked is $biometryAsked")
-//    println("biometryEnabled is $biometryEnabled")
-
-//    TODO: uncomment in case of resetting the flags
-//    LaunchedEffect(Unit) {
-//        settingsDataStore.saveBiometricAuthAskedSetting(false)
-//        settingsDataStore.saveBiometricAuthSetting(false)
-//    }
 }
 

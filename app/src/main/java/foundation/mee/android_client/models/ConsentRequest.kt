@@ -2,11 +2,10 @@ package foundation.mee.android_client.models
 
 import uniffi.mee_agent.*
 
-// TODO: Think about removing "" and adding Option type
 data class ConsentRequest(
     val id: String,
     val scope: OidcScopeList,
-    var claims: List<ConsentRequestClaim>, // TODO set var to val after scroll tests in ConsentViewModel
+    val claims: List<ConsentRequestClaim>,
     val clientId: String = "",
     val nonce: String = "",
     val redirectUri: Url = "",
@@ -15,7 +14,6 @@ data class ConsentRequest(
     val clientMetadata: PartnerMetadata,
     val responseType: OidcResponseType
 ) {
-    // TODO: check for shallow-copy / deep-copy later on
     constructor(
         from: MeeContext,
         consentRequest: ConsentRequest

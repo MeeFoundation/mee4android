@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
@@ -16,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,6 +25,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.models.CreditCard
 import foundation.mee.android_client.ui.theme.*
@@ -52,7 +53,7 @@ private val textStyle = TextStyle(
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
-fun RowScope.ConsentCardEntryInput(
+fun ConsentCardEntryInput(
     entry: ConsentRequestClaim,
     updateValue: (String, String) -> Unit,
 ) {
@@ -81,15 +82,15 @@ fun RowScope.ConsentCardEntryInput(
 
     ) {
         BasicTextField(
-            value = creditCardEntryValues?.number ?: "",
+            value = creditCardEntryValues.number ?: "",
             onValueChange = {
-                creditCardEntryValues?.number = it
+                creditCardEntryValues.number = it
                 updateValue()
             },
             textStyle = textStyle,
             decorationBox = { innerTextField ->
                 if (creditCardEntryValues.number.isNullOrEmpty()) {
-                    Placeholder("Card number")
+                    Placeholder(stringResource(R.string.credit_card_number_placeholder))
                 }
                 innerTextField()
             }
@@ -97,15 +98,15 @@ fun RowScope.ConsentCardEntryInput(
         Row {
             Column(Modifier.weight(1f)) {
                 BasicTextField(
-                    value = creditCardEntryValues?.cvc ?: "",
+                    value = creditCardEntryValues.cvc ?: "",
                     onValueChange = {
-                        creditCardEntryValues?.cvc = it
+                        creditCardEntryValues.cvc = it
                         updateValue()
                     },
                     textStyle = textStyle,
                     decorationBox = { innerTextField ->
                         if (creditCardEntryValues.cvc.isNullOrEmpty()) {
-                            Placeholder("CVC")
+                            Placeholder(stringResource(R.string.credit_card_cvc_placeholder))
                         }
                         innerTextField()
                     }
@@ -114,15 +115,15 @@ fun RowScope.ConsentCardEntryInput(
 
             Column(Modifier.weight(1f)) {
                 BasicTextField(
-                    value = creditCardEntryValues?.expirationDate ?: "",
+                    value = creditCardEntryValues.expirationDate ?: "",
                     onValueChange = {
-                        creditCardEntryValues?.expirationDate = it
+                        creditCardEntryValues.expirationDate = it
                         updateValue()
                     },
                     textStyle = textStyle,
                     decorationBox = { innerTextField ->
                         if (creditCardEntryValues.expirationDate.isNullOrEmpty()) {
-                            Placeholder("MM/YY")
+                            Placeholder(stringResource(R.string.credit_card_valid_thru_placeholder))
                         }
                         innerTextField()
                     }

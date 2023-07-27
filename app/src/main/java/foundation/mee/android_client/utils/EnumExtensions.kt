@@ -1,4 +1,4 @@
-package foundation.mee.android_client.models.utils
+package foundation.mee.android_client.utils
 
 inline fun <reified T : Enum<T>> T.nextOrLast(): T {
     val values = enumValues<T>()
@@ -18,4 +18,4 @@ inline fun <reified T : Enum<T>> head(): T = enumValues<T>().first()
 
 inline fun <reified T : Enum<T>> tail(): T = enumValues<T>().last()
 
-inline fun <reified T: Enum<T>> fromInt(value: Int): T = enumValues<T>().first() { it.ordinal == value }
+inline fun <reified T: Enum<T>> fromInt(value: Int): T = enumValues<T>().first { it.ordinal == value }

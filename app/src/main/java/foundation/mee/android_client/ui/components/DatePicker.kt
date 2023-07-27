@@ -4,6 +4,8 @@ import android.app.DatePickerDialog
 import android.content.DialogInterface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import foundation.mee.android_client.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,7 +44,7 @@ fun DatePicker(
     )
 
     dialog.setButton(
-        DialogInterface.BUTTON_NEGATIVE, "cancel"
+        DialogInterface.BUTTON_NEGATIVE, stringResource(R.string.negative_button_text)
     ) { _, which ->
         if (which == DialogInterface.BUTTON_NEGATIVE) {
             onDismiss()

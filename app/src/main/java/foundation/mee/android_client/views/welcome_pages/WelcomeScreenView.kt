@@ -1,6 +1,5 @@
 package foundation.mee.android_client.views.welcome_pages
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -12,21 +11,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.WelcomePageEnum
-import foundation.mee.android_client.navigation.MeeDestinations
-import foundation.mee.android_client.navigation.NavViewModel
-import foundation.mee.android_client.models.utils.*
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.MeeYellowColor
+import foundation.mee.android_client.utils.*
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WelcomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: NavViewModel = hiltViewModel(),
     screenImages: Array<Int>,
     onNext: () -> Unit,
 ) {

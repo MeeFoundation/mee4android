@@ -20,12 +20,12 @@ import foundation.mee.android_client.views.welcome_pages.WelcomePage
 @Composable
 fun MeeNavGraph(
     defaultStartDestination: String = CONNECTIONS.route,
-    viewModel: NavViewModel = hiltViewModel(),
+    navigator: Navigator = hiltViewModel<NavViewModel>().navigator,
     initialFlowDone: Boolean,
     hadConnectionsBefore: Boolean
 ) {
     val controller = rememberNavController()
-    viewModel.navigator.navController = controller
+    navigator.navController = controller
 
     val startDestination: String =
         if (!initialFlowDone) INITIAL_FLOW.route

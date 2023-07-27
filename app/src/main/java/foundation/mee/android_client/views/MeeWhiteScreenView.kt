@@ -1,6 +1,5 @@
 package foundation.mee.android_client.views
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,10 +22,10 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
 fun MeeWhiteScreen(
-    isFaded: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isFaded: Boolean = false
 ) {
-    Box() {
+    Box {
         Surface(
             color = if (isFaded) Color.Black.copy(alpha = 0.4f) else Color.Transparent,
             modifier = Modifier.fillMaxSize().zIndex(1f)
