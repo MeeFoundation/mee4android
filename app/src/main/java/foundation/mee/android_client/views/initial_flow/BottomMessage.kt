@@ -60,7 +60,13 @@ fun RestrictBottomMessage(
     onNextSecondaryButton: () -> Unit,
     onNextPrimaryButton: () -> Unit
 ) {
-    BaseBottomMessage(icon = icon, iconSize = iconSize, title = title, message = message) {
+    BaseBottomMessage(
+        icon = icon,
+        iconSize = iconSize,
+        title = title,
+        message = message,
+        textModifier = Modifier.padding(bottom = 64.dp)
+    ) {
         DeclineButton(
             modifier = Modifier
                 .padding(0.dp)
@@ -135,9 +141,7 @@ fun BaseBottomMessage(
                 color = Color.Black,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
-                modifier = textModifier
-                    .padding(top = 8.dp)
-                    .padding(bottom = 64.dp)
+                modifier = textModifier.padding(top = 8.dp)
             )
             content()
         }

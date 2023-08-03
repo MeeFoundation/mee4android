@@ -51,6 +51,7 @@ fun getExistingPartnersWeb(
                 ClientType.web -> meeAgentStore.getLastConnectionConsentById(x.id) != null
                 else -> false
             }
+            is MeeConnectionType.Gapi -> true
             else -> false
         }
     }
@@ -73,6 +74,9 @@ fun getExistingPartnersMobile(
 
 fun getOtherPartners(existingPartnersWebApp: List<MeeConnection>?): List<MeeConnection> {
     return PartnersRegistry.shared.filter { x ->
-        existingPartnersWebApp?.find { getHostname(it.id) == getHostname(x.id) } == null
+        val isNotPresentedInExistingList = existingPartnersWebApp?.find { getHostname(it.id) == getHostname(x.id) } == null
+        val isGapiInList = existingPartnersWebApp?.find { it.value is MeeConnectionType.Gapi } != null
+        val isGapiInListAndEntryIsGapi = isGapiInList && x.value is MeeConnectionType.Gapi
+        isNotPresentedInExistingList && !isGapiInListAndEntryIsGapi
     }
 }

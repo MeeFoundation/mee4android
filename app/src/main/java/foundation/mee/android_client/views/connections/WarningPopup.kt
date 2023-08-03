@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
@@ -30,7 +31,7 @@ fun WarningPopup(
         BottomMessage(
             icon = painterResource(R.drawable.ic_google),
             iconSize = 60.dp,
-            message = "You will be redirected to your default browser to login to your Google Account and pull your data from it to Mee local storage",
+            message = stringResource(R.string.warning_popup_message_text),
             textModifier = Modifier.padding(bottom = 16.dp)
         ) {
             onNext()

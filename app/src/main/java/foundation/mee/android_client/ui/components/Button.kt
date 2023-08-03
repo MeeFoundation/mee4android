@@ -115,7 +115,7 @@ fun MainButton(
     ) {
         Surface(color = Color.White) {
             Text(
-                text = "Continue",
+                text = stringResource(R.string.continue_button_text),
                 fontFamily = publicSansFamily,
                 fontWeight = FontWeight(600),
                 color = SystemBlueLight,
@@ -144,7 +144,7 @@ fun MeeCertifiedButton(
                 .padding(end = 5.dp)
         )
         Text(
-            text = "Mee-certified?",
+            text = stringResource(R.string.mee_certified_button_text),
             fontFamily = publicSansFamily,
             fontWeight = FontWeight(500),
             color = MeeBrand,

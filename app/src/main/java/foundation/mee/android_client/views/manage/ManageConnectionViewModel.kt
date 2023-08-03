@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.models.MeeConnection
-import foundation.mee.android_client.models.MeeContext
 import foundation.mee.android_client.navigation.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,9 +27,8 @@ class ManageConnectionViewModel @Inject constructor(
     private val meeAgentStore: MeeAgentStore
 ) : ViewModel() {
 
-    private val _screenData =
-        MutableStateFlow<ConnectionDataState<Pair<MeeConnection, MeeContext?>>>(ConnectionDataState.None)
-    val screenData: StateFlow<ConnectionDataState<Pair<MeeConnection, MeeContext?>>> = _screenData
+    private val _screenData = MutableStateFlow<ConnectionDataState<Pair<MeeConnection, ConsentEntriesType>>>(ConnectionDataState.None)
+    val screenData: StateFlow<ConnectionDataState<Pair<MeeConnection, ConsentEntriesType>>> = _screenData
 
     init {
         viewModelScope.launch {
@@ -41,11 +39,31 @@ class ManageConnectionViewModel @Inject constructor(
     private fun loadData() {
         try {
             val hostname: String = checkNotNull(savedStateHandle["connectionHostname"])
-            val meeConnection = meeAgentStore.getConnectionByHostname(hostname)
+            val meeConnection = meeAgentStore.getConnectionByHostname(hostname) // maybe here can check siop
             if (meeConnection != null) {
-                val meeContext = meeAgentStore.getLastMeeContextById(meeConnection.id)
-                _screenData.value =
-                    ConnectionDataState.Success(Pair(meeConnection, meeContext))
+                val meeContext = meeAgentStore.getLastConnectionConsentById(meeConnection.id)
+                if (meeContext != null) {
+                    _screenData.value =
+                        ConnectionDataState.Success(
+                            Pair(
+                                meeConnection,
+                                ConsentEntriesType.SiopClaims(meeContext.attributes)
+                            )
+                        )
+                } else {
+                    val external = meeAgentStore.getLastExternalConsentById(meeConnection.id)
+                    if (external != null) {
+                        _screenData.value =
+                            ConnectionDataState.Success(
+                                Pair(
+                                    meeConnection,
+                                    ConsentEntriesType.GapiEntries(external)
+                                )
+                            )
+                    } else {
+                        _screenData.value = ConnectionDataState.None
+                    }
+                }
             } else {
                 _screenData.value = ConnectionDataState.None
             }

@@ -3,7 +3,7 @@
     <string name="loading_white_page_1">Creating a context in the Mee Data Storage</string>
     <string name="loading_white_page_2">Generating the context data encryption key</string>
     <string name="loading_white_page_3">Generating unique device keys</string>
-    <string name="loading_white_page_4">"Generating the context-specific user indentifier "</string>
+    <string name="loading_white_page_4">"Generating the context-specific user identifier "</string>
     <string name="negative_button_text">Cancel</string>
     <string name="biometry_title">Device Authentication</string>
     <string name="biometry_subtitle">Provide device credentials</string>
@@ -36,7 +36,7 @@
     <string name="continue_button_text">Continue</string>
     <string name="settings_button_text">Settings</string>
     <string name="biometry_initial_step_title">Set up biometrics</string>
-    <string name="biometry_initial_step_message">Mee uses biometrics to make sure that you are the only person who can open the app.</string>
+    <string name="biometry_initial_step_message">Mee Smartwallet uses biometrics to make sure that you are the only person who can open the app.</string>
     <string name="biometry_all_set_step_title">All Set!</string>
     <string name="biometry_all_set_step_message">Please use Biometry next time you sign-in.</string>
     <string name="biometry_restrict_step_title">Please set up device credentials!</string>
@@ -47,4 +47,6 @@
     <string name="manage_connection_optional_expander">Optional info shared</string>
     <string name="manage_connection_delete_button">Delete Connection</string>
     <string name="get_started_button_title">Get Started</string>
+    <string name="mee_certified_button_text">Mee-certified?</string>
+    <string name="warning_popup_message_text">You will be redirected to your default browser to login to your Google Account and pull your data from it to Mee local storage</string>
 </resources>

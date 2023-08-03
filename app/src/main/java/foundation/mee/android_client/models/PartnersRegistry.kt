@@ -55,13 +55,13 @@ object PartnersRegistry {
                     )
                 )
             ),
-//            MeeConnection(
-//                id = "https://google.com",
-//                name = "Google Account",
-//                value = MeeConnectionType.Gapi(
-//                    GapiConnectionType(scopes = listOf())
-//                )
-//            )
+            MeeConnection(
+                id = "https://google.com",
+                name = "Google Account",
+                value = MeeConnectionType.Gapi(
+                    GapiConnectionType(scopes = listOf())
+                )
+            )
         )
     }
 

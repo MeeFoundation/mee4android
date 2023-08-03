@@ -26,7 +26,7 @@ fun ManageConnection(
                 ManageConnectionContent(
                     modifier = Modifier.padding(padding),
                     meeConnection = pair.first,
-                    meeContext = pair.second,
+                    consentEntriesType = pair.second,
                     onRemoveConnection = {
                         manageConnectionViewModel.removeConnection(it, navigator)
                     }

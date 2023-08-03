@@ -1,72 +1,37 @@
 package foundation.mee.android_client.views.connections
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.*
-import foundation.mee.android_client.utils.getURLFromString
-import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.ui.theme.ChevronRightIconColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.navigation.MeeDestinations.*
-import foundation.mee.android_client.navigation.Navigator
-import foundation.mee.android_client.ui.components.clickableWithoutRipple
-import foundation.mee.android_client.utils.getHostname
-import foundation.mee.android_client.utils.linkToWebpage
 
 @Composable
 fun PartnerEntry(
     connection: MeeConnection,
     modifier: Modifier = Modifier,
-    hasEntry: Boolean = false,
-    navigator: Navigator = hiltViewModel<NavViewModel>().navigator,
-    agentViewModel: MeeAgentViewModel = hiltViewModel(),
+    hasEntry: Boolean = false
 ) {
-    val isCertified = true
-    val clientMetadata = when (val conn = connection.value) {
-        is MeeConnectionType.Siop -> conn.value.clientMetadata
-        else -> null
-    }
-    val context = LocalContext.current
 
-    var showCompatibleWarning by rememberSaveable {
-        mutableStateOf(false)
-    }
+    val state = rememberPartnerEntryState(connection)
 
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
-            .sizeIn(minHeight = 64.dp)
-            .clickableWithoutRipple {
-                if (hasEntry) {
-                    navigator.navigate("${MANAGE.route}/${getHostname(connection.id)}")
-                } else {
-                    when (connection.value) {
-                        is MeeConnectionType.Gapi -> showCompatibleWarning = true
-                        else -> {
-                            val uri = Uri.parse(connection.id)
-                            linkToWebpage(context, uri)
-                        }
-                    }
-                }
-            },
+            .sizeIn(minHeight = 64.dp),
         color = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
     ) {
@@ -82,7 +47,7 @@ fun PartnerEntry(
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(
-                        model = clientMetadata?.logoUrl ?: "${connection.id}/favicon.ico"
+                        model = state.logoUri
                     ),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
@@ -96,21 +61,19 @@ fun PartnerEntry(
                 ) {
                     Row {
                         Text(
-                            text = clientMetadata?.name ?: connection.name,
+                            text = state.name,
                             style = MaterialTheme.typography.h6,
                         )
-                        if (isCertified) {
-                            Image(
-                                painter = rememberAsyncImagePainter(R.drawable.mee_certified_logo),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .padding(horizontal = 5.dp)
-                                    .requiredSize(20.dp)
-                            )
-                        }
+                        Image(
+                            painter = rememberAsyncImagePainter(R.drawable.mee_certified_logo),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(horizontal = 5.dp)
+                                .requiredSize(20.dp)
+                        )
                     }
                     Text(
-                        text = getURLFromString(connection.id)?.host ?: connection.id,
+                        text = state.hostname,
                         style = MaterialTheme.typography.caption
                     )
                 }
@@ -120,21 +83,13 @@ fun PartnerEntry(
                     imageVector = ImageVector.vectorResource(
                         id = R.drawable.icon_chevron_right,
                     ),
-                    contentDescription = "test",
+                    contentDescription = null,
                     tint = ChevronRightIconColor,
                     modifier = modifier
                         .padding(end = 8.dp)
                         .size(width = 9.dp, height = 16.dp)
                 )
             }
-        }
-    }
-
-    if (showCompatibleWarning) {
-        WarningPopup(onDismiss = { showCompatibleWarning = false }) {
-            showCompatibleWarning = false
-            val url = agentViewModel.meeAgentStore.getGoogleIntegrationUrl()
-            url?.let { linkToWebpage(context, Uri.parse(it)) }
         }
     }
 }
