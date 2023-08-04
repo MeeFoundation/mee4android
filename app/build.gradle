@@ -9,6 +9,8 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'idea'
 
+def google_api_key
+
 android {
     namespace 'foundation.mee.android_client'
     compileSdk 33
@@ -29,6 +31,14 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            google_api_key = "1043231896197-4rn1v1fkg4jla06ugvdcgaol4lsoeu47"
+            buildConfigField("String", "GOOGLE_API_KEY", "\"$google_api_key\"")
+            manifestPlaceholders = [google_api_key: google_api_key]
+        }
+        debug {
+            google_api_key = "1043231896197-sqo1jitbu0ed7e3h69oi3rbe9a0g4uqf"
+            buildConfigField("String", "GOOGLE_API_KEY", "\"$google_api_key\"")
+            manifestPlaceholders = [google_api_key: google_api_key]
         }
     }
     ndkVersion "25.2.9519653"
@@ -63,6 +73,8 @@ cargo {
     apiLevel = 23
     exec { spec, toolchain ->
         spec.environment("RANLIB", "~/Library/Android/sdk/ndk/${android.ndkVersion}/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-ranlib")
+        spec.environment("GOOGLE_API_CLIENT_ID", "${google_api_key}.apps.googleusercontent.com")
+        spec.environment("GOOGLE_API_REDIRECT_URI", "com.googleusercontent.apps.${google_api_key}:/oauth2redirect")
     }
 }
 

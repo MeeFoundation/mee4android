@@ -44,8 +44,8 @@ fun BiometryHandler(
         })
     }
 
-    LaunchedEffect(biometryAttempts) {
-        if (appIsActive) {
+    if (appIsActive) {
+        LaunchedEffect(biometryAttempts) {
             auth()
         }
     }

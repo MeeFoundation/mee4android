@@ -1,26 +1,25 @@
 package foundation.mee.android_client.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import foundation.mee.android_client.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
-import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.ui.theme.PartnerEntryBackgroundColor
-import foundation.mee.android_client.ui.theme.publicSansFamily
+import foundation.mee.android_client.ui.theme.*
 
 @Composable
 fun PrimaryButton(
@@ -96,6 +95,62 @@ fun RejectButton(
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             letterSpacing = 0.45.sp
+        )
+    }
+}
+
+@Composable
+fun MainButton(
+    action: () -> Unit = {}
+) {
+    Button(
+        onClick = action,
+        shape = RoundedCornerShape(size = 13.dp),
+        elevation = null,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+        modifier = Modifier
+            .padding(0.dp)
+            .height(60.dp)
+            .fillMaxWidth()
+    ) {
+        Surface(color = Color.White) {
+            Text(
+                text = stringResource(R.string.continue_button_text),
+                fontFamily = publicSansFamily,
+                fontWeight = FontWeight(600),
+                color = SystemBlueLight,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun MeeCertifiedButton(
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickableWithoutRipple {
+                onClick()
+            }) {
+        Image(
+            painter = painterResource(R.drawable.mee_certified_logo),
+            contentDescription = null,
+            modifier = Modifier
+                .height(20.dp)
+                .width(20.dp)
+                .padding(end = 5.dp)
+        )
+        Text(
+            text = stringResource(R.string.mee_certified_button_text),
+            fontFamily = publicSansFamily,
+            fontWeight = FontWeight(500),
+            color = MeeBrand,
+            fontSize = 14.sp,
+            textAlign = TextAlign.Center,
+            textDecoration = TextDecoration.Underline
         )
     }
 }

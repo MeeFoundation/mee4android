@@ -38,6 +38,14 @@
                     android:host="auth.mee.foundation"
                     android:scheme="https" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="com.googleusercontent.apps.${google_api_key}" />
+            </intent-filter>
         </activity>
     </application>
 

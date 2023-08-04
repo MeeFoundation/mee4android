@@ -16,7 +16,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import foundation.mee.android_client.BuildConfig.GOOGLE_API_KEY
 import foundation.mee.android_client.controller.biometry.BiometryHandler
 import foundation.mee.android_client.effects.OnLifecycleEvent
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
@@ -25,7 +27,7 @@ import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.service.ReferrerClient
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.views.MeeWhiteScreen
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
@@ -121,8 +123,16 @@ class MainActivity : FragmentActivity() {
         super.onNewIntent(intent)
 
         val model: NavViewModel by viewModels()
-        model.navigator.navController.handleDeepLink(intent)
-        setIntent(null)
+        val meeAgentViewModel: MeeAgentViewModel by viewModels()
+        if (intent?.data?.scheme == "com.googleusercontent.apps.${GOOGLE_API_KEY}") {
+            lifecycleScope.launch {
+                withContext(Dispatchers.Default) {
+                    meeAgentViewModel.meeAgentStore.createGoogleConnection(intent.dataString!!)
+                }
+            }
+        } else {
+            model.navigator.navController.handleDeepLink(intent)
+        }
     }
 
 }
