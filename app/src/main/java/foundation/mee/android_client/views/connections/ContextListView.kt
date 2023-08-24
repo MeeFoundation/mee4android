@@ -89,7 +89,11 @@ fun ConsentsList(
         }
     }
     if (showCompatibleWarning) {
-        WarningPopup(onDismiss = { showCompatibleWarning = false }) {
+        WarningPopup(
+            icon = R.drawable.ic_google,
+            iconSize = 60.dp,
+            messageText = R.string.warning_popup_message_text,
+            onDismiss = { showCompatibleWarning = false }) {
             showCompatibleWarning = false
             val url = meeAgentStore.getGoogleIntegrationUrl()
             url?.let { linkToWebpage(context, Uri.parse(it)) }

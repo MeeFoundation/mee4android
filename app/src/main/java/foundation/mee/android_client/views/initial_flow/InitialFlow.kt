@@ -17,7 +17,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,7 +65,7 @@ fun InitialFlow(
                         .fillMaxHeight(),
                 ) {
                     BottomMessage(
-                        icon = painterResource(R.drawable.mee_guy_icon),
+                        icon = R.drawable.mee_guy_icon,
                         iconSize = 60.dp,
                         title = stringResource(R.string.biometry_initial_step_title),
                         message = stringResource(R.string.biometry_initial_step_message),
@@ -99,7 +98,7 @@ fun InitialFlow(
                         .fillMaxHeight(),
                 ) {
                     BottomMessage(
-                        icon = painterResource(R.drawable.all_set),
+                        icon = R.drawable.all_set,
                         iconSize = 60.dp,
                         title = stringResource(R.string.biometry_all_set_step_title),
                         message = stringResource(R.string.biometry_all_set_step_message),
@@ -136,7 +135,7 @@ fun InitialFlow(
                         .fillMaxHeight(),
                 ) {
                     RestrictBottomMessage(
-                        icon = painterResource(R.drawable.mee_compatible_sign),
+                        icon = R.drawable.mee_compatible_sign,
                         iconSize = 60.dp,
                         title = stringResource(R.string.biometry_restrict_step_title),
                         message = stringResource(R.string.biometry_restrict_step_message),
@@ -164,7 +163,7 @@ fun InitialFlowPreview() {
                     .fillMaxHeight(),
             ) {
                 BottomMessage(
-                    icon = painterResource(R.drawable.mee_guy_icon),
+                    icon = R.drawable.mee_guy_icon,
                     iconSize = 60.dp,
                     title = stringResource(R.string.biometry_initial_step_title),
                     message = stringResource(R.string.biometry_initial_step_message),

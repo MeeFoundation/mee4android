@@ -1,4 +1,4 @@
-package foundation.mee.android_client.views.manage
+package foundation.mee.android_client.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -18,20 +18,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
-import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.PartnerEntryOnBackgroundColor
 import foundation.mee.android_client.ui.theme.SystemBlueLight
 import foundation.mee.android_client.ui.theme.publicSansFamily
 
-
 @Composable
-fun ManageConnectionScreenTitle(
+fun MeeTopAppBar(
+    title: Int,
     onClickBack: () -> Boolean
 ) {
     TopAppBar(
         backgroundColor = MaterialTheme.colors.primary,
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier
@@ -76,7 +74,7 @@ fun ManageConnectionScreenTitle(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = stringResource(R.string.manage_connection_title),
+                        text = stringResource(title),
                         fontFamily = publicSansFamily,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.SemiBold,

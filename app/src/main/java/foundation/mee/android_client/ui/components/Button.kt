@@ -101,6 +101,8 @@ fun RejectButton(
 
 @Composable
 fun MainButton(
+    text: Int,
+    textColor: Color? = null,
     action: () -> Unit = {}
 ) {
     Button(
@@ -115,10 +117,10 @@ fun MainButton(
     ) {
         Surface(color = Color.White) {
             Text(
-                text = stringResource(R.string.continue_button_text),
+                text = stringResource(text),
                 fontFamily = publicSansFamily,
                 fontWeight = FontWeight(600),
-                color = SystemBlueLight,
+                color = textColor ?: SystemBlueLight,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center
             )

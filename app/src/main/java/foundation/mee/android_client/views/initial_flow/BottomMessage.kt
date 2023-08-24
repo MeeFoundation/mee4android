@@ -2,7 +2,6 @@ package foundation.mee.android_client.views.initial_flow
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,15 +25,16 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.components.DeclineButton
 import foundation.mee.android_client.ui.components.MainButton
 import foundation.mee.android_client.ui.components.PrimaryButton
-import foundation.mee.android_client.ui.theme.DurationPopupBackground
-import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.ui.theme.publicSansFamily
+import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.views.MeeWhiteScreen
 
 @Composable
 fun BottomMessage(
-    icon: Painter,
-    iconSize: Dp,
+    icon: Int?,
+    iconSize: Dp?,
+    buttonText: Int? = null,
+    buttonColor: Color? = null,
+    bottomMessageHeader: @Composable () -> Unit = {},
     message: String,
     @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier.padding(bottom = 64.dp),
     title: String? = null,
@@ -45,15 +45,19 @@ fun BottomMessage(
         iconSize = iconSize,
         title = title,
         message = message,
-        textModifier = textModifier
+        textModifier = textModifier,
+        bottomMessageHeader = bottomMessageHeader
     ) {
-        MainButton { onNext() }
+        MainButton(
+            text = buttonText ?: R.string.continue_button_text,
+            textColor = buttonColor
+        ) { onNext() }
     }
 }
 
 @Composable
 fun RestrictBottomMessage(
-    icon: Painter,
+    icon: Int,
     iconSize: Dp,
     title: String,
     message: String,
@@ -97,10 +101,11 @@ fun RestrictBottomMessage(
 
 @Composable
 fun BaseBottomMessage(
-    icon: Painter,
-    iconSize: Dp,
+    icon: Int?,
+    iconSize: Dp?,
     title: String?,
     message: String,
+    bottomMessageHeader: @Composable () -> Unit = {},
     @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -110,40 +115,48 @@ fun BaseBottomMessage(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .padding(bottom = 50.dp)
-                .padding(horizontal = 16.dp)
+            verticalArrangement = Arrangement.Top
         ) {
-            Image(
-                painter = icon,
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
+            bottomMessageHeader()
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .size(iconSize)
-                    .padding(top = 8.dp)
-            )
-            title?.let {
+                    .padding(top = 16.dp)
+                    .padding(bottom = 50.dp)
+                    .padding(horizontal = 16.dp)
+            ) {
+                icon?.let {
+                    Image(
+                        painter = painterResource(icon),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .size(iconSize ?: 60.dp)
+                            .padding(top = 8.dp)
+                    )
+                }
+                title?.let {
+                    Text(
+                        text = title,
+                        fontFamily = publicSansFamily,
+                        fontWeight = FontWeight(700),
+                        color = Color.Black,
+                        fontSize = 34.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
                 Text(
-                    text = title,
+                    text = message,
                     fontFamily = publicSansFamily,
-                    fontWeight = FontWeight(700),
+                    fontWeight = FontWeight(400),
                     color = Color.Black,
-                    fontSize = 34.sp,
+                    fontSize = 16.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = textModifier.padding(top = 8.dp)
                 )
+                content()
             }
-            Text(
-                text = message,
-                fontFamily = publicSansFamily,
-                fontWeight = FontWeight(400),
-                color = Color.Black,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                modifier = textModifier.padding(top = 8.dp)
-            )
-            content()
         }
     }
 }
@@ -161,7 +174,7 @@ fun BottomMessagePreview() {
                     .fillMaxHeight(),
             ) {
                 BottomMessage(
-                    icon = painterResource(R.drawable.mee_guy_icon),
+                    icon = R.drawable.mee_guy_icon,
                     iconSize = 60.dp,
                     title = stringResource(id = R.string.biometry_initial_step_title),
                     message = stringResource(id = R.string.biometry_initial_step_message),
