@@ -21,7 +21,7 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 @Composable
 fun PartnerEntry(
-    connection: MeeConnection,
+    connection: MeeConnector,
     modifier: Modifier = Modifier,
     hasEntry: Boolean = false
 ) {

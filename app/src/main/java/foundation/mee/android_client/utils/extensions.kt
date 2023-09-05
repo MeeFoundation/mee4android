@@ -7,11 +7,11 @@ import uniffi.mee_agent.*
 import uniffi.mee_agent.OidcClaimParams
 
 
-fun RpAuthRequest(from: ConsentRequest): RpAuthRequest {
+fun OidcAuthRequest(from: ConsentRequest): OidcAuthRequest {
     val claims = OidcRequestClaimsWrapper(null, emptyMap())
     mapIdToken(claims, from)
 
-    return RpAuthRequest(
+    return OidcAuthRequest(
         from.scope,
         claims,
         OidcClientMetadata(from.clientMetadata),
@@ -19,7 +19,10 @@ fun RpAuthRequest(from: ConsentRequest): RpAuthRequest {
         from.clientId,
         from.redirectUri,
         from.presentationDefinition,
-        from.responseType
+        from.clientIdScheme,
+        from.presentation_definition_uri,
+        from.responseType,
+        from.responseMode
     )
 
 }

@@ -15,6 +15,8 @@ import foundation.mee.android_client.views.connections.ConnectionsScreen
 import foundation.mee.android_client.views.consent.ConsentPage
 import foundation.mee.android_client.views.initial_flow.InitialFlow
 import foundation.mee.android_client.views.manage.ManageConnection
+import foundation.mee.android_client.views.settings.MeeSettingsView
+import foundation.mee.android_client.views.sidebar.MeeSidebarMenu
 import foundation.mee.android_client.views.welcome_pages.WelcomePage
 
 @Composable
@@ -41,7 +43,9 @@ fun MeeNavGraph(
         }
 
         composable(route = CONNECTIONS.route) {
-            ConnectionsScreen()
+            MeeSidebarMenu {
+                ConnectionsScreen()
+            }
         }
 
         composable(
@@ -50,7 +54,9 @@ fun MeeNavGraph(
                 type = NavType.StringType
             })
         ) {
-            ManageConnection()
+            MeeSidebarMenu {
+                ManageConnection()
+            }
         }
 
         composable(
@@ -67,7 +73,10 @@ fun MeeNavGraph(
 
             if (consentRequest != null) {
                 ConsentPage(consentRequest)
-            } else ConnectionsScreen()
+            } else
+                MeeSidebarMenu {
+                    ConnectionsScreen()
+                }
         }
 
         composable(
@@ -79,11 +88,19 @@ fun MeeNavGraph(
 
             if (consentRequest != null) {
                 ConsentPage(consentRequest)
-            } else ConnectionsScreen()
+            } else {
+                MeeSidebarMenu {
+                    ConnectionsScreen()
+                }
+            }
         }
 
         composable(route = INITIAL_FLOW.route) {
             InitialFlow()
+        }
+
+        composable(route = SETTINGS.route) {
+            MeeSettingsView()
         }
     }
 }

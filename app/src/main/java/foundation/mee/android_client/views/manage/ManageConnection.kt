@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import foundation.mee.android_client.R
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.navigation.Navigator
+import foundation.mee.android_client.ui.components.MeeTopAppBar
 
 @Composable
 fun ManageConnection(
@@ -21,14 +23,14 @@ fun ManageConnection(
         is ConnectionDataState.Success -> {
             val pair = (loadState.value as ConnectionDataState.Success).data
             Scaffold(topBar = {
-                ManageConnectionScreenTitle { navigator.popBackStack() }
+                MeeTopAppBar(title = R.string.manage_connection_title) { navigator.popBackStack() }
             }) { padding ->
                 ManageConnectionContent(
                     modifier = Modifier.padding(padding),
                     meeConnection = pair.first,
                     consentEntriesType = pair.second,
                     onRemoveConnection = {
-                        manageConnectionViewModel.removeConnection(it, navigator)
+                        manageConnectionViewModel.removeConnection(pair.first.otherPartyConnectionId, navigator)
                     }
                 )
             }

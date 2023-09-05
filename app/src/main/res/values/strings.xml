@@ -49,4 +49,19 @@
     <string name="get_started_button_title">Get Started</string>
     <string name="mee_certified_button_text">Mee-certified?</string>
     <string name="warning_popup_message_text">You will be redirected to your default browser to login to your Google Account and pull your data from it to Mee local storage</string>
+    <string name="sidebar_settings_title">Settings</string>
+    <string name="sidebar_send_feedback_title">Send Feedback</string>
+    <string name="top_app_bar_settings_title">Settings</string>
+    <string name="settings_delete_user_data">Delete user data</string>
+    <string name="delete_popup_message_text">Are you sure you want to delete your data?</string>
+    <string name="delete_popup_button_text">Yes, delete my data</string>
+    <string name="send_feedback_intent_title_text">Send feedback</string>
+    <string name="settings_lock_type_title">Screen Lock Type</string>
+    <string name="settings_entry_credentials_title">Biometrics &amp; Passcode</string>
+    <string name="settings_entry_credentials_desc">Go to Security Settings</string>
+    <string name="settings_data_deletion_success">Your data was deleted successfully</string>
+    <string name="settings_data_deletion_success_back">Back to Connections Screen</string>
+    <string name="settings_data_deletion_error_title">Ooops!</string>
+    <string name="settings_data_deletion_error">Your data couldn’t be deleted.\nPlease try again later</string>
+    <string name="settings_data_deletion_error_back">Back to Settings</string>
 </resources>

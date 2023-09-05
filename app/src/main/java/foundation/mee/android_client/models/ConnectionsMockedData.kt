@@ -3,11 +3,12 @@ package foundation.mee.android_client.models
 import uniffi.mee_agent.OidcClientMetadata
 
 
-val meConnectionMock = MeeConnection(
+val meConnectionMock = MeeConnector(
     id = "https://mee.foundation/",
     name = "Mee Foundation",
-    value = MeeConnectionType.Siop(
-        SiopConnectionType(
+    otherPartyConnectionId = "mee.foundation",
+    value = MeeConnectorType.Siop(
+        SiopConnectorType(
             redirectUri = "https://mee.foundation/",
             clientMetadata = PartnerMetadata(
                 from = OidcClientMetadata(
@@ -23,18 +24,19 @@ val meConnectionMock = MeeConnection(
                     subjectSyntaxTypesSupported = listOf()
                 )
             ),
-            subjectSyntaxType = ConnectionTypeSubject.DidKey("")
+            subjectSyntaxType = ConnectorTypeSubject.DidKey("")
         )
     )
 )
 
 
-val sites: List<MeeConnection> = listOf(
-    MeeConnection(
+val sites: List<MeeConnector> = listOf(
+    MeeConnector(
         id = "https://www.nytimes.com",
         name = "New York Times",
-        value = MeeConnectionType.Siop(
-            SiopConnectionType(
+        otherPartyConnectionId = "nytimes.com",
+        value = MeeConnectorType.Siop(
+            SiopConnectorType(
                 redirectUri = "https://www.nytimes.com",
                 clientMetadata = PartnerMetadata(
                     from = OidcClientMetadata(
@@ -50,17 +52,18 @@ val sites: List<MeeConnection> = listOf(
                         subjectSyntaxTypesSupported = listOf()
                     )
                 ),
-                subjectSyntaxType = ConnectionTypeSubject.DidKey("")
+                subjectSyntaxType = ConnectorTypeSubject.DidKey("")
             )
         )
     )
 )
-val mobileApps: List<MeeConnection> = listOf(
-    MeeConnection(
+val mobileApps: List<MeeConnector> = listOf(
+    MeeConnector(
         id = "https://www.washingtonpost.com",
         name = "The Washington Post",
-        value = MeeConnectionType.Siop(
-            SiopConnectionType(
+        otherPartyConnectionId = "washingtonpost.com",
+        value = MeeConnectorType.Siop(
+            SiopConnectorType(
                 redirectUri = "https://www.washingtonpost.com",
                 clientMetadata = PartnerMetadata(
                     from = OidcClientMetadata(
@@ -76,15 +79,16 @@ val mobileApps: List<MeeConnection> = listOf(
                         subjectSyntaxTypesSupported = listOf()
                     )
                 ),
-                subjectSyntaxType = ConnectionTypeSubject.DidKey("")
+                subjectSyntaxType = ConnectorTypeSubject.DidKey("")
             )
         )
     ),
-    MeeConnection(
+    MeeConnector(
         id = "https://www.theguardian.com",
         name = "The Guardian",
-        value = MeeConnectionType.Siop(
-            SiopConnectionType(
+        otherPartyConnectionId = "theguardian.com",
+        value = MeeConnectorType.Siop(
+            SiopConnectorType(
                 redirectUri = "https://www.theguardian.com",
                 clientMetadata = PartnerMetadata(
                     from = OidcClientMetadata(
@@ -100,7 +104,7 @@ val mobileApps: List<MeeConnection> = listOf(
                         subjectSyntaxTypesSupported = listOf()
                     )
                 ),
-                subjectSyntaxType = ConnectionTypeSubject.DidKey("")
+                subjectSyntaxType = ConnectorTypeSubject.DidKey("")
             )
         )
     )

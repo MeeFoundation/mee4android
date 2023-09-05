@@ -41,7 +41,7 @@ import foundation.mee.android_client.utils.CERTIFIED_URL_STRING
 import foundation.mee.android_client.utils.getURLFromString
 import foundation.mee.android_client.utils.showConsentToast
 import kotlinx.coroutines.launch
-import uniffi.mee_agent.RpAuthResponseWrapper
+import uniffi.mee_agent.OidcAuthResponseWrapper
 
 val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 3f)
 
@@ -49,7 +49,7 @@ val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 3f)
 fun ConsentPageNew(
     consentViewModel: ConsentViewModel,
     onCleanConsent: () -> Unit,
-    onAccept: (ConsentRequest) -> RpAuthResponseWrapper?
+    onAccept: (ConsentRequest) -> OidcAuthResponseWrapper?
 ) {
     val data by consentViewModel.uiState.collectAsState()
 

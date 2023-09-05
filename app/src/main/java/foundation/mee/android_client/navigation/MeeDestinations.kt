@@ -6,5 +6,6 @@ enum class MeeDestinations(val route: String) {
     MANAGE("manage"),
     CONSENT("consent"),
     INITIAL_FLOW("initial_flow"),
-    CONTEXT_RECOVERY_FLOW("context_recovery_flow")
+    CONTEXT_RECOVERY_FLOW("context_recovery_flow"),
+    SETTINGS("settings")
 }

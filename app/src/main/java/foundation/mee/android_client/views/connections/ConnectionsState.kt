@@ -36,34 +36,34 @@ fun rememberConnectionsState(meeAgentStore: MeeAgentStore = hiltViewModel<MeeAge
 
 @Stable
 class ConnectionsState(
-    val existingPartnersWebApp: List<MeeConnection>,
-    val existingPartnersMobileApp: List<MeeConnection>,
-    val otherPartnersWebApp: List<MeeConnection>
+    val existingPartnersWebApp: List<MeeConnector>,
+    val existingPartnersMobileApp: List<MeeConnector>,
+    val otherPartnersWebApp: List<MeeConnector>
 )
 
 fun getExistingPartnersWeb(
-    data: List<MeeConnection>?,
+    data: List<MeeConnector>?,
     meeAgentStore: MeeAgentStore
-): List<MeeConnection>? {
+): List<MeeConnector>? {
     return data?.filter { x ->
         when (val connType = x.value) {
-            is MeeConnectionType.Siop -> when (connType.value.clientMetadata.type) {
+            is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
                 ClientType.web -> meeAgentStore.getLastConnectionConsentById(x.id) != null
                 else -> false
             }
-            is MeeConnectionType.Gapi -> true
+            is MeeConnectorType.Gapi -> true
             else -> false
         }
     }
 }
 
 fun getExistingPartnersMobile(
-    data: List<MeeConnection>?,
+    data: List<MeeConnector>?,
     meeAgentStore: MeeAgentStore
-): List<MeeConnection>? {
+): List<MeeConnector>? {
     return data?.filter { x ->
         when (val connType = x.value) {
-            is MeeConnectionType.Siop -> when (connType.value.clientMetadata.type) {
+            is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
                 ClientType.mobile -> meeAgentStore.getLastConnectionConsentById(x.id) != null
                 else -> false
             }
@@ -72,11 +72,11 @@ fun getExistingPartnersMobile(
     }
 }
 
-fun getOtherPartners(existingPartnersWebApp: List<MeeConnection>?): List<MeeConnection> {
+fun getOtherPartners(existingPartnersWebApp: List<MeeConnector>?): List<MeeConnector> {
     return PartnersRegistry.shared.filter { x ->
         val isNotPresentedInExistingList = existingPartnersWebApp?.find { getHostname(it.id) == getHostname(x.id) } == null
-        val isGapiInList = existingPartnersWebApp?.find { it.value is MeeConnectionType.Gapi } != null
-        val isGapiInListAndEntryIsGapi = isGapiInList && x.value is MeeConnectionType.Gapi
+        val isGapiInList = existingPartnersWebApp?.find { it.value is MeeConnectorType.Gapi } != null
+        val isGapiInListAndEntryIsGapi = isGapiInList && x.value is MeeConnectorType.Gapi
         isNotPresentedInExistingList && !isGapiInListAndEntryIsGapi
     }
 }
