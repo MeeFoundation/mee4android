@@ -29,4 +29,11 @@ class SharedPreferencesHelper(val context: Context) {
     fun getString(key: String): String? {
         return sharedPreferences.getString(key, null)
     }
+
+    fun clearPreferences() {
+        with(sharedPreferences.edit()) {
+            clear()
+            apply()
+        }
+    }
 }

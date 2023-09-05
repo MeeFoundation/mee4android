@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -22,7 +21,8 @@ fun WarningPopup(
     buttonText: Int? = null,
     buttonColor: Color? = null,
     bottomMessageHeader: @Composable () -> Unit = {},
-    onDismiss: () -> Unit,
+    title: Int? = null,
+    onDismiss: () -> Unit = {},
     onNext: () -> Unit
 ) {
     Dialog(
@@ -37,10 +37,11 @@ fun WarningPopup(
         BottomMessage(
             icon = icon,
             iconSize = iconSize,
-            message = stringResource(messageText),
+            message = messageText,
             buttonText = buttonText,
             buttonColor = buttonColor,
             bottomMessageHeader = bottomMessageHeader,
+            title = title,
             textModifier = Modifier.padding(bottom = 16.dp)
         ) {
             onNext()

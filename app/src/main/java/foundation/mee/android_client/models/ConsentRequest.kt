@@ -10,9 +10,12 @@ data class ConsentRequest(
     val nonce: String = "",
     val redirectUri: Url = "",
     val isCrossDeviceFlow: Boolean = false,
-    var presentationDefinition: String? = "",
+    var presentationDefinition: PresentationDefinition?,
     val clientMetadata: PartnerMetadata,
-    val responseType: OidcResponseType
+    val clientIdScheme: ClientIdScheme?,
+    val presentation_definition_uri: String?,
+    val responseType: OidcResponseType,
+    val responseMode: OidcResponseMode?
 ) {
     constructor(
         from: MeeContext,
@@ -25,13 +28,16 @@ data class ConsentRequest(
         consentRequest.nonce,
         consentRequest.redirectUri,
         consentRequest.isCrossDeviceFlow,
-        "",
+        consentRequest.presentationDefinition,
         consentRequest.clientMetadata,
-        OidcResponseType.ID_TOKEN
+        consentRequest.clientIdScheme,
+        consentRequest.presentation_definition_uri,
+        OidcResponseType.ID_TOKEN,
+        consentRequest.responseMode
     )
 
     constructor(
-        from: RpAuthRequest,
+        from: OidcAuthRequest,
         isCrossDeviceFlow: Boolean
     ) : this(
         from.redirectUri,
@@ -43,7 +49,10 @@ data class ConsentRequest(
         isCrossDeviceFlow,
         from.presentationDefinition,
         PartnerMetadata(from.clientMetadata),
-        from.responseType
+        from.clientIdScheme,
+        from.presentationDefinitionUri,
+        from.responseType,
+        from.responseMode
     )
 }
 

@@ -9,19 +9,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import foundation.mee.android_client.R
-import foundation.mee.android_client.models.MeeConnection
-import foundation.mee.android_client.models.mobileApps
-import foundation.mee.android_client.models.PartnersRegistry
-import foundation.mee.android_client.models.sites
+import foundation.mee.android_client.models.*
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 
 
 @Composable
 fun ConnectionsContent(
     modifier: Modifier = Modifier,
-    connections: List<MeeConnection>,
-    mobileConnections: List<MeeConnection>,
-    partnerConnections: List<MeeConnection> = emptyList()
+    connections: List<MeeConnector>,
+    mobileConnections: List<MeeConnector>,
+    partnerConnections: List<MeeConnector> = emptyList()
 ) {
     Column(
         modifier = modifier
@@ -43,7 +40,7 @@ fun ConnectionsContent(
 @Preview(showBackground = true, widthDp = 375, heightDp = 800)
 @Composable
 fun ConnectionsContentPreview() {
-    val partnerConnections: List<MeeConnection> = PartnersRegistry.shared
+    val partnerConnections: List<MeeConnector> = PartnersRegistry.shared
     MeeIdentityAgentTheme {
         ConnectionsContent(
             connections = sites,

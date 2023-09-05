@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.mee.android_client.models.MeeAgentStore
-import foundation.mee.android_client.models.MeeConnection
+import foundation.mee.android_client.models.MeeConnector
 import foundation.mee.android_client.navigation.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,8 +27,8 @@ class ManageConnectionViewModel @Inject constructor(
     private val meeAgentStore: MeeAgentStore
 ) : ViewModel() {
 
-    private val _screenData = MutableStateFlow<ConnectionDataState<Pair<MeeConnection, ConsentEntriesType>>>(ConnectionDataState.None)
-    val screenData: StateFlow<ConnectionDataState<Pair<MeeConnection, ConsentEntriesType>>> = _screenData
+    private val _screenData = MutableStateFlow<ConnectionDataState<Pair<MeeConnector, ConsentEntriesType>>>(ConnectionDataState.None)
+    val screenData: StateFlow<ConnectionDataState<Pair<MeeConnector, ConsentEntriesType>>> = _screenData
 
     init {
         viewModelScope.launch {
@@ -39,7 +39,7 @@ class ManageConnectionViewModel @Inject constructor(
     private fun loadData() {
         try {
             val hostname: String = checkNotNull(savedStateHandle["connectionHostname"])
-            val meeConnection = meeAgentStore.getConnectionByHostname(hostname) // maybe here can check siop
+            val meeConnection = meeAgentStore.getConnectionByHostname(hostname)
             if (meeConnection != null) {
                 val meeContext = meeAgentStore.getLastConnectionConsentById(meeConnection.id)
                 if (meeContext != null) {
@@ -51,7 +51,7 @@ class ManageConnectionViewModel @Inject constructor(
                             )
                         )
                 } else {
-                    val external = meeAgentStore.getLastExternalConsentById(meeConnection.id)
+                    val external = meeAgentStore.getLastExternalConsentById(hostname)
                     if (external != null) {
                         _screenData.value =
                             ConnectionDataState.Success(

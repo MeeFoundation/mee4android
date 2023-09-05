@@ -3,78 +3,91 @@ package foundation.mee.android_client.models
 import uniffi.mee_agent.*
 
 
-sealed class ConnectionTypeSubject {
+sealed class ConnectorTypeSubject {
     data class DidKey(
         val value: String
-    ) : ConnectionTypeSubject()
+    ) : ConnectorTypeSubject()
 
     data class JwkThumbprint(
         val value: String
-    ) : ConnectionTypeSubject()
+    ) : ConnectorTypeSubject()
 }
 
 
-data class SiopConnectionType(
+data class SiopConnectorType(
     var redirectUri: String,
     var clientMetadata: PartnerMetadata,
-    var subjectSyntaxType: ConnectionTypeSubject
+    var subjectSyntaxType: ConnectorTypeSubject
 )
 
-data class GapiConnectionType(
+data class GapiConnectorType(
     var scopes: List<String>
 )
 
-sealed class MeeConnectionType {
+data class OpenId4VcConnectorType(
+    var issuerId: String
+)
+
+sealed class MeeConnectorType {
     data class Siop(
-        val value: SiopConnectionType
-    ) : MeeConnectionType()
+        val value: SiopConnectorType
+    ) : MeeConnectorType()
 
     data class Gapi(
-        val value: GapiConnectionType
-    ) : MeeConnectionType()
+        val value: GapiConnectorType
+    ) : MeeConnectorType()
 
-    object MeeTalk : MeeConnectionType()
+    object MeeTalk : MeeConnectorType()
 
+    data class OpenId4Vc(
+        val value: OpenId4VcConnectorType
+    ) : MeeConnectorType()
 
+    object MeeBrowserExtension : MeeConnectorType()
 }
 
-data class MeeConnection(
+data class MeeConnector(
     var id: String,
     var name: String,
-    var value: MeeConnectionType
+    var otherPartyConnectionId: String,
+    var value: MeeConnectorType
 ) {
-    constructor(from: OtherPartyConnectionUniffi) : this(
+    constructor(from: OtherPartyConnectorUniffi) : this(
         id = from.id,
         name = from.name,
-        value = meeConnectionType(from)
+        otherPartyConnectionId = from.otherPartyConnectionId,
+        value = meeConnectorType(from)
     )
 
     companion object {
-        private fun meeConnectionType(from: OtherPartyConnectionUniffi): MeeConnectionType {
+        private fun meeConnectorType(from: OtherPartyConnectorUniffi): MeeConnectorType {
             return when (val protocol = from.protocol) {
-                is OpConnectionProtocolUniffi.MeeTalk -> MeeConnectionType.MeeTalk
-                is OpConnectionProtocolUniffi.Gapi -> MeeConnectionType.Gapi(
-                    GapiConnectionType(protocol.value.scopes)
+                is OpConnectorProtocolUniffi.MeeTalk -> MeeConnectorType.MeeTalk
+                is OpConnectorProtocolUniffi.Gapi -> MeeConnectorType.Gapi(
+                    GapiConnectorType(protocol.value.scopes)
                 )
-                is OpConnectionProtocolUniffi.Siop -> {
+                is OpConnectorProtocolUniffi.Siop -> {
                     val value = protocol.value
-                    MeeConnectionType.Siop(
-                        SiopConnectionType(
+                    MeeConnectorType.Siop(
+                        SiopConnectorType(
                             value.redirectUri,
                             PartnerMetadata(value.clientMetadata),
                             when (val subjectSyntaxType = value.subjectSyntaxType) {
-                                is SubjectSyntaxType.DidKey -> ConnectionTypeSubject.DidKey(
+                                is SubjectSyntaxType.DidKey -> ConnectorTypeSubject.DidKey(
                                     subjectSyntaxType.value
                                 )
-                                is SubjectSyntaxType.JwkThumbprint -> ConnectionTypeSubject.JwkThumbprint(
+                                is SubjectSyntaxType.JwkThumbprint -> ConnectorTypeSubject.JwkThumbprint(
                                     subjectSyntaxType.value
                                 )
                             }
                         )
                     )
                 }
+                is OpConnectorProtocolUniffi.OpenId4Vc -> MeeConnectorType.OpenId4Vc(
+                    OpenId4VcConnectorType(protocol.value.issuerId)
+                )
+                is OpConnectorProtocolUniffi.MeeBrowserExtension -> MeeConnectorType.MeeBrowserExtension
             }
         }
-
     }
 }

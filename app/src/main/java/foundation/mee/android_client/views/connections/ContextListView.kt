@@ -21,23 +21,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.R
-import foundation.mee.android_client.models.MeeAgentStore
-import foundation.mee.android_client.models.MeeConnection
-import foundation.mee.android_client.models.MeeConnectionType
-import foundation.mee.android_client.models.mobileApps
+import foundation.mee.android_client.models.*
 import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.navigation.Navigator
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.utils.getHostname
 import foundation.mee.android_client.utils.linkToWebpage
 
 @Composable
 fun ConsentsList(
     modifier: Modifier = Modifier,
     title: String,
-    meeConnections: List<MeeConnection> = emptyList(),
+    meeConnections: List<MeeConnector> = emptyList(),
     navigator: Navigator = hiltViewModel<NavViewModel>().navigator,
     meeAgentStore: MeeAgentStore = hiltViewModel<MeeAgentViewModel>().meeAgentStore,
     hasEntry: Boolean = false
@@ -69,14 +65,12 @@ fun ConsentsList(
                         if (hasEntry) {
                             navigator.navigate(
                                 "${MeeDestinations.MANAGE.route}/${
-                                    getHostname(
-                                        connection.id
-                                    )
+                                    connection.otherPartyConnectionId
                                 }"
                             )
                         } else {
                             when (connection.value) {
-                                is MeeConnectionType.Gapi -> showCompatibleWarning = true
+                                is MeeConnectorType.Gapi -> showCompatibleWarning = true
                                 else -> {
                                     val uri = Uri.parse(connection.id)
                                     linkToWebpage(context, uri)

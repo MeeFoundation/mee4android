@@ -3,15 +3,16 @@ package foundation.mee.android_client.models
 import uniffi.mee_agent.OidcClientMetadata
 
 object PartnersRegistry {
-    var shared: List<MeeConnection>
+    var shared: List<MeeConnector>
 
     init {
         shared = listOf(
-            MeeConnection(
+            MeeConnector(
                 id = "https://mee.foundation/",
                 name = "Mee Foundation",
-                value = MeeConnectionType.Siop(
-                    SiopConnectionType(
+                otherPartyConnectionId = "mee.foundation",
+                value = MeeConnectorType.Siop(
+                    SiopConnectorType(
                         redirectUri = "https://mee.foundation/",
                         clientMetadata = PartnerMetadata(
                             from = OidcClientMetadata(
@@ -27,15 +28,16 @@ object PartnersRegistry {
                                 subjectSyntaxTypesSupported = listOf()
                             )
                         ),
-                        subjectSyntaxType = ConnectionTypeSubject.DidKey("")
+                        subjectSyntaxType = ConnectorTypeSubject.DidKey("")
                     )
                 )
             ),
-            MeeConnection(
+            MeeConnector(
                 id = "https://oldeyorktimes.com/",
                 name = "The Olde York Times",
-                value = MeeConnectionType.Siop(
-                    SiopConnectionType(
+                otherPartyConnectionId = "oldeyorktimes.com",
+                value = MeeConnectorType.Siop(
+                    SiopConnectorType(
                         redirectUri = "https://oldeyorktimes.com/",
                         clientMetadata = PartnerMetadata(
                             from = OidcClientMetadata(
@@ -51,15 +53,16 @@ object PartnersRegistry {
                                 subjectSyntaxTypesSupported = listOf()
                             )
                         ),
-                        subjectSyntaxType = ConnectionTypeSubject.DidKey("")
+                        subjectSyntaxType = ConnectorTypeSubject.DidKey("")
                     )
                 )
             ),
-            MeeConnection(
+            MeeConnector(
                 id = "https://google.com",
                 name = "Google Account",
-                value = MeeConnectionType.Gapi(
-                    GapiConnectionType(scopes = listOf())
+                otherPartyConnectionId = "google.com",
+                value = MeeConnectorType.Gapi(
+                    GapiConnectorType(scopes = listOf())
                 )
             )
         )

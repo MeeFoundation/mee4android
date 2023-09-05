@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
-import foundation.mee.android_client.models.MeeConnection
+import foundation.mee.android_client.models.MeeConnector
 import foundation.mee.android_client.ui.components.Expander
 import foundation.mee.android_client.ui.components.advancedShadow
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
@@ -35,7 +35,7 @@ import kotlin.reflect.full.memberProperties
 fun ManageConnectionContent(
     modifier: Modifier = Modifier,
     consentEntriesType: ConsentEntriesType,
-    meeConnection: MeeConnection,
+    meeConnection: MeeConnector,
     onRemoveConnection: (String) -> Unit
 ) {
 

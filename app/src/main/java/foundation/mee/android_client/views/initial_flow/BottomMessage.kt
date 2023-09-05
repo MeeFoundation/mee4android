@@ -35,9 +35,9 @@ fun BottomMessage(
     buttonText: Int? = null,
     buttonColor: Color? = null,
     bottomMessageHeader: @Composable () -> Unit = {},
-    message: String,
+    message: Int,
     @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier.padding(bottom = 64.dp),
-    title: String? = null,
+    title: Int? = null,
     onNext: () -> Unit
 ) {
     BaseBottomMessage(
@@ -59,8 +59,8 @@ fun BottomMessage(
 fun RestrictBottomMessage(
     icon: Int,
     iconSize: Dp,
-    title: String,
-    message: String,
+    title: Int,
+    message: Int,
     onNextSecondaryButton: () -> Unit,
     onNextPrimaryButton: () -> Unit
 ) {
@@ -103,8 +103,8 @@ fun RestrictBottomMessage(
 fun BaseBottomMessage(
     icon: Int?,
     iconSize: Dp?,
-    title: String?,
-    message: String,
+    title: Int?,
+    message: Int,
     bottomMessageHeader: @Composable () -> Unit = {},
     @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier,
     content: @Composable () -> Unit
@@ -137,7 +137,7 @@ fun BaseBottomMessage(
                 }
                 title?.let {
                     Text(
-                        text = title,
+                        text = stringResource(title),
                         fontFamily = publicSansFamily,
                         fontWeight = FontWeight(700),
                         color = Color.Black,
@@ -147,7 +147,7 @@ fun BaseBottomMessage(
                     )
                 }
                 Text(
-                    text = message,
+                    text = stringResource(message),
                     fontFamily = publicSansFamily,
                     fontWeight = FontWeight(400),
                     color = Color.Black,
@@ -176,8 +176,8 @@ fun BottomMessagePreview() {
                 BottomMessage(
                     icon = R.drawable.mee_guy_icon,
                     iconSize = 60.dp,
-                    title = stringResource(id = R.string.biometry_initial_step_title),
-                    message = stringResource(id = R.string.biometry_initial_step_message),
+                    title = R.string.biometry_initial_step_title,
+                    message = R.string.biometry_initial_step_message,
                     onNext = {}
                 )
             }
