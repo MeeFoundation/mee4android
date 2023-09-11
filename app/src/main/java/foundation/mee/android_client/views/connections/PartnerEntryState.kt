@@ -3,20 +3,28 @@ package foundation.mee.android_client.views.connections
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
+import foundation.mee.android_client.MeeAgentViewModel
+import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.models.MeeConnector
 import foundation.mee.android_client.models.MeeConnectorType
 import foundation.mee.android_client.utils.getURLFromString
+import uniffi.mee_agent.OtherPartyContextData
 
 @Composable
-fun rememberPartnerEntryState(connection: MeeConnector): PartnerEntryState {
+fun rememberPartnerEntryState(
+    connection: MeeConnector,
+    meeAgentStore: MeeAgentStore = hiltViewModel<MeeAgentViewModel>().meeAgentStore
+): PartnerEntryState {
     return remember {
-        PartnerEntryState(connection)
+        PartnerEntryState(connection, meeAgentStore)
     }
 }
 
 @Stable
 class PartnerEntryState(
-    connection: MeeConnector
+    connection: MeeConnector,
+    meeAgentStore: MeeAgentStore
 ) {
     val name: String
     val logoUri: String
@@ -33,7 +41,14 @@ class PartnerEntryState(
             is MeeConnectorType.Gapi -> {
                 name = "Google Account"
                 logoUri = "https://google.com/favicon.ico"
-                hostname = "google.com"
+
+                val id = "google.com"
+                hostname = when (val data = meeAgentStore.getLastExternalConsentById(id)?.data) {
+                    is OtherPartyContextData.Gapi -> {
+                        data.value.userInfo.email ?: id
+                    }
+                    else -> id
+                }
             }
             is MeeConnectorType.MeeTalk -> {
                 name = "Mee Talk"

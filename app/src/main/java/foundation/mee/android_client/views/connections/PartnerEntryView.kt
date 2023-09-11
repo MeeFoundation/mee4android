@@ -64,13 +64,6 @@ fun PartnerEntry(
                             text = state.name,
                             style = MaterialTheme.typography.h6,
                         )
-                        Image(
-                            painter = rememberAsyncImagePainter(R.drawable.mee_certified_logo),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(horizontal = 5.dp)
-                                .requiredSize(20.dp)
-                        )
                     }
                     Text(
                         text = state.hostname,
