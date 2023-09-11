@@ -53,6 +53,7 @@ fun OidcClaimParams(from: ConsentRequestClaim): OidcClaimParams =
         from.attributeType,
         from.name,
         from.type.name,
+        from.order,
         if (from.retentionDuration == RetentionDuration.WHILE_USING_APP) RetentionDuration.WHILE_USING_APP
         else RetentionDuration.UNTIL_CONNECTION_DELETION,
         from.businessPurpose,

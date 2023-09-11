@@ -35,7 +35,8 @@ data class ConsentRequestClaim(
     var isRequired: Boolean = false,
     val type: ConsentEntryType,
     var isOn: Boolean = false,
-    var isOpen: Boolean = false
+    var isOpen: Boolean = false,
+    var order: ULong?
 ) {
     constructor(
         from: OidcClaimParams,
@@ -50,7 +51,8 @@ data class ConsentRequestClaim(
         value = from.value,
         retentionDuration = from.retentionDuration,
         isRequired = from.essential,
-        type = ConsentEntryType.values().find { it.name == from.typ } ?: ConsentEntryType.string
+        type = ConsentEntryType.values().find { it.name == from.typ } ?: ConsentEntryType.string,
+        order = from.order
     )
 
     fun isIncorrect(): Boolean {
