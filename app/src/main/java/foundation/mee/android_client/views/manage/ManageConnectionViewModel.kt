@@ -39,14 +39,14 @@ class ManageConnectionViewModel @Inject constructor(
     private fun loadData() {
         try {
             val hostname: String = checkNotNull(savedStateHandle["connectionHostname"])
-            val meeConnection = meeAgentStore.getConnectionByHostname(hostname)
-            if (meeConnection != null) {
-                val meeContext = meeAgentStore.getLastConnectionConsentById(meeConnection.id)
+            val meeConnector = meeAgentStore.getConnectorByConnectionId(hostname)
+            if (meeConnector != null) {
+                val meeContext = meeAgentStore.getLastConnectionConsentByConnectorId(meeConnector.id)
                 if (meeContext != null) {
                     _screenData.value =
                         ConnectionDataState.Success(
                             Pair(
-                                meeConnection,
+                                meeConnector,
                                 ConsentEntriesType.SiopClaims(meeContext.attributes)
                             )
                         )
@@ -56,7 +56,7 @@ class ManageConnectionViewModel @Inject constructor(
                         _screenData.value =
                             ConnectionDataState.Success(
                                 Pair(
-                                    meeConnection,
+                                    meeConnector,
                                     ConsentEntriesType.GapiEntries(external)
                                 )
                             )
@@ -74,7 +74,7 @@ class ManageConnectionViewModel @Inject constructor(
     }
 
     fun removeConnection(id: String, navigator: Navigator) {
-        meeAgentStore.removeItemByName(id)
+        meeAgentStore.removeItemByConnectionId(id)
         navigator.popBackStack()
     }
 }

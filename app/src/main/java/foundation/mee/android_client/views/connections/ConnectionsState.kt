@@ -48,7 +48,7 @@ fun getExistingPartnersWeb(
     return data?.filter { x ->
         when (val connType = x.value) {
             is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.web -> meeAgentStore.getLastConnectionConsentById(x.id) != null
+                ClientType.web -> meeAgentStore.getLastConnectionConsentByConnectorId(x.id) != null
                 else -> false
             }
             is MeeConnectorType.Gapi -> true
@@ -64,7 +64,7 @@ fun getExistingPartnersMobile(
     return data?.filter { x ->
         when (val connType = x.value) {
             is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.mobile -> meeAgentStore.getLastConnectionConsentById(x.id) != null
+                ClientType.mobile -> meeAgentStore.getLastConnectionConsentByConnectorId(x.id) != null
                 else -> false
             }
             else -> false
@@ -74,7 +74,7 @@ fun getExistingPartnersMobile(
 
 fun getOtherPartners(existingPartnersWebApp: List<MeeConnector>?): List<MeeConnector> {
     return PartnersRegistry.shared.filter { x ->
-        val isNotPresentedInExistingList = existingPartnersWebApp?.find { getHostname(it.id) == getHostname(x.id) } == null
+        val isNotPresentedInExistingList = existingPartnersWebApp?.find { getHostname(it.otherPartyConnectionId) == x.otherPartyConnectionId } == null
         val isGapiInList = existingPartnersWebApp?.find { it.value is MeeConnectorType.Gapi } != null
         val isGapiInListAndEntryIsGapi = isGapiInList && x.value is MeeConnectorType.Gapi
         isNotPresentedInExistingList && !isGapiInListAndEntryIsGapi

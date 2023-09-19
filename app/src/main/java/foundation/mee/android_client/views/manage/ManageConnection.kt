@@ -30,7 +30,7 @@ fun ManageConnection(
                     meeConnection = pair.first,
                     consentEntriesType = pair.second,
                     onRemoveConnection = {
-                        manageConnectionViewModel.removeConnection(pair.first.otherPartyConnectionId, navigator)
+                        manageConnectionViewModel.removeConnection(it, navigator)
                     }
                 )
             }
