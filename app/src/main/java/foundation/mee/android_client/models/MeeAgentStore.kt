@@ -27,15 +27,7 @@ class MeeAgentStore @Inject constructor(
     private val docsAbsolutePath = context.applicationInfo.dataDir
     private val dsUrl = "$docsAbsolutePath${File.separator}mee.sqlite"
 
-    init {
-        try {
-            initMeeAgent()
-        } catch (e: Exception) {
-            Log.e("Unable to init Mee Agent", e.message.orEmpty())
-        }
-    }
-
-    private fun initMeeAgent() {
+    fun initMeeAgent() {
         val file = File(dsUrl)
         if (!file.exists()) {
             file.createNewFile()
@@ -70,7 +62,7 @@ class MeeAgentStore @Inject constructor(
         }
     }
 
-    fun getLastConnectionConsentByConnectorId(id: String): MeeContext? {
+    fun getLastConnectionConsentById(id: String): MeeContext? {
         return try {
             val coreConsent = agent.siopLastConsentByConnectionId(connId = id)
             if (coreConsent != null) {
@@ -93,7 +85,7 @@ class MeeAgentStore @Inject constructor(
 
     fun getConnectorByConnectionId(id: String): MeeConnector? {
         val items = getAllItems() ?: return null
-        return items.firstOrNull { getHostname(it.otherPartyConnectionId) == getHostname(id) }
+        return items.firstOrNull { it.otherPartyConnectionId == id }
     }
 
     fun removeItemByConnectionId(id: String): String? {
@@ -110,13 +102,12 @@ class MeeAgentStore @Inject constructor(
         return null
     }
 
-    fun isReturningUser(id: String): Boolean = getConnectorByConnectionId(id) != null
+    fun isReturningUser(id: String): Boolean = getConnectorByConnectionId(getHostname(id)) != null
 
     fun recoverRequest(consentRequest: ConsentRequest): OidcAuthResponseWrapper? {
-        val meeConnector = getConnectorByConnectionId(consentRequest.id)
-        return if (meeConnector != null) getLastConnectionConsentByConnectorId(meeConnector.id)?.let { contextData ->
+        return getLastConnectionConsentById(getHostname(consentRequest.id))?.let { contextData ->
             ConsentRequest(contextData, consentRequest)
-        }?.let { request -> authorize(request) } else null
+        }?.let { request -> authorize(request) }
     }
 
     fun getGoogleIntegrationUrl(): Url? {

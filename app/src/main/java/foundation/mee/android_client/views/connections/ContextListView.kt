@@ -27,7 +27,6 @@ import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.navigation.Navigator
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.utils.getHostname
 import foundation.mee.android_client.utils.linkToWebpage
 
 @Composable
@@ -65,9 +64,7 @@ fun ConsentsList(
                     modifier = Modifier.clickableWithoutRipple {
                         if (hasEntry) {
                             navigator.navigate(
-                                "${MeeDestinations.MANAGE.route}/${
-                                    getHostname(connection.otherPartyConnectionId)
-                                }"
+                                "${MeeDestinations.MANAGE.route}/${connection.otherPartyConnectionId}"
                             )
                         } else {
                             when (connection.value) {

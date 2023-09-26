@@ -4,7 +4,6 @@ import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.models.*
-import foundation.mee.android_client.utils.getHostname
 
 @Composable
 fun rememberConnectionsState(meeAgentStore: MeeAgentStore = hiltViewModel<MeeAgentViewModel>().meeAgentStore): ConnectionsState {
@@ -48,7 +47,7 @@ fun getExistingPartnersWeb(
     return data?.filter { x ->
         when (val connType = x.value) {
             is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.web -> meeAgentStore.getLastConnectionConsentByConnectorId(x.id) != null
+                ClientType.web -> meeAgentStore.getLastConnectionConsentById(x.otherPartyConnectionId) != null
                 else -> false
             }
             is MeeConnectorType.Gapi -> true
@@ -64,7 +63,7 @@ fun getExistingPartnersMobile(
     return data?.filter { x ->
         when (val connType = x.value) {
             is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.mobile -> meeAgentStore.getLastConnectionConsentByConnectorId(x.id) != null
+                ClientType.mobile -> meeAgentStore.getLastConnectionConsentById(x.otherPartyConnectionId) != null
                 else -> false
             }
             else -> false
@@ -74,7 +73,7 @@ fun getExistingPartnersMobile(
 
 fun getOtherPartners(existingPartnersWebApp: List<MeeConnector>?): List<MeeConnector> {
     return PartnersRegistry.shared.filter { x ->
-        val isNotPresentedInExistingList = existingPartnersWebApp?.find { getHostname(it.otherPartyConnectionId) == x.otherPartyConnectionId } == null
+        val isNotPresentedInExistingList = existingPartnersWebApp?.find { it.otherPartyConnectionId == x.otherPartyConnectionId } == null
         val isGapiInList = existingPartnersWebApp?.find { it.value is MeeConnectorType.Gapi } != null
         val isGapiInListAndEntryIsGapi = isGapiInList && x.value is MeeConnectorType.Gapi
         isNotPresentedInExistingList && !isGapiInListAndEntryIsGapi

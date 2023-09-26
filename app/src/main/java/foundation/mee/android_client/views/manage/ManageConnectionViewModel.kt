@@ -41,7 +41,7 @@ class ManageConnectionViewModel @Inject constructor(
             val hostname: String = checkNotNull(savedStateHandle["connectionHostname"])
             val meeConnector = meeAgentStore.getConnectorByConnectionId(hostname)
             if (meeConnector != null) {
-                val meeContext = meeAgentStore.getLastConnectionConsentByConnectorId(meeConnector.id)
+                val meeContext = meeAgentStore.getLastConnectionConsentById(meeConnector.otherPartyConnectionId)
                 if (meeContext != null) {
                     _screenData.value =
                         ConnectionDataState.Success(

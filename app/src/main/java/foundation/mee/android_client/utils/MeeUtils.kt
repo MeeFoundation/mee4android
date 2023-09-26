@@ -3,7 +3,9 @@ package foundation.mee.android_client.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.Settings
 import android.util.Base64
+import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ConsentRequest
 import uniffi.mee_agent.siopRpAuthRequestFromUrl
 import java.net.URL
@@ -44,4 +46,26 @@ fun buildConsentRequestFromUrl(url: String): ConsentRequest? {
     } catch (e: Exception) {
         null
     }
+}
+
+fun goToSystemSettings(context: Context) {
+    context.startActivity(
+        Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.parse("package:${context.packageName}")
+        )
+    )
+}
+
+fun sendFeedback(context: Context) {
+    val meeFoundationContact = "contact@mee.foundation"
+    val mailUriPrefix = "mailto:"
+    val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("$mailUriPrefix$meeFoundationContact")
+    }
+    context.startActivity(
+        Intent.createChooser(
+            emailIntent, context.getString(R.string.send_feedback_intent_title_text)
+        )
+    )
 }

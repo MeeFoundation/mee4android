@@ -84,7 +84,7 @@ data class MeeConnector(
                     )
                 }
                 is OpConnectorProtocolUniffi.OpenId4Vc -> MeeConnectorType.OpenId4Vc(
-                    OpenId4VcConnectorType(protocol.value.issuerId)
+                    OpenId4VcConnectorType(protocol.value.issuerUrl)
                 )
                 is OpConnectorProtocolUniffi.MeeBrowserExtension -> MeeConnectorType.MeeBrowserExtension
             }
