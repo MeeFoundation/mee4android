@@ -64,9 +64,7 @@ fun ConsentsList(
                     modifier = Modifier.clickableWithoutRipple {
                         if (hasEntry) {
                             navigator.navigate(
-                                "${MeeDestinations.MANAGE.route}/${
-                                    connection.otherPartyConnectionId
-                                }"
+                                "${MeeDestinations.MANAGE.route}/${connection.otherPartyConnectionId}"
                             )
                         } else {
                             when (connection.value) {

@@ -60,7 +60,11 @@
     <string name="settings_entry_credentials_desc">Go to Security Settings</string>
     <string name="settings_data_deletion_success">Your data was deleted successfully</string>
     <string name="settings_data_deletion_success_back">Back to Connections Screen</string>
-    <string name="settings_data_deletion_error_title">Ooops!</string>
-    <string name="settings_data_deletion_error">Your data couldn’t be deleted.\nPlease try again later</string>
-    <string name="settings_data_deletion_error_back">Back to Settings</string>
+    <string name="settings_data_deletion_error_title">Error occurred deleting user data</string>
+    <string name="settings_data_deletion_error">We were unable to delete your data. \nTo resolve this issue, please go to the Android system settings to manually delete your data.</string>
+    <string name="settings_data_deletion_error_button_title">Go to system settings</string>
+    <string name="init_agent_db_error_title">Error occurred migrating user data</string>
+    <string name="init_agent_db_error_message">We are unable to recover your data. \nTo handle the failed migration, it is necessary to completely reset the user data.\nPlease go to the system settings and delete your data to resolve the issue.</string>
+    <string name="init_agent_error_title">Unknown error occurred.</string>
+    <string name="init_agent_error_message">We are unable to recover your data.\nTo resolve the issue please go to the system settings and manually delete your data or contact us if the problem persists.</string>
 </resources>

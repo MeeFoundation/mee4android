@@ -36,14 +36,14 @@ class PartnerEntryState(
                 val clientMetadata = conn.value.clientMetadata
                 name = clientMetadata.name
                 logoUri = clientMetadata.logoUrl
-                hostname = getURLFromString(connection.id)?.host ?: connection.id
+                hostname = getURLFromString(connection.otherPartyConnectionId)?.host ?: connection.otherPartyConnectionId
             }
             is MeeConnectorType.Gapi -> {
                 name = "Google Account"
                 logoUri = "https://google.com/favicon.ico"
 
                 val id = "google.com"
-                hostname = when (val data = meeAgentStore.getLastExternalConsentById(id)?.data) {
+                hostname = when (val data = meeAgentStore.getLastExternalConsentById(connection.otherPartyConnectionId)?.data) {
                     is OtherPartyContextData.Gapi -> {
                         data.value.userInfo.email ?: id
                     }

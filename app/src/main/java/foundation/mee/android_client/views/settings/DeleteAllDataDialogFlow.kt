@@ -81,7 +81,7 @@ fun DeleteAllDataDialogFlow(
                 icon = R.drawable.mee_compatible_sign,
                 title = R.string.settings_data_deletion_error_title,
                 messageText = R.string.settings_data_deletion_error,
-                buttonText = R.string.settings_data_deletion_error_back
+                buttonText = R.string.settings_data_deletion_error_button_title
             ) {
                 onClose()
                 currentStep = DeleteAllDataSteps.Initial

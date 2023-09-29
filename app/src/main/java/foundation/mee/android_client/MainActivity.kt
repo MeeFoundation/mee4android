@@ -26,7 +26,10 @@ import foundation.mee.android_client.navigation.MeeNavGraph
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.service.ReferrerClient
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
+import foundation.mee.android_client.utils.goToSystemSettings
+import foundation.mee.android_client.utils.sendFeedback
 import foundation.mee.android_client.views.MeeWhiteScreen
+import foundation.mee.android_client.views.initial_flow.InitAgentErrorMessage
 import kotlinx.coroutines.*
 
 @AndroidEntryPoint
@@ -38,82 +41,106 @@ class MainActivity : FragmentActivity() {
         val keyguard = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
         intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or FLAG_ACTIVITY_NEW_TASK)
 
+        val meeAgentStore: MeeAgentViewModel by viewModels()
+        val initAgentResult = meeAgentStore.initMeeAgent()
+
         setContent {
-            val settingsDataStore = MeeAndroidSettingsDataStore(context = LocalContext.current)
-            val initialFlowDone by settingsDataStore.getInitialFlowDoneSetting().collectAsState(
-                initial = null
-            )
-            val hadConnectionsBefore by settingsDataStore.getHadConnectionsBeforeSetting()
-                .collectAsState(
-                    initial = null
-                )
+            val context = LocalContext.current
+            when (initAgentResult) {
+                is Result.Success -> {
+                    val settingsDataStore =
+                        MeeAndroidSettingsDataStore(context)
+                    val initialFlowDone by settingsDataStore.getInitialFlowDoneSetting()
+                        .collectAsState(
+                            initial = null
+                        )
+                    val hadConnectionsBefore by settingsDataStore.getHadConnectionsBeforeSetting()
+                        .collectAsState(
+                            initial = null
+                        )
 
-            val coroutineScope = rememberCoroutineScope()
+                    val coroutineScope = rememberCoroutineScope()
 
-            MeeIdentityAgentTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    var loginSuccess by rememberSaveable { mutableStateOf(false) }
+                    MeeIdentityAgentTheme {
+                        // A surface container using the 'background' color from the theme
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.background
+                        ) {
+                            var loginSuccess by rememberSaveable { mutableStateOf(false) }
 
-                    val ctx = LocalContext.current as FragmentActivity
+                            val ctx = context as FragmentActivity
 
-                    OnLifecycleEvent { owner, event ->
-                        Log.d("Lifecycle Event: ", event.toString())
-                        when (event) {
-                            Lifecycle.Event.ON_RESUME -> {
-                                if (!keyguard.isDeviceSecure) {
-                                    coroutineScope.launch {
-                                        settingsDataStore.saveInitialFlowDoneSetting(flag = false)
+                            OnLifecycleEvent { owner, event ->
+                                Log.d("Lifecycle Event: ", event.toString())
+                                when (event) {
+                                    Lifecycle.Event.ON_RESUME -> {
+                                        if (!keyguard.isDeviceSecure) {
+                                            coroutineScope.launch {
+                                                settingsDataStore.saveInitialFlowDoneSetting(flag = false)
+                                            }
+                                        }
+                                    }
+
+                                    Lifecycle.Event.ON_STOP -> {
+                                        loginSuccess = false
+
+                                    }
+                                    else -> {}
+                                }
+                            }
+
+                            if (hadConnectionsBefore != null) {
+                                if (hadConnectionsBefore == false) {
+                                    ReferrerClient(ctx).getReferrerUrl {
+                                        coroutineScope.launch {
+                                            settingsDataStore.saveReferrerUrlSetting(it)
+                                        }
                                     }
                                 }
                             }
 
-                            Lifecycle.Event.ON_STOP -> {
-                                loginSuccess = false
-
-                            }
-                            else -> {}
-                        }
-                    }
-
-                    if (hadConnectionsBefore != null) {
-                        if (hadConnectionsBefore == false) {
-                            ReferrerClient(ctx).getReferrerUrl {
-                                coroutineScope.launch {
-                                    settingsDataStore.saveReferrerUrlSetting(it)
-                                }
-                            }
-                        }
-                    }
-
-                    if (initialFlowDone != null) {
-                        if (loginSuccess || initialFlowDone == false
-                        ) {
-                            Box(modifier = Modifier.fillMaxSize()) {
-
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .zIndex(1f)
+                            if (initialFlowDone != null) {
+                                if (loginSuccess || initialFlowDone == false
                                 ) {
-                                    MeeNavGraph(
-                                        initialFlowDone = initialFlowDone == true,
-                                        hadConnectionsBefore = hadConnectionsBefore == true
+                                    Box(modifier = Modifier.fillMaxSize()) {
+
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .zIndex(1f)
+                                        ) {
+                                            MeeNavGraph(
+                                                initialFlowDone = initialFlowDone == true,
+                                                hadConnectionsBefore = hadConnectionsBefore == true
+                                            )
+                                        }
+
+                                    }
+                                } else {
+                                    MeeWhiteScreen()
+                                    BiometryHandler(
+                                        activityContext = ctx,
+                                        onSuccessfulAuth = { loginSuccess = true }
                                     )
                                 }
-
                             }
-                        } else {
-                            MeeWhiteScreen()
-                            BiometryHandler(
-                                activityContext = ctx,
-                                onSuccessfulAuth = { loginSuccess = true }
-                            )
                         }
                     }
+                }
+                is Result.DbError -> InitAgentErrorMessage(
+                    title = R.string.init_agent_db_error_title,
+                    message = R.string.init_agent_db_error_message,
+                    primaryButtonTitle = R.string.settings_data_deletion_error_button_title
+                ) {
+                    goToSystemSettings(context)
+                }
+                is Result.InitAgentError -> InitAgentErrorMessage(
+                    title = R.string.init_agent_error_title,
+                    message = R.string.init_agent_error_message,
+                    primaryButtonTitle = R.string.send_feedback_intent_title_text,
+                ) {
+                    sendFeedback(context)
                 }
             }
         }
@@ -131,7 +158,11 @@ class MainActivity : FragmentActivity() {
                 }
             }
         } else {
-            model.navigator.navController.handleDeepLink(intent)
+            try {
+                model.navigator.navController.handleDeepLink(intent)
+            } catch (e: java.lang.Exception) {
+                Log.e("onNewIntent", e.message.orEmpty())
+            }
         }
     }
 

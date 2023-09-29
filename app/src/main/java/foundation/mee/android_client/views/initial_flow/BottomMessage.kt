@@ -1,6 +1,7 @@
 package foundation.mee.android_client.views.initial_flow
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.material.Surface
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +63,7 @@ fun RestrictBottomMessage(
     iconSize: Dp,
     title: Int,
     message: Int,
+    primaryButtonTitle: Int? = null,
     onNextSecondaryButton: () -> Unit,
     onNextPrimaryButton: () -> Unit
 ) {
@@ -84,7 +87,7 @@ fun RestrictBottomMessage(
             onNextSecondaryButton()
         }
         PrimaryButton(
-            title = stringResource(R.string.settings_button_text),
+            title = stringResource(primaryButtonTitle ?: R.string.settings_button_text),
             modifier = Modifier
                 .padding(0.dp)
                 .height(60.dp)
@@ -156,6 +159,37 @@ fun BaseBottomMessage(
                     modifier = textModifier.padding(top = 8.dp)
                 )
                 content()
+            }
+        }
+    }
+}
+
+@Composable
+fun InitAgentErrorMessage(
+    title: Int,
+    message: Int,
+    primaryButtonTitle: Int,
+    onNext: () -> Unit
+) {
+    val activity = (LocalContext.current as? Activity)
+
+    Box {
+        MeeWhiteScreen(modifier = Modifier.zIndex(2f), isFaded = true)
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier
+                .zIndex(1f)
+                .fillMaxHeight(),
+        ) {
+            RestrictBottomMessage(
+                icon = R.drawable.mee_compatible_sign,
+                iconSize = 60.dp,
+                title = title,
+                message = message,
+                primaryButtonTitle = primaryButtonTitle,
+                onNextSecondaryButton = { activity?.finishAffinity() }
+            ) {
+                onNext()
             }
         }
     }

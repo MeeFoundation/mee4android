@@ -134,7 +134,7 @@ fun ManageConnectionContent(
                 )
                 .background(color = Color.White, shape = RoundedCornerShape(12.dp))
                 .clickableWithoutRipple
-                { onRemoveConnection(meeConnection.id) }
+                { onRemoveConnection(meeConnection.otherPartyConnectionId) }
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,

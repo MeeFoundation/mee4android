@@ -20,6 +20,7 @@ import foundation.mee.android_client.models.MeeSettingsList
 import foundation.mee.android_client.ui.components.advancedShadow
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.*
+import foundation.mee.android_client.utils.goToSystemSettings
 
 @Composable
 fun MeeSettingsContent(
@@ -81,6 +82,7 @@ fun MeeSettingsContent(
     if (openDialog.value) {
         DeleteAllDataDialogFlow {
             openDialog.value = false
+            goToSystemSettings(context)
         }
     }
 }

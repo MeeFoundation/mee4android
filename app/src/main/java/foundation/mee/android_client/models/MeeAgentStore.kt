@@ -8,13 +8,13 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.models.settings.MeeAndroidSettingsDataStore
 import foundation.mee.android_client.models.settings.SharedPreferencesHelper
 import foundation.mee.android_client.utils.generateSecret
-import foundation.mee.android_client.utils.getHostname
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import uniffi.mee_agent.*
 import java.io.File
 import javax.inject.Inject
 import foundation.mee.android_client.utils.OidcAuthRequest
+import foundation.mee.android_client.utils.getHostname
 
 private const val MEE_KEYCHAIN_SECRET_NAME = "MEE_KEYCHAIN_SECRET_NAME"
 
@@ -27,15 +27,7 @@ class MeeAgentStore @Inject constructor(
     private val docsAbsolutePath = context.applicationInfo.dataDir
     private val dsUrl = "$docsAbsolutePath${File.separator}mee.sqlite"
 
-    init {
-        try {
-            initMeeAgent()
-        } catch (e: Exception) {
-            Log.e("Unable to init Mee Agent", e.message.orEmpty())
-        }
-    }
-
-    private fun initMeeAgent() {
+    fun initMeeAgent() {
         val file = File(dsUrl)
         if (!file.exists()) {
             file.createNewFile()
@@ -91,21 +83,16 @@ class MeeAgentStore @Inject constructor(
         }
     }
 
-    private fun getConnectionById(id: String): MeeConnector? {
+    fun getConnectorByConnectionId(id: String): MeeConnector? {
         val items = getAllItems() ?: return null
-        return items.firstOrNull { it.id == id }
+        return items.firstOrNull { it.otherPartyConnectionId == id }
     }
 
-    fun getConnectionByHostname(hostname: String): MeeConnector? {
-        val items = getAllItems() ?: return null
-        return items.firstOrNull { getHostname(it.otherPartyConnectionId) == hostname }
-    }
-
-    fun removeItemByName(id: String): String? {
-        val item = getConnectionByHostname(id)
+    fun removeItemByConnectionId(id: String): String? {
+        val item = getConnectorByConnectionId(id)
         if (item != null) {
             return try {
-                agent.deleteOtherPartyConnection(id)
+                agent.deleteOtherPartyConnection(item.otherPartyConnectionId)
                 id
             } catch (e: Exception) {
                 Log.e("removeItem", e.message.orEmpty())
@@ -115,10 +102,10 @@ class MeeAgentStore @Inject constructor(
         return null
     }
 
-    fun isReturningUser(id: String): Boolean = getConnectionById(id) != null
+    fun isReturningUser(id: String): Boolean = getConnectorByConnectionId(getHostname(id)) != null
 
     fun recoverRequest(consentRequest: ConsentRequest): OidcAuthResponseWrapper? {
-        return getLastConnectionConsentById(consentRequest.id)?.let { contextData ->
+        return getLastConnectionConsentById(getHostname(consentRequest.id))?.let { contextData ->
             ConsentRequest(contextData, consentRequest)
         }?.let { request -> authorize(request) }
     }

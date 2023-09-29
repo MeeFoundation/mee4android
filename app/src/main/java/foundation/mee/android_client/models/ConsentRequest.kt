@@ -59,6 +59,6 @@ data class ConsentRequest(
 private fun claimsMapper(idToken: Map<String, OidcClaimParams?>): List<ConsentRequestClaim> {
     return idToken.entries.mapNotNull { (key, value) ->
         value?.let { ConsentRequestClaim(value, key) }
-    }
+    }.sortedBy { it.order }
 }
 
