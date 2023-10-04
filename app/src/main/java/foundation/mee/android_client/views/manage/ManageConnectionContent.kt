@@ -28,7 +28,7 @@ import foundation.mee.android_client.views.connections.PartnerEntry
 import foundation.mee.android_client.views.consent.ConsentEntry
 import foundation.mee.android_client.views.consent.ExternalConsentEntry
 import uniffi.mee_agent.GapiUserInfo
-import uniffi.mee_agent.OtherPartyContextData
+import uniffi.mee_agent.OtherPartyContextDataUniffi
 import kotlin.reflect.full.memberProperties
 
 @Composable
@@ -104,7 +104,7 @@ fun ManageConnectionContent(
             is ConsentEntriesType.GapiEntries -> {
                 val entries: List<Pair<String, String>> =
                     when (val data = consentEntriesType.value.data) {
-                        is OtherPartyContextData.Gapi -> {
+                        is OtherPartyContextDataUniffi.Gapi -> {
                             val copy = arrayListOf<Pair<String, String>>()
                             for (prop in GapiUserInfo::class.memberProperties) {
                                 when (prop.name) {

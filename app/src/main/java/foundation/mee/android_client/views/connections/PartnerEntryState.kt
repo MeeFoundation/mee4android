@@ -9,7 +9,7 @@ import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.models.MeeConnector
 import foundation.mee.android_client.models.MeeConnectorType
 import foundation.mee.android_client.utils.getURLFromString
-import uniffi.mee_agent.OtherPartyContextData
+import uniffi.mee_agent.OtherPartyContextDataUniffi
 
 @Composable
 fun rememberPartnerEntryState(
@@ -44,7 +44,7 @@ class PartnerEntryState(
 
                 val id = "google.com"
                 hostname = when (val data = meeAgentStore.getLastExternalConsentById(connection.otherPartyConnectionId)?.data) {
-                    is OtherPartyContextData.Gapi -> {
+                    is OtherPartyContextDataUniffi.Gapi -> {
                         data.value.userInfo.email ?: id
                     }
                     else -> id

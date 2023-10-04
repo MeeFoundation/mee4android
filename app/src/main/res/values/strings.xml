@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mee Smartwallet</string>
+    <string name="app_name">Mee</string>
     <string name="loading_white_page_1">Creating a context in the Mee Data Storage</string>
     <string name="loading_white_page_2">Generating the context data encryption key</string>
     <string name="loading_white_page_3">Generating unique device keys</string>
