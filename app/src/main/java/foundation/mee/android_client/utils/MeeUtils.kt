@@ -65,7 +65,7 @@ fun sendFeedback(context: Context) {
     }
     context.startActivity(
         Intent.createChooser(
-            emailIntent, context.getString(R.string.send_feedback_intent_title_text)
+            emailIntent, context.getString(R.string.sidebar_send_feedback_title)
         )
     )
 }

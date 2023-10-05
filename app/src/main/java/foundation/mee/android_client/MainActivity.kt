@@ -26,10 +26,9 @@ import foundation.mee.android_client.navigation.MeeNavGraph
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.service.ReferrerClient
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.utils.goToSystemSettings
-import foundation.mee.android_client.utils.sendFeedback
 import foundation.mee.android_client.views.MeeWhiteScreen
 import foundation.mee.android_client.views.initial_flow.InitAgentErrorMessage
+import foundation.mee.android_client.views.initial_flow.MigrationErrorMessage
 import kotlinx.coroutines.*
 
 @AndroidEntryPoint
@@ -45,23 +44,10 @@ class MainActivity : FragmentActivity() {
         val initAgentResult = meeAgentStore.initMeeAgent()
 
         setContent {
-            val context = LocalContext.current
             when (initAgentResult.type) {
                 Result.Type.SUCCESS -> ContentOnInitSuccess(keyguard)
-                Result.Type.MIGRATION_ERROR -> InitAgentErrorMessage(
-                    title = R.string.init_agent_db_error_title,
-                    message = R.string.init_agent_db_error_message,
-                    primaryButtonTitle = R.string.settings_data_deletion_error_button_title
-                ) {
-                    goToSystemSettings(context)
-                }
-                Result.Type.INIT_AGENT_ERROR -> InitAgentErrorMessage(
-                    title = R.string.init_agent_error_title,
-                    message = R.string.init_agent_error_message,
-                    primaryButtonTitle = R.string.send_feedback_intent_title_text,
-                ) {
-                    sendFeedback(context)
-                }
+                Result.Type.MIGRATION_ERROR -> MigrationErrorMessage()
+                Result.Type.INIT_AGENT_ERROR -> InitAgentErrorMessage()
             }
         }
     }
