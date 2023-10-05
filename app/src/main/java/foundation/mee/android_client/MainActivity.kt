@@ -46,96 +46,16 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             val context = LocalContext.current
-            when (initAgentResult) {
-                is Result.Success -> {
-                    val settingsDataStore =
-                        MeeAndroidSettingsDataStore(context)
-                    val initialFlowDone by settingsDataStore.getInitialFlowDoneSetting()
-                        .collectAsState(
-                            initial = null
-                        )
-                    val hadConnectionsBefore by settingsDataStore.getHadConnectionsBeforeSetting()
-                        .collectAsState(
-                            initial = null
-                        )
-
-                    val coroutineScope = rememberCoroutineScope()
-
-                    MeeIdentityAgentTheme {
-                        // A surface container using the 'background' color from the theme
-                        Surface(
-                            modifier = Modifier.fillMaxSize(),
-                            color = MaterialTheme.colors.background
-                        ) {
-                            var loginSuccess by rememberSaveable { mutableStateOf(false) }
-
-                            val ctx = context as FragmentActivity
-
-                            OnLifecycleEvent { owner, event ->
-                                Log.d("Lifecycle Event: ", event.toString())
-                                when (event) {
-                                    Lifecycle.Event.ON_RESUME -> {
-                                        if (!keyguard.isDeviceSecure) {
-                                            coroutineScope.launch {
-                                                settingsDataStore.saveInitialFlowDoneSetting(flag = false)
-                                            }
-                                        }
-                                    }
-
-                                    Lifecycle.Event.ON_STOP -> {
-                                        loginSuccess = false
-
-                                    }
-                                    else -> {}
-                                }
-                            }
-
-                            if (hadConnectionsBefore != null) {
-                                if (hadConnectionsBefore == false) {
-                                    ReferrerClient(ctx).getReferrerUrl {
-                                        coroutineScope.launch {
-                                            settingsDataStore.saveReferrerUrlSetting(it)
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (initialFlowDone != null) {
-                                if (loginSuccess || initialFlowDone == false
-                                ) {
-                                    Box(modifier = Modifier.fillMaxSize()) {
-
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .zIndex(1f)
-                                        ) {
-                                            MeeNavGraph(
-                                                initialFlowDone = initialFlowDone == true,
-                                                hadConnectionsBefore = hadConnectionsBefore == true
-                                            )
-                                        }
-
-                                    }
-                                } else {
-                                    MeeWhiteScreen()
-                                    BiometryHandler(
-                                        activityContext = ctx,
-                                        onSuccessfulAuth = { loginSuccess = true }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-                is Result.DbError -> InitAgentErrorMessage(
+            when (initAgentResult.type) {
+                Result.Type.SUCCESS -> ContentOnInitSuccess(keyguard)
+                Result.Type.MIGRATION_ERROR -> InitAgentErrorMessage(
                     title = R.string.init_agent_db_error_title,
                     message = R.string.init_agent_db_error_message,
                     primaryButtonTitle = R.string.settings_data_deletion_error_button_title
                 ) {
                     goToSystemSettings(context)
                 }
-                is Result.InitAgentError -> InitAgentErrorMessage(
+                Result.Type.INIT_AGENT_ERROR -> InitAgentErrorMessage(
                     title = R.string.init_agent_error_title,
                     message = R.string.init_agent_error_message,
                     primaryButtonTitle = R.string.send_feedback_intent_title_text,
@@ -166,4 +86,87 @@ class MainActivity : FragmentActivity() {
         }
     }
 
+}
+
+@Composable
+fun ContentOnInitSuccess(keyguard: KeyguardManager) {
+    val context = LocalContext.current
+    val settingsDataStore =
+        MeeAndroidSettingsDataStore(context)
+    val initialFlowDone by settingsDataStore.getInitialFlowDoneSetting()
+        .collectAsState(
+            initial = null
+        )
+    val hadConnectionsBefore by settingsDataStore.getHadConnectionsBeforeSetting()
+        .collectAsState(
+            initial = null
+        )
+
+    val coroutineScope = rememberCoroutineScope()
+
+    MeeIdentityAgentTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
+        ) {
+            var loginSuccess by rememberSaveable { mutableStateOf(false) }
+
+            val ctx = context as FragmentActivity
+
+            OnLifecycleEvent { owner, event ->
+                Log.d("Lifecycle Event: ", event.toString())
+                when (event) {
+                    Lifecycle.Event.ON_RESUME -> {
+                        if (!keyguard.isDeviceSecure) {
+                            coroutineScope.launch {
+                                settingsDataStore.saveInitialFlowDoneSetting(flag = false)
+                            }
+                        }
+                    }
+
+                    Lifecycle.Event.ON_STOP -> {
+                        loginSuccess = false
+
+                    }
+                    else -> {}
+                }
+            }
+
+            if (hadConnectionsBefore != null) {
+                if (hadConnectionsBefore == false) {
+                    ReferrerClient(ctx).getReferrerUrl {
+                        coroutineScope.launch {
+                            settingsDataStore.saveReferrerUrlSetting(it)
+                        }
+                    }
+                }
+            }
+
+            if (initialFlowDone != null) {
+                if (loginSuccess || initialFlowDone == false
+                ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .zIndex(1f)
+                        ) {
+                            MeeNavGraph(
+                                initialFlowDone = initialFlowDone == true,
+                                hadConnectionsBefore = hadConnectionsBefore == true
+                            )
+                        }
+
+                    }
+                } else {
+                    MeeWhiteScreen()
+                    BiometryHandler(
+                        activityContext = ctx,
+                        onSuccessfulAuth = { loginSuccess = true }
+                    )
+                }
+            }
+        }
+    }
 }

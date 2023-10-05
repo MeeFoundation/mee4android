@@ -1,7 +1,7 @@
 package foundation.mee.android_client.models
 
-import uniffi.mee_agent.OtherPartyContext
-import uniffi.mee_agent.OtherPartyContextData
+import uniffi.mee_agent.OtherPartyContextDataUniffi
+import uniffi.mee_agent.OtherPartyContextUniffi
 import uniffi.mee_agent.SiopConsentUniffi
 
 data class MeeContext(
@@ -30,10 +30,10 @@ data class MeeContext(
 data class ExternalMeeContext(
     var id: String,
     var name: String,
-    var data: OtherPartyContextData,
+    var data: OtherPartyContextDataUniffi,
 ) {
     constructor(
-        from: OtherPartyContext
+        from: OtherPartyContextUniffi
     ) : this(
         id = from.id,
         name = from.name,
