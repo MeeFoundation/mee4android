@@ -28,6 +28,8 @@ import foundation.mee.android_client.ui.components.DeclineButton
 import foundation.mee.android_client.ui.components.MainButton
 import foundation.mee.android_client.ui.components.PrimaryButton
 import foundation.mee.android_client.ui.theme.*
+import foundation.mee.android_client.utils.goToSystemSettings
+import foundation.mee.android_client.utils.sendFeedback
 import foundation.mee.android_client.views.MeeWhiteScreen
 
 @Composable
@@ -63,6 +65,7 @@ fun RestrictBottomMessage(
     iconSize: Dp,
     title: Int,
     message: Int,
+    secondaryButtonTitle: Int? = null,
     primaryButtonTitle: Int? = null,
     onNextSecondaryButton: () -> Unit,
     onNextPrimaryButton: () -> Unit
@@ -79,7 +82,7 @@ fun RestrictBottomMessage(
                 .padding(0.dp)
                 .height(60.dp)
                 .fillMaxWidth(),
-            title = stringResource(R.string.close_button_text),
+            title = stringResource(secondaryButtonTitle ?: R.string.close_button_text),
             fontWeight = FontWeight(600),
             fontSize = 20.sp,
             backgroundColor = Color.Transparent
@@ -165,14 +168,14 @@ fun BaseBottomMessage(
 }
 
 @Composable
-fun InitAgentErrorMessage(
+fun ErrorMessage(
     title: Int,
     message: Int,
     primaryButtonTitle: Int,
+    secondaryButtonTitle: Int?,
+    onNextSecondaryButton: () -> Unit,
     onNext: () -> Unit
 ) {
-    val activity = (LocalContext.current as? Activity)
-
     Box {
         MeeWhiteScreen(modifier = Modifier.zIndex(2f), isFaded = true)
         Column(
@@ -186,12 +189,42 @@ fun InitAgentErrorMessage(
                 iconSize = 60.dp,
                 title = title,
                 message = message,
+                secondaryButtonTitle = secondaryButtonTitle,
                 primaryButtonTitle = primaryButtonTitle,
-                onNextSecondaryButton = { activity?.finishAffinity() }
+                onNextSecondaryButton = onNextSecondaryButton
             ) {
                 onNext()
             }
         }
+    }
+}
+
+@Composable
+fun MigrationErrorMessage() {
+    val context = LocalContext.current
+    val activity = (context as? Activity)
+    ErrorMessage(
+        title = R.string.init_agent_db_error_title,
+        message = R.string.init_agent_db_error_message,
+        primaryButtonTitle = R.string.settings_data_deletion_error_button_title,
+        secondaryButtonTitle = R.string.close_button_text,
+        onNextSecondaryButton = { activity?.finishAffinity() }
+    ) {
+        goToSystemSettings(context)
+    }
+}
+
+@Composable
+fun InitAgentErrorMessage() {
+    val context = LocalContext.current
+    ErrorMessage(
+        title = R.string.init_agent_error_title,
+        message = R.string.init_agent_error_message,
+        primaryButtonTitle = R.string.settings_data_deletion_error_button_title,
+        secondaryButtonTitle = R.string.sidebar_send_feedback_title,
+        onNextSecondaryButton = { sendFeedback(context) }
+    ) {
+        goToSystemSettings(context)
     }
 }
 
