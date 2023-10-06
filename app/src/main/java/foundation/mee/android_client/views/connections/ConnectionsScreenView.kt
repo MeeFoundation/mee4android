@@ -8,12 +8,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import foundation.mee.android_client.ui.theme.*
 
 @Composable
-fun ConnectionsScreen() {
+fun ConnectionsScreen(
+    onClickMenu: () -> Unit
+) {
 
     val connectionsState = rememberConnectionsState()
 
     Scaffold(topBar = {
-        ConnectionsScreenTitle()
+        ConnectionsScreenTitle(onClickMenu)
     }) { padding ->
         ConnectionsContent(
             connections = connectionsState.existingPartnersWebApp,
@@ -28,7 +30,7 @@ fun ConnectionsScreen() {
 @Composable
 fun PreviewConnectionScreen() {
     MeeIdentityAgentTheme {
-        ConnectionsScreen()
+        ConnectionsScreen {}
     }
 }
 
@@ -36,7 +38,7 @@ fun PreviewConnectionScreen() {
 @Composable
 fun PreviewConnectionScreenDynamic() {
     MeeIdentityAgentTheme {
-        ConnectionsScreen()
+        ConnectionsScreen {}
     }
 }
 
@@ -44,6 +46,6 @@ fun PreviewConnectionScreenDynamic() {
 @Composable
 fun PreviewConnectionScreenAnother() {
     MeeIdentityAgentTheme {
-        ConnectionsScreen()
+        ConnectionsScreen {}
     }
 }

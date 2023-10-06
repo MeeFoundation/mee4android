@@ -19,9 +19,11 @@ import foundation.mee.android_client.ui.theme.*
 fun Sidebar(
     options: Array<MeeSidebarOption>,
     onClick: (item: MeeSidebarOption) -> Unit,
+    drawerState: DrawerState,
     content: @Composable () -> Unit
 ) {
     ModalNavigationDrawer(
+        drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
                 drawerContainerColor = Color.White,
