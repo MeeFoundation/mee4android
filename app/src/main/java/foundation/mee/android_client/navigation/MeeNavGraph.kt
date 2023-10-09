@@ -11,7 +11,7 @@ import androidx.navigation.navDeepLink
 import foundation.mee.android_client.utils.DEEP_LINK_URL_STRING
 import foundation.mee.android_client.navigation.MeeDestinations.*
 import foundation.mee.android_client.utils.buildConsentRequestFromUrl
-import foundation.mee.android_client.views.connections.ConnectionsScreen
+import foundation.mee.android_client.views.connections.ConnectionsScreenWithSidebar
 import foundation.mee.android_client.views.consent.ConsentPage
 import foundation.mee.android_client.views.initial_flow.InitialFlow
 import foundation.mee.android_client.views.manage.ManageConnection
@@ -43,9 +43,7 @@ fun MeeNavGraph(
         }
 
         composable(route = CONNECTIONS.route) {
-            MeeSidebarMenu {
-                ConnectionsScreen()
-            }
+            ConnectionsScreenWithSidebar()
         }
 
         composable(
@@ -74,9 +72,7 @@ fun MeeNavGraph(
             if (consentRequest != null) {
                 ConsentPage(consentRequest)
             } else
-                MeeSidebarMenu {
-                    ConnectionsScreen()
-                }
+                ConnectionsScreenWithSidebar()
         }
 
         composable(
@@ -89,9 +85,7 @@ fun MeeNavGraph(
             if (consentRequest != null) {
                 ConsentPage(consentRequest)
             } else {
-                MeeSidebarMenu {
-                    ConnectionsScreen()
-                }
+                ConnectionsScreenWithSidebar()
             }
         }
 
