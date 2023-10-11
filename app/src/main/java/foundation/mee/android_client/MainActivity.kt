@@ -66,6 +66,7 @@ class MainActivity : FragmentActivity() {
         } else {
             try {
                 model.navigator.navController.handleDeepLink(intent)
+                setIntent(null)
             } catch (e: java.lang.Exception) {
                 Log.e("onNewIntent", e.message.orEmpty())
             }

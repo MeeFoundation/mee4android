@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import foundation.mee.android_client.ui.theme.AccessibleSystemRedLight
 import foundation.mee.android_client.ui.theme.LabelLightSecondary
 import foundation.mee.android_client.ui.theme.SystemBlueLight
 import foundation.mee.android_client.ui.theme.publicSansFamily
+import foundation.mee.android_client.utils.goToSystemSettings
 import foundation.mee.android_client.views.connections.WarningPopup
 
 enum class DeleteAllDataSteps {
@@ -77,14 +79,14 @@ fun DeleteAllDataDialogFlow(
             }
         }
         DeleteAllDataSteps.Error -> {
+            val context = LocalContext.current
             WarningPopup(
                 icon = R.drawable.mee_compatible_sign,
                 title = R.string.settings_data_deletion_error_title,
                 messageText = R.string.settings_data_deletion_error,
                 buttonText = R.string.settings_data_deletion_error_button_title
             ) {
-                onClose()
-                currentStep = DeleteAllDataSteps.Initial
+                goToSystemSettings(context)
             }
         }
     }
