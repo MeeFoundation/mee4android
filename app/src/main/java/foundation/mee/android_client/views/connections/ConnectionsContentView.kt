@@ -17,8 +17,7 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 fun ConnectionsContent(
     modifier: Modifier = Modifier,
     connections: List<MeeConnector>,
-    mobileConnections: List<MeeConnector>,
-    partnerConnections: List<MeeConnector> = emptyList()
+    mobileConnections: List<MeeConnector>
 ) {
     Column(
         modifier = modifier
@@ -26,13 +25,10 @@ fun ConnectionsContent(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         if (connections.isNotEmpty()) {
-            ConsentsList(title = stringResource(R.string.connections_list_sites_title), meeConnections = connections, hasEntry = true)
+            ConsentsList(title = stringResource(R.string.connections_list_sites_title), meeConnections = connections)
         }
         if (mobileConnections.isNotEmpty()) {
-            ConsentsList(title = stringResource(R.string.connections_list_sites_mobile_apps), meeConnections = mobileConnections, hasEntry = true)
-        }
-        if (partnerConnections.isNotEmpty()) {
-            ConsentsList(title = stringResource(R.string.connections_list_sites_other), meeConnections = partnerConnections)
+            ConsentsList(title = stringResource(R.string.connections_list_sites_mobile_apps), meeConnections = mobileConnections)
         }
     }
 }
@@ -40,12 +36,10 @@ fun ConnectionsContent(
 @Preview(showBackground = true, widthDp = 375, heightDp = 800)
 @Composable
 fun ConnectionsContentPreview() {
-    val partnerConnections: List<MeeConnector> = PartnersRegistry.shared
     MeeIdentityAgentTheme {
         ConnectionsContent(
             connections = sites,
-            mobileConnections = mobileApps,
-            partnerConnections = partnerConnections
+            mobileConnections = mobileApps
         )
     }
 }

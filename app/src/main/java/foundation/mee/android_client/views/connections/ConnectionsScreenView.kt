@@ -1,11 +1,21 @@
 package foundation.mee.android_client.views.connections
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import foundation.mee.android_client.ui.theme.*
+import foundation.mee.android_client.R
+import foundation.mee.android_client.ui.components.NoRippleInteractionSource
 
 @Composable
 fun ConnectionsScreen(
@@ -13,16 +23,42 @@ fun ConnectionsScreen(
 ) {
 
     val connectionsState = rememberConnectionsState()
+    val openDialog = remember { mutableStateOf(false) }
 
     Scaffold(topBar = {
         ConnectionsScreenTitle(onClickMenu)
     }) { padding ->
-        ConnectionsContent(
-            connections = connectionsState.existingPartnersWebApp,
-            mobileConnections = connectionsState.existingPartnersMobileApp,
-            partnerConnections = connectionsState.otherPartnersWebApp,
-            modifier = Modifier.padding(padding),
-        )
+        Box {
+            ConnectionsContent(
+                connections = connectionsState.existingPartnersWebApp,
+                mobileConnections = connectionsState.existingPartnersMobileApp,
+                modifier = Modifier.padding(padding),
+            )
+            Row(
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Bottom,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                IconButton(
+                    onClick = { openDialog.value = true },
+                    interactionSource = NoRippleInteractionSource()
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_add_button),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(78.dp)
+                    )
+                }
+            }
+        }
+    }
+    if (openDialog.value) {
+        SitesToConnectDialog(
+            partners = connectionsState.otherPartnersWebApp,
+        ) {
+            openDialog.value = false
+        }
     }
 }
 
