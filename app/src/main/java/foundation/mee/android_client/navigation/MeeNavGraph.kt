@@ -1,7 +1,10 @@
 package foundation.mee.android_client.navigation
 
+import android.content.Intent
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -62,17 +65,23 @@ fun MeeNavGraph(
             arguments = listOf(
                 navArgument("params") { type = NavType.StringType }),
             deepLinks = listOf(
-                navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/authorize?{params}" }
+                navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/authorize?{params}" },
+                navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/?{params}" }
             )
         ) { backStackEntry ->
-            val params = backStackEntry.arguments?.getString("params")
-            val siopUrl = "${DEEP_LINK_URL_STRING}/authorize?${params}"
-            val consentRequest = buildConsentRequestFromUrl(siopUrl)
-
-            if (consentRequest != null) {
+            val consentRequest = try {
+                val intent: Intent? =
+                    backStackEntry.arguments?.getParcelable(
+                        NavController.KEY_DEEP_LINK_INTENT
+                    )
+                intent?.data?.let { buildConsentRequestFromUrl(it.toString()) }
+            } catch (e: Exception) {
+                Log.e("navigation", e.message.orEmpty())
+                null
+            }
+            consentRequest?.let {
                 ConsentPage(consentRequest)
-            } else
-                ConnectionsScreenWithSidebar()
+            } ?: ConnectionsScreenWithSidebar()
         }
 
         composable(
