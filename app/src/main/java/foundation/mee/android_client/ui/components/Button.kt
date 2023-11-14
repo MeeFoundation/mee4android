@@ -118,7 +118,7 @@ fun MainButton(
                 fontFamily = publicSansFamily,
                 fontWeight = FontWeight(600),
                 color = textColor ?: SystemBlueLight,
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 textAlign = TextAlign.Center
             )
         }

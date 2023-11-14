@@ -66,4 +66,6 @@
     <string name="init_agent_db_error_message">We are unable to recover your data. \nTo handle the failed migration, it is necessary to completely reset the user data.\nPlease go to the system settings and delete your data to resolve the issue.</string>
     <string name="init_agent_error_title">Unknown error occurred.</string>
     <string name="init_agent_error_message">We are unable to recover your data. \nTo resolve the issue, please go to the system settings and manually delete your data or contact us if problem persists.</string>
+    <string name="sites_to_connect_dialog_header">Sites/Apps to Connect to</string>
+    <string name="connect_text">Connect</string>
 </resources>

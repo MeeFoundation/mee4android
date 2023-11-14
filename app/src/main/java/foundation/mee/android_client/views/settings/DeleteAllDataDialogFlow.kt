@@ -1,32 +1,16 @@
 package foundation.mee.android_client.views.settings
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.navigation.Navigator
-import foundation.mee.android_client.ui.components.clickableWithoutRipple
+import foundation.mee.android_client.ui.components.BottomDialogHeader
 import foundation.mee.android_client.ui.theme.AccessibleSystemRedLight
-import foundation.mee.android_client.ui.theme.LabelLightSecondary
-import foundation.mee.android_client.ui.theme.SystemBlueLight
-import foundation.mee.android_client.ui.theme.publicSansFamily
 import foundation.mee.android_client.utils.goToSystemSettings
 import foundation.mee.android_client.views.connections.WarningPopup
 
@@ -54,7 +38,7 @@ fun DeleteAllDataDialogFlow(
                 buttonText = R.string.delete_popup_button_text,
                 buttonColor = AccessibleSystemRedLight,
                 bottomMessageHeader = {
-                    BottomMessageHeader {
+                    BottomDialogHeader(title = R.string.settings_delete_user_data) {
                         onClose()
                     }
                 }
@@ -90,39 +74,4 @@ fun DeleteAllDataDialogFlow(
             }
         }
     }
-}
-
-@Composable
-fun BottomMessageHeader(
-    onCancelClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = stringResource(R.string.settings_delete_user_data),
-            fontFamily = publicSansFamily,
-            fontSize = 17.sp,
-            fontWeight = FontWeight(700),
-            color = Color.Black
-        )
-        Text(
-            text = stringResource(R.string.negative_button_text),
-            fontFamily = publicSansFamily,
-            fontSize = 17.sp,
-            fontWeight = FontWeight(400),
-            color = SystemBlueLight,
-            modifier = Modifier.clickableWithoutRipple {
-                onCancelClick()
-            }
-        )
-    }
-    Divider(
-        color = LabelLightSecondary,
-        thickness = 0.5.dp,
-        modifier = Modifier.alpha(0.5f)
-    )
 }

@@ -73,9 +73,8 @@ fun getExistingPartnersMobile(
 
 fun getOtherPartners(existingPartnersWebApp: List<MeeConnector>?): List<MeeConnector> {
     return PartnersRegistry.shared.filter { x ->
-        val isNotPresentedInExistingList = existingPartnersWebApp?.find { it.otherPartyConnectionId == x.otherPartyConnectionId } == null
-        val isGapiInList = existingPartnersWebApp?.find { it.value is MeeConnectorType.Gapi } != null
-        val isGapiInListAndEntryIsGapi = isGapiInList && x.value is MeeConnectorType.Gapi
-        isNotPresentedInExistingList && !isGapiInListAndEntryIsGapi
+        val isNotPresentedInExistingList =
+            existingPartnersWebApp?.find { it.otherPartyConnectionId == x.otherPartyConnectionId } == null
+        isNotPresentedInExistingList || x.value is MeeConnectorType.Gapi
     }
 }
