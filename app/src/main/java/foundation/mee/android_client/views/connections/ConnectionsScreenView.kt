@@ -26,12 +26,10 @@ fun ConnectionsScreen(
     val openDialog = remember { mutableStateOf(false) }
 
     Scaffold(topBar = {
-        ConnectionsScreenTitle(onClickMenu)
+        ConnectionsScreenTitle { onClickMenu() }
     }) { padding ->
         Box {
             ConnectionsContent(
-                connections = connectionsState.existingPartnersWebApp,
-                mobileConnections = connectionsState.existingPartnersMobileApp,
                 modifier = Modifier.padding(padding),
             )
             Row(

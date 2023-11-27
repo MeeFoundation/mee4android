@@ -20,4 +20,8 @@ class Navigator @Inject constructor() {
     fun navigateToMainScreen() {
         navController.navigate(MeeDestinations.CONNECTIONS.route)
     }
+
+    fun navigateToManageScreen(otherPartyConnectionId: String) {
+        navController.navigate("${MeeDestinations.MANAGE.route}/${otherPartyConnectionId}")
+    }
 }

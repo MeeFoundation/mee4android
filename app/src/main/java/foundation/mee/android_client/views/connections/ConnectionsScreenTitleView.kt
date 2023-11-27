@@ -1,68 +1,44 @@
 package foundation.mee.android_client.views.connections
 
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
-import foundation.mee.android_client.R
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.ui.theme.publicSansFamily
+import foundation.mee.android_client.views.search.ConnectionsSearchTopBar
+import foundation.mee.android_client.views.search.SearchViewModel
 
 @Composable
 fun ConnectionsScreenTitle(
+    searchViewModel: SearchViewModel = hiltViewModel(),
     onClickMenu: () -> Unit
 ) {
+    val showSearch by searchViewModel.searchMenu.collectAsState()
+
     TopAppBar(
         backgroundColor = MeeGreenPrimaryColor,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Box {
-            Row(
-                verticalAlignment = Alignment.Bottom,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(bottom = 10.dp, start = 12.dp)
-            ) {
-                Icon(imageVector = ImageVector.vectorResource(
-                    id = R.drawable.ic_sidebar_menu
-                ),
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier
-                        .width(18.dp)
-                        .clickable { onClickMenu() })
+        AnimatedVisibility(
+            visible = showSearch,
+            enter = slideInHorizontally(),
+            exit = slideOutHorizontally { width -> -width }
+        ) {
+            ConnectionsSearchTopBar {
+                searchViewModel.hideSearchMenu()
+                searchViewModel.onCancelClick()
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .paddingFromBaseline(bottom = 10.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Text(
-                    text = stringResource(R.string.connections_screen_title),
-                    fontFamily = publicSansFamily,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                )
-            }
+        }
+        ConnectionsMainTopBar(onClickMenu) {
+            searchViewModel.showSearchMenu()
         }
     }
 }
