@@ -1,8 +1,9 @@
 package foundation.mee.android_client.views.connections
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -29,8 +30,8 @@ fun ConnectionsScreenTitle(
     ) {
         AnimatedVisibility(
             visible = showSearch,
-            enter = slideInHorizontally(),
-            exit = slideOutHorizontally { width -> -width }
+            enter = fadeIn(animationSpec = tween(600)),
+            exit = fadeOut()
         ) {
             ConnectionsSearchTopBar {
                 searchViewModel.hideSearchMenu()

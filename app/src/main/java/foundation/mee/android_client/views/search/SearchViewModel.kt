@@ -1,5 +1,6 @@
 package foundation.mee.android_client.views.search
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.mee.android_client.models.ClientType
@@ -16,8 +17,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
+    val context: Application,
     val meeAgentStore: MeeAgentStore
 ) : ViewModel() {
+
+    private val _isSpeaking = MutableStateFlow(false)
+    val isSpeaking = _isSpeaking.asStateFlow()
 
     private val _searchMenu = MutableStateFlow(false)
     val searchMenu = _searchMenu.asStateFlow()
@@ -36,8 +41,6 @@ class SearchViewModel @Inject constructor(
 
     private fun getAllConnectors(): List<MeeConnector> {
         return meeAgentStore.getAllItems() ?: listOf()
-//        uncomment to test with many items in the list
-//        return getMockConnectors().sortedBy { it.name }
     }
 
     fun onChange(query: String) {
@@ -54,6 +57,7 @@ class SearchViewModel @Inject constructor(
 
     fun hideSearchMenu() {
         _searchMenu.value = false
+        _isSpeaking.value = false
     }
 
     fun getWebConnectors(): Flow<List<MeeConnector>> {
@@ -62,6 +66,10 @@ class SearchViewModel @Inject constructor(
 
     fun getMobileConnectors(): Flow<List<MeeConnector>> {
         return getConnectorsByClientType(connectors, ClientType.mobile)
+    }
+
+    fun onChangeIsSpeaking(value: Boolean) {
+        _isSpeaking.value = value
     }
 
     private fun getConnectorsByClientType(

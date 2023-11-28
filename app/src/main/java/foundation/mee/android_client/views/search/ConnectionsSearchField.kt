@@ -1,5 +1,8 @@
 package foundation.mee.android_client.views.search
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -17,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -27,11 +31,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
+import foundation.mee.android_client.models.SearchRecognitionListener
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.LabelColor
+import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.PartnerEntryOnBackgroundColor
 import foundation.mee.android_client.ui.theme.publicSansFamily
+import foundation.mee.android_client.utils.showConsentToast
 
 @Composable
 fun ConnectionsSearchField(
@@ -39,7 +46,25 @@ fun ConnectionsSearchField(
     searchViewModel: SearchViewModel = hiltViewModel()
 ) {
 
+    val context = LocalContext.current
     val textFieldValue by searchViewModel.searchState.collectAsState()
+    val isSpeaking by searchViewModel.isSpeaking.collectAsState()
+
+    val recognitionListener by lazy {
+        SearchRecognitionListener(
+            context,
+            onChangeIsSpeaking = { newVal -> searchViewModel.onChangeIsSpeaking(newVal) },
+            onReceiveResult = { result -> searchViewModel.onChange(result) })
+    }
+
+    val requestRecordAudioPermission =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                recognitionListener.startListening()
+            } else {
+                showConsentToast(context, R.string.permission_not_granted)
+            }
+        }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -86,11 +111,17 @@ fun ConnectionsSearchField(
                 id = R.drawable.ic_mic,
             ),
             contentDescription = null,
-            tint = PartnerEntryOnBackgroundColor,
+            tint = if (!isSpeaking) PartnerEntryOnBackgroundColor else MeeGreenPrimaryColor,
             modifier = Modifier
                 .width(16.dp)
                 .height(16.dp)
-                .clickableWithoutRipple { }
+                .clickableWithoutRipple {
+                    if (isSpeaking) {
+                        recognitionListener.stopListening()
+                    } else {
+                        requestRecordAudioPermission.launch(Manifest.permission.RECORD_AUDIO)
+                    }
+                }
         )
     }
 }

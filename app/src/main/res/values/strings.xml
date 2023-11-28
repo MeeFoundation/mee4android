@@ -69,4 +69,7 @@
     <string name="sites_to_connect_dialog_header">Sites/Apps to Connect to</string>
     <string name="connect_text">Connect</string>
     <string name="search_text">Search</string>
+    <string name="recognition_not_available_text">Speech recognition is not available</string>
+    <string name="recognition_failed_text">Speech recognition failed, please try again</string>
+    <string name="permission_not_granted">Mee needs permission to enable voice search</string>
 </resources>
