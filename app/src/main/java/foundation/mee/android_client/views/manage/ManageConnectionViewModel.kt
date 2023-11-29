@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.models.MeeConnector
+import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -75,6 +76,10 @@ class ManageConnectionViewModel @Inject constructor(
 
     fun removeConnection(id: String, navigator: Navigator) {
         meeAgentStore.removeItemByConnectionId(id)
-        navigator.popBackStack()
+        navigator.navController.navigate(MeeDestinations.CONNECTIONS.route) {
+            popUpTo(MeeDestinations.CONNECTIONS.route) {
+                inclusive = true
+            }
+        }
     }
 }

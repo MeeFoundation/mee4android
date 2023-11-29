@@ -103,7 +103,7 @@ dependencies {
     implementation("androidx.security:security-crypto:1.0.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
-
+    implementation('com.intuit.fuzzymatcher:fuzzy-matcher:1.1.0')
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
     implementation("com.android.installreferrer:installreferrer:2.2")
     testImplementation 'junit:junit:4.13.2'
@@ -135,4 +135,12 @@ android.applicationVariants.all { variant ->
 
 kapt {
     correctErrorTypes = true
+}
+
+// the lines below are needed to build com.intuit.fuzzymatcher:fuzzy-matcher for android < 26
+allprojects {
+    configurations.configureEach {
+        resolutionStrategy.force 'org.apache.lucene:lucene-analyzers-common:4.8.1'
+        resolutionStrategy.force 'org.apache.lucene:lucene-core:4.8.1'
+    }
 }

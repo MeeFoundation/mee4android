@@ -7,74 +7,36 @@ import foundation.mee.android_client.models.*
 
 @Composable
 fun rememberConnectionsState(meeAgentStore: MeeAgentStore = hiltViewModel<MeeAgentViewModel>().meeAgentStore): ConnectionsState {
-
-    val data = remember {
-        meeAgentStore.getAllItems()
-    }
-    val existingPartnersWebApp = remember {
-        getExistingPartnersWeb(data, meeAgentStore)
-    }
-    val existingPartnersMobileApp =
-        remember {
-            getExistingPartnersMobile(data, meeAgentStore)
-        }
     val otherPartnersWebApp =
         remember {
-            getOtherPartners(existingPartnersWebApp)
+            getOtherPartners(meeAgentStore)
         }
 
-
     return remember {
-        ConnectionsState(
-            existingPartnersWebApp ?: listOf(),
-            existingPartnersMobileApp ?: listOf(),
-            otherPartnersWebApp
-        )
+        ConnectionsState(otherPartnersWebApp)
     }
 }
 
 @Stable
 class ConnectionsState(
-    val existingPartnersWebApp: List<MeeConnector>,
-    val existingPartnersMobileApp: List<MeeConnector>,
     val otherPartnersWebApp: List<MeeConnector>
 )
 
-fun getExistingPartnersWeb(
-    data: List<MeeConnector>?,
-    meeAgentStore: MeeAgentStore
-): List<MeeConnector>? {
-    return data?.filter { x ->
-        when (val connType = x.value) {
-            is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.web -> meeAgentStore.getLastConnectionConsentById(x.otherPartyConnectionId) != null
-                else -> false
-            }
-            is MeeConnectorType.Gapi -> true
-            else -> false
-        }
-    }
-}
-
-fun getExistingPartnersMobile(
-    data: List<MeeConnector>?,
-    meeAgentStore: MeeAgentStore
-): List<MeeConnector>? {
-    return data?.filter { x ->
-        when (val connType = x.value) {
-            is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.mobile -> meeAgentStore.getLastConnectionConsentById(x.otherPartyConnectionId) != null
-                else -> false
-            }
-            else -> false
-        }
-    }
-}
-
-fun getOtherPartners(existingPartnersWebApp: List<MeeConnector>?): List<MeeConnector> {
+fun getOtherPartners(meeAgentStore: MeeAgentStore): List<MeeConnector> {
+    val data = meeAgentStore.getAllItems()
     return PartnersRegistry.shared.filter { x ->
         val isNotPresentedInExistingList =
-            existingPartnersWebApp?.find { it.otherPartyConnectionId == x.otherPartyConnectionId } == null
-        isNotPresentedInExistingList || x.value is MeeConnectorType.Gapi
+            data?.find { it.otherPartyConnectionId == x.otherPartyConnectionId } == null
+        when (val connType = x.value) {
+            is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
+                ClientType.web -> isNotPresentedInExistingList && meeAgentStore.getLastConnectionConsentById(
+                    x.otherPartyConnectionId
+                ) == null
+                else -> true
+            }
+
+            is MeeConnectorType.Gapi -> true
+            else -> true
+        }
     }
 }
