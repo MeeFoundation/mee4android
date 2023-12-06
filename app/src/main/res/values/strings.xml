@@ -38,9 +38,9 @@
     <string name="biometry_initial_step_title">Set up biometrics</string>
     <string name="biometry_initial_step_message">Mee Smartwallet uses biometrics to make sure that you are the only person who can open the app.</string>
     <string name="biometry_all_set_step_title">All Set!</string>
-    <string name="biometry_all_set_step_message">Please use Biometry next time you sign-in.</string>
-    <string name="biometry_restrict_step_title">Please set up device credentials!</string>
-    <string name="biometry_restrict_step_message">Mee is you.\nWe need to detect and authenticate your identity to make sure it’s you who is trying to access the Mee Smartwallet.</string>
+    <string name="biometry_all_set_step_message">Biometry set successfully, please use it next time you sign-in.</string>
+    <string name="biometry_restrict_step_title">Set up device credentials</string>
+    <string name="biometry_restrict_step_message">Mee is you. We need to detect and authenticate your identity to make sure it’s you who is trying to access the Mee Smartwallet.</string>
     <string name="back_button_text">Back</string>
     <string name="manage_connection_title">Manage Connection</string>
     <string name="manage_connection_required_expander">Required info shared</string>
@@ -72,4 +72,5 @@
     <string name="recognition_not_available_text">Speech recognition is not available</string>
     <string name="recognition_failed_text">Speech recognition failed, please try again</string>
     <string name="permission_not_granted">Mee needs permission to enable voice search</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

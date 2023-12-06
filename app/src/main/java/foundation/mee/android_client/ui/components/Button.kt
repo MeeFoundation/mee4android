@@ -1,6 +1,7 @@
 package foundation.mee.android_client.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -125,10 +126,41 @@ fun MainButton(
     }
 }
 
+@Composable
+fun PopupButton(
+    title: String,
+    action: () -> Unit = {}
+) {
+    Box(
+        modifier = Modifier
+            .sizeIn(maxHeight = 40.dp)
+            .padding(horizontal = 12.dp, vertical = 10.dp)
+            .clickable(onClick = action),
+
+    ) {
+        Text(
+            text = title,
+            color = MeeGreenPrimaryColor,
+            fontFamily = publicSansFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+            letterSpacing = 0.1.sp
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun RejectButtonPreview() {
     MeeIdentityAgentTheme {
         RejectButton(title = stringResource(R.string.get_started_button_title))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PopupButtonPreview() {
+    MeeIdentityAgentTheme {
+        PopupButton(title = stringResource(R.string.get_started_button_title))
     }
 }

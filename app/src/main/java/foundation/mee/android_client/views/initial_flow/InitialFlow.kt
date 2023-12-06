@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,13 +59,14 @@ fun InitialFlow(
             Box {
                 MeeWhiteScreen(modifier = Modifier.zIndex(2f), isFaded = true)
                 Column(
-                    verticalArrangement = Arrangement.Bottom,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .zIndex(1f)
+                        .padding(horizontal = 50.dp)
                         .fillMaxHeight(),
                 ) {
                     BottomMessage(
-                        icon = R.drawable.mee_guy_icon,
+                        icon = R.drawable.biometrics_android,
                         iconSize = 60.dp,
                         title = R.string.biometry_initial_step_title,
                         message = R.string.biometry_initial_step_message,
@@ -81,7 +83,7 @@ fun InitialFlow(
             if (keyguard.isDeviceSecure) {
                 BiometryHandler(
                     activityContext = context as FragmentActivity,
-                    onSuccessfulAuth = { currentStep = InitialFlowSteps.AllSet }
+                    onSuccessfulAuth = { currentStep = InitialFlowSteps.Animation }
                 )
             } else {
                 currentStep = InitialFlowSteps.Restrict
@@ -128,13 +130,14 @@ fun InitialFlow(
             Box {
                 MeeWhiteScreen(modifier = Modifier.zIndex(2f), isFaded = true)
                 Column(
-                    verticalArrangement = Arrangement.Bottom,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .zIndex(1f)
+                        .padding(horizontal = 50.dp)
                         .fillMaxHeight(),
                 ) {
                     RestrictBottomMessage(
-                        icon = R.drawable.mee_compatible_sign,
+                        icon = R.drawable.exclamation_mark,
                         iconSize = 60.dp,
                         title = R.string.biometry_restrict_step_title,
                         message = R.string.biometry_restrict_step_message,
@@ -156,9 +159,10 @@ fun InitialFlowPreview() {
         Box {
             MeeWhiteScreen(modifier = Modifier.zIndex(2f), isFaded = true)
             Column(
-                verticalArrangement = Arrangement.Bottom,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .zIndex(1f)
+                    .padding(horizontal = 50.dp)
                     .fillMaxHeight(),
             ) {
                 BottomMessage(
@@ -168,6 +172,32 @@ fun InitialFlowPreview() {
                     message = R.string.biometry_initial_step_message,
                     onNext = {}
                 )
+            }
+        }
+    }
+}
+@Preview(showBackground = true, widthDp = 375, heightDp = 812)
+@Composable
+fun InitialFlowRejectPreview() {
+    MeeIdentityAgentTheme {
+        Box {
+            MeeWhiteScreen(modifier = Modifier.zIndex(2f), isFaded = true)
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .zIndex(1f)
+                    .padding(horizontal = 50.dp)
+                    .fillMaxHeight(),
+            ) {
+                RestrictBottomMessage(
+                    icon = R.drawable.exclamation_mark,
+                    iconSize = 60.dp,
+                    title = R.string.biometry_restrict_step_title,
+                    message = R.string.biometry_restrict_step_message,
+                    onNextSecondaryButton = { }
+                ) {
+
+                }
             }
         }
     }

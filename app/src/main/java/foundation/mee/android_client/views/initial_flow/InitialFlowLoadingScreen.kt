@@ -1,8 +1,17 @@
 package foundation.mee.android_client.views.initial_flow
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,8 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import foundation.mee.android_client.R
 import foundation.mee.android_client.models.loadingScreenTexts
+import foundation.mee.android_client.ui.components.NotificationPopup
+import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
+import foundation.mee.android_client.views.MeeWhiteScreen
 import foundation.mee.android_client.views.wizard_pages.LoadingScreenWhitePage
 import kotlinx.coroutines.delay
 
@@ -45,18 +60,46 @@ fun InitialFlowLoadingScreen(onNext: () -> Unit) {
         animationSpec = tween(durationMillis = 2000)
     )
 
-    LoadingScreenWhitePage(
-        progress = currentProgress,
-        text = loadingScreenTexts[currentIndex]?.let { stringResource(id = it) },
-        modifierBox = Modifier
-            .size(sizeBox),
-        modifierLogo = Modifier
-            .graphicsLayer(scaleX = scaleFactor, scaleY = scaleFactor)
-            .alpha(alpha = alpha),
-        modifierCircle = Modifier
-            .graphicsLayer(scaleX = scaleFactor, scaleY = scaleFactor)
-            .alpha(alpha = alpha)
-    )
+    var showNotification by remember {
+        mutableStateOf(true)
+    }
+    Box {
+        LoadingScreenWhitePage(
+            progress = currentProgress,
+            text = loadingScreenTexts[currentIndex]?.let { stringResource(id = it) },
+            modifierBox = Modifier
+                .size(sizeBox),
+            modifierLogo = Modifier
+                .graphicsLayer(scaleX = scaleFactor, scaleY = scaleFactor)
+                .alpha(alpha = alpha),
+            modifierCircle = Modifier
+                .graphicsLayer(scaleX = scaleFactor, scaleY = scaleFactor)
+                .alpha(alpha = alpha)
+        )
+        AnimatedVisibility(
+            visible = showNotification,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .fillMaxHeight()
+                    .padding(vertical = 8.dp),
+                verticalArrangement = Arrangement.Bottom
+            ) {
+
+                NotificationPopup(
+                    message = stringResource(R.string.biometry_all_set_step_message),
+                    primaryButtonTitle = stringResource(R.string.dismiss)
+                ) {
+                    showNotification = false
+                }
+            }
+        }
+
+    }
+
     LaunchedEffect(key1 = currentIndex) {
         while (currentProgress < 1) {
             currentIndex = if (currentProgress < 0.1) {
@@ -64,6 +107,7 @@ fun InitialFlowLoadingScreen(onNext: () -> Unit) {
             } else if (currentProgress < 0.4) {
                 1
             } else if (currentProgress < 0.7) {
+                showNotification = false
                 2
             } else if (currentProgress < 0.9) {
                 3
@@ -80,4 +124,10 @@ fun InitialFlowLoadingScreen(onNext: () -> Unit) {
         }
 
     }
+}
+
+@Preview(showBackground = true, widthDp = 375, heightDp = 812)
+@Composable
+fun InitialFlowAnimationPreview() {
+    InitialFlowLoadingScreen() {}
 }
