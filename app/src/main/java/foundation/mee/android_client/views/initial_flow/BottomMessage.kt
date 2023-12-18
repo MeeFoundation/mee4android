@@ -38,6 +38,8 @@ fun BottomMessage(
     icon: Int?,
     iconSize: Dp?,
     buttonText: Int? = null,
+    additionalButtonText: Int? = null,
+    onAdditionalButtonClick: (() -> Unit)? = null,
     buttonColor: Color? = null,
     bottomMessageHeader: @Composable () -> Unit = {},
     message: Int,
@@ -55,8 +57,17 @@ fun BottomMessage(
     ) {
         Row() {
             Spacer(Modifier.weight(1f))
+            additionalButtonText?.let {
+                PopupButton(
+                    title = stringResource(additionalButtonText)
+                ) {
+                    if (onAdditionalButtonClick != null) {
+                        onAdditionalButtonClick()
+                    }
+                }
+            }
             PopupButton(
-                title = stringResource(R.string.continue_button_text)
+                title = stringResource(buttonText ?: R.string.continue_button_text)
             ) { onNext() }
         }
     }

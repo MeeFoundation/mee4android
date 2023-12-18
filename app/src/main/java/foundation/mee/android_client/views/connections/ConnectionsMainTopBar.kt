@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
+import foundation.mee.android_client.ui.theme.GrayText
 import foundation.mee.android_client.ui.theme.publicSansFamily
 
 @Composable
@@ -30,56 +31,40 @@ fun ConnectionsMainTopBar(
     onClickMenu: () -> Unit,
     onClickSearch: () -> Unit
 ) {
-    Box {
-        Row(
-            verticalAlignment = Alignment.Bottom,
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Icon(imageVector = ImageVector.vectorResource(
+            id = R.drawable.menu
+        ),
+            contentDescription = null,
+            tint = Color.White,
             modifier = Modifier
-                .fillMaxHeight()
-                .padding(bottom = 10.dp, start = 12.dp)
-        ) {
-            Icon(imageVector = ImageVector.vectorResource(
-                id = R.drawable.ic_sidebar_menu
-            ),
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier
-                    .width(18.dp)
-                    .clickable { onClickMenu() })
-        }
-        Row(
+                .width(24.dp)
+                .clickable { onClickMenu() })
+
+
+        Text(
+            text = stringResource(R.string.connections_screen_title),
+            fontFamily = publicSansFamily,
+            fontSize = 22.sp,
+            fontWeight = FontWeight(600),
+            color = GrayText,
+            textAlign = TextAlign.Center,
+        )
+
+
+        Icon(imageVector = ImageVector.vectorResource(
+            id = R.drawable.search
+        ),
+            contentDescription = null,
+            tint = Color.White,
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .paddingFromBaseline(bottom = 10.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Text(
-                text = stringResource(R.string.connections_screen_title),
-                fontFamily = publicSansFamily,
-                fontSize = 17.sp,
-                fontWeight = FontWeight(600),
-                color = Color.White,
-                textAlign = TextAlign.Center,
-            )
-        }
-        Row(
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .padding(bottom = 10.dp)
-                .padding(end = 12.dp)
-        ) {
-            Icon(imageVector = ImageVector.vectorResource(
-                id = R.drawable.ic_glass
-            ),
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier
-                    .width(18.dp)
-                    .clickable { onClickSearch() })
-        }
+                .width(24.dp)
+                .clickable { onClickSearch() })
     }
 }

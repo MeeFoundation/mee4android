@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
+import foundation.mee.android_client.ui.theme.DarkText
 import foundation.mee.android_client.ui.theme.PartnerEntryOnBackgroundColor
 import foundation.mee.android_client.ui.theme.publicSansFamily
 
@@ -45,23 +46,23 @@ fun Expander(
                 Text(
                     text = title,
                     fontFamily = publicSansFamily,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight(400),
-                    color = PartnerEntryOnBackgroundColor,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight(600),
+                    color = DarkText,
                 )
                 Icon(
                     imageVector = if (isExpanded) {
                         ImageVector.vectorResource(
-                            id = R.drawable.ic_chevron_up
+                            id = R.drawable.chevron_up
                         )
                     } else {
                         ImageVector.vectorResource(
-                            id = R.drawable.ic_chevron_down
+                            id = R.drawable.chevron_down
                         )
                     },
                     contentDescription = null,
-                    tint = PartnerEntryOnBackgroundColor,
-                    modifier = Modifier.width(14.dp)
+                    tint = DarkText,
+                    modifier = Modifier.width(24.dp)
                 )
             }
 

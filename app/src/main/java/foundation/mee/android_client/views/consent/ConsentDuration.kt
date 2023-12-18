@@ -1,5 +1,7 @@
 package foundation.mee.android_client.views.consent
 
+import android.view.Gravity
+import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,19 +11,29 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogWindowProvider
+import androidx.compose.ui.zIndex
 import foundation.mee.android_client.R
 import foundation.mee.android_client.utils.getConsentEntryIconByType
 import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.*
+import foundation.mee.android_client.views.MeeWhiteScreen
+import foundation.mee.android_client.views.connections.WarningPopup
+import foundation.mee.android_client.views.initial_flow.BaseBottomMessage
+import foundation.mee.android_client.views.initial_flow.BottomMessage
+import foundation.mee.android_client.views.initial_flow.InitialFlowSteps
 import uniffi.mee_agent.RetentionDuration
 
 @Composable
@@ -37,129 +49,139 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
             }
         )
     }
-
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        color = DurationPopupBackground,
+    Dialog(
+        onDismissRequest = { }
     ) {
+        val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
+        with(dialogWindowProvider.window) {
+            setGravity(Gravity.BOTTOM)
+            setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                LocalView.current.layoutParams.height
+            )
+        }
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .zIndex(1f)
+                .padding(horizontal = 50.dp)
+                .fillMaxHeight(),
         ) {
-            Text(
-                text = stringResource(R.string.consent_metadata),
-                fontFamily = publicSansFamily,
-                fontSize = 17.sp,
-                fontWeight = FontWeight(700),
-                textAlign = TextAlign.Left,
+
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                color = Color.Black
-            )
-            Divider(
-                color = LabelLightSecondary,
-                thickness = 0.5.dp,
-                modifier = Modifier.alpha(0.5f)
-            )
-            Column(Modifier.padding(top = 16.dp, bottom = 34.dp, start = 16.dp, end = 16.dp)) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    .clip(
+                        RoundedCornerShape(
+                            topEnd = 28.dp,
+                            topStart = 28.dp,
+                            bottomEnd = 28.dp,
+                            bottomStart = 28.dp
+                        )
+                    ),
+                color = DurationPopupBackground,
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top,
                     modifier = Modifier
-                        .background(Color.White, RoundedCornerShape(14.dp))
-                        .padding(13.dp)
-                        .fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(
-                            id = getConsentEntryIconByType(consentEntry.type),
-                        ), contentDescription = null,
-                        tint = ChevronRightIconColor,
-                        modifier = Modifier
-                            .width(18.dp)
-                            .height(18.dp)
-                    )
-                    Text(
-                        text = consentEntry.name,
-                        modifier = Modifier.padding(start = 11.dp),
-                        fontFamily = publicSansFamily,
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight(700),
-                        color = Color.Black
-                    )
-                }
+                        .padding(24.dp)
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.consent_storage_duration_text),
                         fontFamily = publicSansFamily,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight(400),
-                        color = LabelLightSecondary
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight(700),
+                        textAlign = TextAlign.Left,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp),
+                        color = Color.Black
                     )
-                }
+                    Column(
 
-                Column(
-                    modifier = Modifier.background(Color.White, RoundedCornerShape(14.dp))
-                ) {
-                    ConsentDurationOptions.forEach { durationElement ->
-                        ConsentDurationEntry(
-                            text = stringResource(durationElement.name),
-                            description = stringResource(durationElement.description),
-                            selected = durationElement.value == storageDuration,
-                            modifier = Modifier.padding(
-                                start = 16.dp,
-                                end = 16.dp,
-                                top = 8.dp,
-                                bottom = 9.dp
-                            )
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp, bottom = 8.dp)
                         ) {
-                            storageDuration = durationElement.value
-                        }
-                        if (durationElement != ConsentDurationOptions.last()) {
-                            Divider(
-                                color = LabelLightSecondary,
-                                thickness = 0.5.dp,
+                            Icon(
+                                imageVector = ImageVector.vectorResource(
+                                    id = getConsentEntryIconByType(consentEntry.type),
+                                ), contentDescription = null,
+                                tint = ChevronRightIconColor,
                                 modifier = Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .alpha(0.5f)
+                                    .width(18.dp)
+                                    .height(18.dp)
                             )
+                            Text(
+                                text = consentEntry.name,
+                                modifier = Modifier.padding(start = 11.dp),
+                                fontFamily = publicSansFamily,
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight(700),
+                                color = Color.Black
+                            )
+                        }
+                        Divider(
+                            color = LabelLightSecondary,
+                            thickness = 0.5.dp,
+                            modifier = Modifier
+                                .alpha(0.5f)
+                        )
+                        Column(
+                            modifier = Modifier.padding(bottom = 24.dp, top = 8.dp)
+                        ) {
+                            ConsentDurationOptions.forEach { durationElement ->
+                                ConsentDurationEntry(
+                                    text = stringResource(durationElement.name),
+                                    description = stringResource(durationElement.description),
+                                    selected = durationElement.value == storageDuration,
+                                ) {
+                                    storageDuration = durationElement.value
+                                }
+                                Divider(
+                                    color = LabelLightSecondary,
+                                    thickness = 0.5.dp,
+                                    modifier = Modifier
+                                        .alpha(0.5f)
+                                )
+                            }
                         }
                     }
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.negative_button_text),
+                            color = MeeGreenPrimaryColor,
+                            fontFamily = publicSansFamily,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(500),
+                            modifier = Modifier
+                                .padding(end = 32.dp)
+                                .clickableWithoutRipple { onComplete() }
+                        )
+                        Text(
+                            text = stringResource(R.string.save_button_text),
+                            color = MeeGreenPrimaryColor,
+                            fontFamily = publicSansFamily,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(500),
+                            modifier = Modifier
+                                .clickableWithoutRipple {
+                                    consentEntries.first { it.id == id }.retentionDuration =
+                                        storageDuration
+                                    onComplete()
+                                }
+                        )
+                    }
                 }
-            }
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 90.dp, end = 28.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.negative_button_text),
-                    color = MeeGreenPrimaryColor,
-                    fontFamily = publicSansFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight(500),
-                    modifier = Modifier
-                        .padding(end = 32.dp)
-                        .clickableWithoutRipple { onComplete() }
-                )
-                Text(
-                    text = stringResource(R.string.save_button_text),
-                    color = MeeGreenPrimaryColor,
-                    fontFamily = publicSansFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight(500),
-                    modifier = Modifier
-                        .clickableWithoutRipple {
-                            consentEntries.first { it.id == id }.retentionDuration = storageDuration
-                            onComplete()
-                        }
-                )
             }
         }
     }

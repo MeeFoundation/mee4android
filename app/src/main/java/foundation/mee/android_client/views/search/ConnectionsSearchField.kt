@@ -33,10 +33,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.SearchRecognitionListener
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
+import foundation.mee.android_client.ui.theme.DarkText
 import foundation.mee.android_client.ui.theme.LabelColor
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.PartnerEntryOnBackgroundColor
+import foundation.mee.android_client.ui.theme.TextActive
 import foundation.mee.android_client.ui.theme.publicSansFamily
 import foundation.mee.android_client.utils.showConsentToast
 
@@ -70,57 +72,47 @@ fun ConnectionsSearchField(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
-            .background(LabelColor.copy(alpha = 0.18f), RoundedCornerShape(10.dp))
-            .padding(horizontal = 7.dp, vertical = 8.dp)
             .fillMaxWidth()
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    id = R.drawable.ic_glass,
-                ),
-                contentDescription = null,
-                tint = PartnerEntryOnBackgroundColor,
-                modifier = Modifier
-                    .width(16.dp)
-                    .height(16.dp)
-            )
             BasicTextField(value = textFieldValue, onValueChange = {
                 searchViewModel.onChange(it)
             }, textStyle = TextStyle(
-                fontFamily = publicSansFamily, fontSize = 18.sp, fontWeight = FontWeight(400),
-                textAlign = TextAlign.Left
-            ), modifier = Modifier.padding(start = 7.dp),
+                fontFamily = publicSansFamily, fontSize = 16.sp, fontWeight = FontWeight(400),
+                textAlign = TextAlign.Left,
+                color = TextActive
+            ), modifier = Modifier.padding(start = 16.dp),
                 decorationBox = { innerTextField ->
                     if (textFieldValue.isEmpty()) {
                         Text(
-                            text = stringResource(R.string.search_text),
+                            text = stringResource(R.string.search_connections_text),
                             fontFamily = publicSansFamily,
-                            fontSize = 17.sp,
-                            lineHeight = 22.sp,
+                            fontSize = 16.sp,
+                            lineHeight = 24.sp,
                             fontWeight = FontWeight(400),
-                            color = PartnerEntryOnBackgroundColor,
+                            color = DarkText,
                             textAlign = TextAlign.Left
                         )
                     }
                     innerTextField()
                 })
         }
-        Icon(
+        if (searchViewModel.searchState.collectAsState().value != "") Icon(
             imageVector = ImageVector.vectorResource(
-                id = R.drawable.ic_mic,
+                id = R.drawable.closeicon,
             ),
             contentDescription = null,
             tint = if (!isSpeaking) PartnerEntryOnBackgroundColor else MeeGreenPrimaryColor,
             modifier = Modifier
-                .width(16.dp)
-                .height(16.dp)
+                .width(24.dp)
+                .height(24.dp)
                 .clickableWithoutRipple {
-                    if (isSpeaking) {
-                        recognitionListener.stopListening()
-                    } else {
-                        requestRecordAudioPermission.launch(Manifest.permission.RECORD_AUDIO)
-                    }
+//                    if (isSpeaking) {
+//                        recognitionListener.stopListening()
+//                    } else {
+//                        requestRecordAudioPermission.launch(Manifest.permission.RECORD_AUDIO)
+//                    }
+                    searchViewModel.onChange("")
                 }
         )
     }

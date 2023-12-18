@@ -21,10 +21,13 @@ import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeConnector
 import foundation.mee.android_client.ui.components.Expander
+import foundation.mee.android_client.ui.components.NotificationPopup
 import foundation.mee.android_client.ui.components.advancedShadow
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.*
+import foundation.mee.android_client.utils.goToSystemSettings
 import foundation.mee.android_client.views.connections.PartnerEntry
+import foundation.mee.android_client.views.connections.WarningPopup
 import foundation.mee.android_client.views.consent.ConsentEntry
 import foundation.mee.android_client.views.consent.ExternalConsentEntry
 import uniffi.mee_agent.GapiUserInfo
@@ -38,8 +41,14 @@ fun ManageConnectionContent(
     meeConnection: MeeConnector,
     onRemoveConnection: (String) -> Unit
 ) {
-
+    var showRemoveConnectionWarning by remember {
+        mutableStateOf(false)
+    }
     val state = rememberManageConnectionContentState(consentEntries = consentEntriesType)
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxHeight(1f)
+    ) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,10 +79,6 @@ fun ManageConnectionContent(
                             isReadOnly = true,
                             modifier = Modifier.padding(top = 16.dp, start = 3.dp)
                         )
-                        Divider(
-                            color = DefaultGray200,
-                            thickness = 1.dp,
-                        )
                     }
                 }
 
@@ -92,10 +97,6 @@ fun ManageConnectionContent(
                                 it,
                                 isReadOnly = true,
                                 modifier = Modifier.padding(top = 16.dp, start = 3.dp)
-                            )
-                            Divider(
-                                color = DefaultGray200,
-                                thickness = 1.dp,
                             )
                         }
                     }
@@ -123,43 +124,55 @@ fun ManageConnectionContent(
                 entries.forEach { ExternalConsentEntry(it.first, it.second) }
             }
         }
+
+    }
+    Row(
+        Modifier
+            .padding(bottom = 26.dp)
+            .clickableWithoutRipple
+            { showRemoveConnectionWarning = true }
+    ) {
         Row(
-            Modifier
-                .padding(top = 80.dp, bottom = 16.dp)
-                .advancedShadow(
-                    alpha = 0.1f,
-                    shadowBlurRadius = 64.dp,
-                    offsetX = 0.dp,
-                    offsetY = 8.dp
-                )
-                .background(color = Color.White, shape = RoundedCornerShape(12.dp))
-                .clickableWithoutRipple
-                { onRemoveConnection(meeConnection.otherPartyConnectionId) }
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+            Icon(
+                imageVector =
+                ImageVector.vectorResource(
+                    id = R.drawable.trash
+                ),
+                contentDescription = null,
+                tint = WarningRed,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, top = 12.dp, end = 19.dp, bottom = 12.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.manage_connection_delete_button),
-                    fontFamily = publicSansFamily,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = DefaultRedLight,
-                )
-                Icon(
-                    imageVector =
-                    ImageVector.vectorResource(
-                        id = R.drawable.ic_trash
-                    ),
-                    contentDescription = null,
-                    tint = DefaultRedLight,
-                    modifier = Modifier.width(17.dp)
-                )
-            }
+                    .width(18.dp)
+            )
+            Text(
+                text = stringResource(R.string.manage_connection_delete_button),
+                fontFamily = publicSansFamily,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = WarningRed,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+            )
+
         }
     }
+
+    }
+    if (showRemoveConnectionWarning)
+        WarningPopup(
+            icon = R.drawable.exclamation_mark,
+            title = R.string.connection_delete_connection_title,
+            messageText = R.string.connection_delete_connection_message,
+            buttonText = R.string.delete_popup_button_text,
+            additionalButtonText = R.string.negative_button_text,
+            onAdditionalButtonClick = { showRemoveConnectionWarning = false }
+        ) {
+            showRemoveConnectionWarning = false
+            onRemoveConnection(meeConnection.otherPartyConnectionId)
+        }
+
 }

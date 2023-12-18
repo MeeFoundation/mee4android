@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -64,7 +65,7 @@ fun SitesToConnectDialog(
         Surface(
             modifier = Modifier
                 .fillMaxWidth(1f)
-                .sizeIn(minHeight = 64.dp)
+                .fillMaxHeight(1f)
                 .clip(dialogShape)
                 .background(
                     DurationPopupBackground,
@@ -82,14 +83,12 @@ fun SitesToConnectDialog(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .padding(top = 16.dp)
-                        .padding(bottom = 50.dp)
                         .padding(horizontal = 16.dp)
                 ) {
                     partners.mapIndexed { i, connector ->
                         ConnectToEntry(
                             connector = connector,
-                            isLight = i % 2 == 0,
+                            isLight = false,
                             modifier = Modifier.clickableWithoutRipple {
                                 when (connector.value) {
                                     is MeeConnectorType.Gapi -> showCompatibleWarning = true
@@ -111,6 +110,8 @@ fun SitesToConnectDialog(
             icon = R.drawable.ic_google,
             iconSize = 60.dp,
             messageText = R.string.warning_popup_message_text,
+            additionalButtonText = R.string.negative_button_text,
+            onAdditionalButtonClick = { showCompatibleWarning = false },
             onDismiss = { showCompatibleWarning = false }) {
             showCompatibleWarning = false
             val url = meeAgentStore.getGoogleIntegrationUrl()

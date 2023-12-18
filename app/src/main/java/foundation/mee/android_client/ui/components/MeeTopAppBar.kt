@@ -7,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.BottomStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -18,8 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
-import foundation.mee.android_client.ui.theme.PartnerEntryOnBackgroundColor
-import foundation.mee.android_client.ui.theme.SystemBlueLight
+import foundation.mee.android_client.ui.theme.TextActive
 import foundation.mee.android_client.ui.theme.publicSansFamily
 
 @Composable
@@ -32,57 +30,35 @@ fun MeeTopAppBar(
         modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxHeight()
-                .paddingFromBaseline(bottom = 10.dp)
+                .padding(bottom = 8.dp, top = 8.dp, start = 16.dp)
         ) {
-            Box(
-                contentAlignment = BottomStart,
+            Icon(
+                imageVector =
+                ImageVector.vectorResource(
+                    id = R.drawable.back
+                ),
+                contentDescription = null,
+                tint = Color.Unspecified,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(24.dp)
+                    .height(24.dp)
                     .clickableWithoutRipple
                     { onClickBack() }
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = 9.dp)
-                ) {
-                    Icon(
-                        imageVector =
-                        ImageVector.vectorResource(
-                            id = R.drawable.ic_chevron_left
-                        ),
-                        contentDescription = null,
-                        tint = SystemBlueLight,
-                        modifier = Modifier
-                            .width(17.dp)
-                            .height(17.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.back_button_text),
-                        fontFamily = publicSansFamily,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = PartnerEntryOnBackgroundColor,
-                        modifier = Modifier.padding(start = 5.dp)
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(title),
-                        fontFamily = publicSansFamily,
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
+            )
+            Text(
+                text = stringResource(title),
+                fontFamily = publicSansFamily,
+                fontSize = 22.sp,
+                fontWeight = FontWeight(600),
+                color = TextActive,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(start = 16.dp)
+            )
         }
     }
 }
