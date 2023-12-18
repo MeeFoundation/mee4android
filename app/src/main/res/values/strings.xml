@@ -17,7 +17,7 @@
     <string name="credit_card_cvc_placeholder">CVC</string>
     <string name="credit_card_valid_thru_placeholder">MM/YY</string>
     <string name="consent_metadata">Metadata</string>
-    <string name="consent_storage_duration_text">STORAGE DURATION</string>
+    <string name="consent_storage_duration_text">Storage duration</string>
     <string name="save_button_text">Save</string>
     <string name="consent_duration_while_using_name">While using app</string>
     <string name="consent_duration_while_using_desc">Shared with provider’s app during usage; \ndeleted by provider afterwards</string>
@@ -38,10 +38,11 @@
     <string name="biometry_initial_step_title">Set up biometrics</string>
     <string name="biometry_initial_step_message">Mee Smartwallet uses biometrics to make sure that you are the only person who can open the app.</string>
     <string name="biometry_all_set_step_title">All Set!</string>
-    <string name="biometry_all_set_step_message">Please use Biometry next time you sign-in.</string>
-    <string name="biometry_restrict_step_title">Please set up device credentials!</string>
-    <string name="biometry_restrict_step_message">Mee is you.\nWe need to detect and authenticate your identity to make sure it’s you who is trying to access the Mee Smartwallet.</string>
+    <string name="biometry_all_set_step_message">Biometry set successfully, please use it next time you sign-in.</string>
+    <string name="biometry_restrict_step_title">Set up device credentials</string>
+    <string name="biometry_restrict_step_message">Mee is you. We need to detect and authenticate your identity to make sure it’s you who is trying to access the Mee Smartwallet.</string>
     <string name="back_button_text">Back</string>
+    <string name="empty_search_result">Nothing found</string>
     <string name="manage_connection_title">Manage Connection</string>
     <string name="manage_connection_required_expander">Required info shared</string>
     <string name="manage_connection_optional_expander">Optional info shared</string>
@@ -53,13 +54,17 @@
     <string name="top_app_bar_settings_title">Settings</string>
     <string name="settings_delete_user_data">Delete user data</string>
     <string name="delete_popup_message_text">Are you sure you want to delete your data?</string>
-    <string name="delete_popup_button_text">Yes, delete my data</string>
+    <string name="delete_popup_button_text">Yes</string>
     <string name="settings_lock_type_title">Screen Lock Type</string>
+    <string name="settings_user_data_title">Your user data</string>
     <string name="settings_entry_credentials_title">Biometrics &amp; Passcode</string>
-    <string name="settings_entry_credentials_desc">Go to Security Settings</string>
-    <string name="settings_data_deletion_success">Your data was deleted successfully</string>
-    <string name="settings_data_deletion_success_back">Back to Connections Screen</string>
+    <string name="settings_entry_credentials_desc">Manage in Security Settings</string>
+    <string name="settings_delete_user_data_desc">This will disconnect your connections</string>
+    <string name="settings_data_deletion_success">Your user data was successfully deleted.</string>
+    <string name="settings_data_deletion_success_back">Back to Connections</string>
     <string name="settings_data_deletion_error_title">Error occurred deleting user data</string>
+    <string name="connection_delete_connection_title">Delete connection</string>
+    <string name="connection_delete_connection_message">Are you sure you want to delete this connection?</string>
     <string name="settings_data_deletion_error">We were unable to delete your data. \nTo resolve this issue, please go to the Android system settings to manually delete your data.</string>
     <string name="settings_data_deletion_error_button_title">Go to System Settings</string>
     <string name="init_agent_db_error_title">Error occurred migrating user data</string>
@@ -69,7 +74,9 @@
     <string name="sites_to_connect_dialog_header">Sites/Apps to Connect to</string>
     <string name="connect_text">Connect</string>
     <string name="search_text">Search</string>
+    <string name="search_connections_text">Search connections</string>
     <string name="recognition_not_available_text">Speech recognition is not available</string>
     <string name="recognition_failed_text">Speech recognition failed, please try again</string>
     <string name="permission_not_granted">Mee needs permission to enable voice search</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

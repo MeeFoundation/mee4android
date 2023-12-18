@@ -1,6 +1,7 @@
 package foundation.mee.android_client.views.connections
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -42,10 +43,13 @@ fun ConnectionsScreen(
                     interactionSource = NoRippleInteractionSource()
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.ic_add_button),
+                        painter = painterResource(R.drawable.connection_add),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
-                        modifier = Modifier.size(78.dp)
+                        modifier = Modifier
+                            .height(78.dp)
+                            .width(78.dp)
+                            .padding(end = 16.dp, bottom = 16.dp)
                     )
                 }
             }

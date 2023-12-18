@@ -16,7 +16,10 @@ import foundation.mee.android_client.ui.theme.publicSansFamily
 import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.LabelLightSecondary
+import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.SystemBlueLight
+import foundation.mee.android_client.ui.theme.TextActive
+import foundation.mee.android_client.ui.theme.TextSecondary
 
 @Composable
 fun ConsentDurationEntry(
@@ -28,39 +31,41 @@ fun ConsentDurationEntry(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier
+        horizontalArrangement = Arrangement.Start,
+        modifier = Modifier
             .fillMaxWidth()
             .clickableWithoutRipple { onClick() }
+            .padding(vertical = 8.dp)
 
     ) {
-        Column {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = text,
                 fontFamily = publicSansFamily,
-                fontSize = 17.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight(400),
-                color = Color.Black
+                color = TextActive
             )
             Text(
                 text = description,
                 fontFamily = publicSansFamily,
                 fontSize = 12.sp,
                 fontWeight = FontWeight(400),
-                color = LabelLightSecondary
+                color = TextSecondary,
             )
         }
 
-        if (selected) {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    id = R.drawable.ic_checkmark
-                ),
-                contentDescription = null,
-                tint = SystemBlueLight,
-                modifier = Modifier
-                    .width(15.dp)
-            )
-        }
+        Icon(
+            imageVector = ImageVector.vectorResource(
+                id = if (selected) R.drawable.radio_selected else R.drawable.radio_empty
+            ),
+            contentDescription = null,
+            tint = MeeGreenPrimaryColor,
+            modifier = Modifier
+                .width(24.dp)
+                .height(24.dp)
+        )
     }
 }

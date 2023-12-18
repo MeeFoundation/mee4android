@@ -3,6 +3,9 @@ package foundation.mee.android_client.views.connections
 import android.view.Gravity
 import android.view.ViewGroup
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -17,6 +20,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.compose.ui.zIndex
 import foundation.mee.android_client.ui.theme.DurationPopupBackground
 import foundation.mee.android_client.views.initial_flow.BottomMessage
 
@@ -28,6 +32,8 @@ fun WarningPopup(
     iconSize: Dp? = null,
     messageText: Int,
     buttonText: Int? = null,
+    additionalButtonText: Int? = null,
+    onAdditionalButtonClick: (() -> Unit)? = null,
     buttonColor: Color? = null,
     bottomMessageHeader: @Composable () -> Unit = {},
     title: Int? = null,
@@ -45,21 +51,21 @@ fun WarningPopup(
                 LocalView.current.layoutParams.height
             )
         }
-        Surface(
+        Column(
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier
-                .fillMaxWidth(1f)
-                .sizeIn(minHeight = 64.dp)
-                .clip(popupShape)
-                .background(
-                    DurationPopupBackground,
-                    popupShape
-                )
+                .zIndex(1f)
+                .padding(horizontal = 50.dp)
+                .fillMaxHeight(),
         ) {
+
             BottomMessage(
                 icon = icon,
                 iconSize = iconSize,
                 message = messageText,
                 buttonText = buttonText,
+                additionalButtonText = additionalButtonText,
+                onAdditionalButtonClick = onAdditionalButtonClick,
                 buttonColor = buttonColor,
                 bottomMessageHeader = bottomMessageHeader,
                 title = title,

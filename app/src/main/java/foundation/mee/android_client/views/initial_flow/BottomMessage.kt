@@ -26,6 +26,7 @@ import androidx.compose.ui.zIndex
 import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.components.DeclineButton
 import foundation.mee.android_client.ui.components.MainButton
+import foundation.mee.android_client.ui.components.PopupButton
 import foundation.mee.android_client.ui.components.PrimaryButton
 import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.utils.goToSystemSettings
@@ -37,10 +38,12 @@ fun BottomMessage(
     icon: Int?,
     iconSize: Dp?,
     buttonText: Int? = null,
+    additionalButtonText: Int? = null,
+    onAdditionalButtonClick: (() -> Unit)? = null,
     buttonColor: Color? = null,
     bottomMessageHeader: @Composable () -> Unit = {},
     message: Int,
-    @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier.padding(bottom = 64.dp),
+    @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier.padding(bottom = 24.dp),
     title: Int? = null,
     onNext: () -> Unit
 ) {
@@ -52,10 +55,21 @@ fun BottomMessage(
         textModifier = textModifier,
         bottomMessageHeader = bottomMessageHeader
     ) {
-        MainButton(
-            text = buttonText ?: R.string.continue_button_text,
-            textColor = buttonColor
-        ) { onNext() }
+        Row() {
+            Spacer(Modifier.weight(1f))
+            additionalButtonText?.let {
+                PopupButton(
+                    title = stringResource(additionalButtonText)
+                ) {
+                    if (onAdditionalButtonClick != null) {
+                        onAdditionalButtonClick()
+                    }
+                }
+            }
+            PopupButton(
+                title = stringResource(buttonText ?: R.string.continue_button_text)
+            ) { onNext() }
+        }
     }
 }
 
@@ -75,32 +89,22 @@ fun RestrictBottomMessage(
         iconSize = iconSize,
         title = title,
         message = message,
-        textModifier = Modifier.padding(bottom = 64.dp)
+        textModifier = Modifier.padding(bottom = 24.dp)
     ) {
-        DeclineButton(
-            modifier = Modifier
-                .padding(0.dp)
-                .height(60.dp)
-                .fillMaxWidth(),
-            title = stringResource(secondaryButtonTitle ?: R.string.close_button_text),
-            fontWeight = FontWeight(600),
-            fontSize = 20.sp,
-            backgroundColor = Color.Transparent
-        ) {
-            onNextSecondaryButton()
+        Row() {
+            Spacer(Modifier.weight(1f))
+            PopupButton(
+                title = stringResource(secondaryButtonTitle ?: R.string.close_button_text),
+            ) {
+                onNextSecondaryButton()
+            }
+            PopupButton(
+                title = stringResource(primaryButtonTitle ?: R.string.settings_button_text),
+            ) {
+                onNextPrimaryButton()
+            }
         }
-        PrimaryButton(
-            title = stringResource(primaryButtonTitle ?: R.string.settings_button_text),
-            modifier = Modifier
-                .padding(0.dp)
-                .height(60.dp)
-                .fillMaxWidth(),
-            fontWeight = FontWeight(600),
-            fontSize = 20.sp,
-            shape = RoundedCornerShape(size = 13.dp)
-        ) {
-            onNextPrimaryButton()
-        }
+
     }
 }
 
@@ -117,7 +121,7 @@ fun BaseBottomMessage(
 ) {
     Surface(
         color = DurationPopupBackground,
-        modifier = Modifier.clip(RoundedCornerShape(topEnd = 13.dp, topStart = 13.dp))
+        modifier = Modifier.clip(RoundedCornerShape(topEnd = 28.dp, topStart = 28.dp, bottomEnd = 28.dp, bottomStart = 28.dp))
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -127,9 +131,9 @@ fun BaseBottomMessage(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .padding(top = 16.dp)
-                    .padding(bottom = 50.dp)
-                    .padding(horizontal = 16.dp)
+                    .padding(top = 29.dp)
+                    .padding(bottom = 24.dp)
+                    .padding(horizontal = 24.dp)
             ) {
                 icon?.let {
                     Image(
@@ -138,7 +142,7 @@ fun BaseBottomMessage(
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .size(iconSize ?: 60.dp)
-                            .padding(top = 8.dp)
+                            .padding(top = 0.dp)
                     )
                 }
                 title?.let {
@@ -147,9 +151,9 @@ fun BaseBottomMessage(
                         fontFamily = publicSansFamily,
                         fontWeight = FontWeight(700),
                         color = Color.Black,
-                        fontSize = 34.sp,
+                        fontSize = 24.sp,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 16.dp)
                     )
                 }
                 Text(
@@ -157,9 +161,9 @@ fun BaseBottomMessage(
                     fontFamily = publicSansFamily,
                     fontWeight = FontWeight(400),
                     color = Color.Black,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = textModifier.padding(top = 8.dp)
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Start,
+                    modifier = textModifier.padding(top = 16.dp)
                 )
                 content()
             }
@@ -235,13 +239,14 @@ fun BottomMessagePreview() {
         Box {
             MeeWhiteScreen(modifier = Modifier.zIndex(2f), isFaded = true)
             Column(
-                verticalArrangement = Arrangement.Bottom,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .zIndex(1f)
+                    .padding(horizontal = 50.dp)
                     .fillMaxHeight(),
             ) {
                 BottomMessage(
-                    icon = R.drawable.mee_guy_icon,
+                    icon = R.drawable.biometrics_android,
                     iconSize = 60.dp,
                     title = R.string.biometry_initial_step_title,
                     message = R.string.biometry_initial_step_message,

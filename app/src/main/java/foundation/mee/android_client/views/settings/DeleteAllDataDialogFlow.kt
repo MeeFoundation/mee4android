@@ -1,8 +1,15 @@
 package foundation.mee.android_client.views.settings
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.R
@@ -10,6 +17,7 @@ import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.navigation.Navigator
 import foundation.mee.android_client.ui.components.BottomDialogHeader
+import foundation.mee.android_client.ui.components.NotificationPopup
 import foundation.mee.android_client.ui.theme.AccessibleSystemRedLight
 import foundation.mee.android_client.utils.goToSystemSettings
 import foundation.mee.android_client.views.connections.WarningPopup
@@ -34,14 +42,13 @@ fun DeleteAllDataDialogFlow(
     when (currentStep) {
         DeleteAllDataSteps.Initial -> {
             WarningPopup(
+                icon = R.drawable.exclamation_mark,
+                title = R.string.settings_delete_user_data,
                 messageText = R.string.delete_popup_message_text,
                 buttonText = R.string.delete_popup_button_text,
                 buttonColor = AccessibleSystemRedLight,
-                bottomMessageHeader = {
-                    BottomDialogHeader(title = R.string.settings_delete_user_data) {
-                        onClose()
-                    }
-                }
+                additionalButtonText = R.string.negative_button_text,
+                onAdditionalButtonClick = onClose
             ) {
                 currentStep = try {
                     meeAgentStore.resetMeeAgent()
@@ -53,13 +60,19 @@ fun DeleteAllDataDialogFlow(
             }
         }
         DeleteAllDataSteps.Success -> {
-            WarningPopup(
-                icon = R.drawable.all_set,
-                title = R.string.biometry_all_set_step_title,
-                messageText = R.string.settings_data_deletion_success,
-                buttonText = R.string.settings_data_deletion_success_back
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .fillMaxHeight()
+                    .padding(vertical = 8.dp),
+                verticalArrangement = Arrangement.Bottom
             ) {
-                navigator.navigateToMainScreen()
+                NotificationPopup(
+                    message = stringResource(R.string.settings_data_deletion_success),
+                    primaryButtonTitle = stringResource(R.string.settings_data_deletion_success_back)
+                ) {
+                    navigator.navigateToMainScreen()
+                }
             }
         }
         DeleteAllDataSteps.Error -> {

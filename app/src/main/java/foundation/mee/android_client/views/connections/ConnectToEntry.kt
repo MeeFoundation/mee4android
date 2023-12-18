@@ -18,12 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeConnector
+import foundation.mee.android_client.ui.theme.DarkText
 import foundation.mee.android_client.ui.theme.DurationPopupBackground
+import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.PartnerEntryBackgroundColor
 import foundation.mee.android_client.ui.theme.SystemBlueLight
 
@@ -47,8 +50,8 @@ fun ConnectToEntry(
                     PartnerEntryBackgroundColor
                 }
             )
-            .sizeIn(minHeight = 64.dp)
-            .padding(horizontal = 8.dp),
+            .sizeIn(minHeight = 56.dp)
+            .padding(start = 16.dp, end = 24.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -63,24 +66,26 @@ fun ConnectToEntry(
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .size(width = 48.dp, height = 48.dp)
+                        .size(width = 40.dp, height = 40.dp)
                         .clip(shape = CircleShape),
                 )
                 Column(
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(
                         text = state.name,
-                        style = MaterialTheme.typography.h6,
+                        color = DarkText,
+                        fontSize = 16.sp
                     )
                 }
             }
             Row(modifier = modifier) {
                 Text(
                     text = stringResource(R.string.connect_text),
-                    color = SystemBlueLight,
-                    fontSize = 12.sp
+                    color = MeeGreenPrimaryColor,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight(500)
                 )
             }
         }
