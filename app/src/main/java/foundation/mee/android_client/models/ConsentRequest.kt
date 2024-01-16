@@ -24,7 +24,7 @@ data class ConsentRequest(
         consentRequest: ConsentRequest
     ) : this(
         id = from.id,
-        OidcScopeList(listOf()),
+        scope = OidcScopeList(listOf()),
         claims = from.attributes,
         clientId = consentRequest.clientId,
         nonce = consentRequest.nonce,
@@ -44,13 +44,13 @@ data class ConsentRequest(
         from: OidcAuthRequest,
         isCrossDeviceFlow: Boolean
     ) : this(
-        id = from.redirectUri ?: "", // TODO discuss with the team
+        id = from.redirectUri!!, // TODO discuss with the team
         scope = from.scope,
         claims = from.claims?.idToken?.let { claimsMapper(it) } ?: listOf(),
         clientId = from.clientId,
         nonce = from.nonce,
         state = from.state,
-        redirectUri = from.redirectUri ?: "", // TODO discuss with the team
+        redirectUri = from.redirectUri!!, // TODO discuss with the team
         responseUri = from.responseUri,
         isCrossDeviceFlow = isCrossDeviceFlow,
         presentationDefinition = from.presentationDefinition,
