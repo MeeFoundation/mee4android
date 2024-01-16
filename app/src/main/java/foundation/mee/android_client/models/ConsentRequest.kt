@@ -4,14 +4,16 @@ import uniffi.mee_agent.*
 
 data class ConsentRequest(
     val id: String,
-    val scope: OidcScopeList,
+    val scope: OidcScopeList?,
     val claims: List<ConsentRequestClaim>,
     val clientId: String = "",
     val nonce: String = "",
+    val state: String?,
     val redirectUri: Url = "",
+    val responseUri: Url?,
     val isCrossDeviceFlow: Boolean = false,
     var presentationDefinition: PresentationDefinition?,
-    val clientMetadata: PartnerMetadata,
+    val clientMetadata: PartnerMetadata?,
     val clientIdScheme: ClientIdScheme?,
     val presentation_definition_uri: String?,
     val responseType: OidcResponseType,
@@ -21,38 +23,42 @@ data class ConsentRequest(
         from: MeeContext,
         consentRequest: ConsentRequest
     ) : this(
-        from.id,
+        id = from.id,
         OidcScopeList(listOf()),
-        from.attributes,
-        consentRequest.clientId,
-        consentRequest.nonce,
-        consentRequest.redirectUri,
-        consentRequest.isCrossDeviceFlow,
-        consentRequest.presentationDefinition,
-        consentRequest.clientMetadata,
-        consentRequest.clientIdScheme,
-        consentRequest.presentation_definition_uri,
-        OidcResponseType.ID_TOKEN,
-        consentRequest.responseMode
+        claims = from.attributes,
+        clientId = consentRequest.clientId,
+        nonce = consentRequest.nonce,
+        state = consentRequest.state,
+        redirectUri = consentRequest.redirectUri,
+        responseUri = consentRequest.responseUri,
+        isCrossDeviceFlow = consentRequest.isCrossDeviceFlow,
+        presentationDefinition = consentRequest.presentationDefinition,
+        clientMetadata = consentRequest.clientMetadata,
+        clientIdScheme = consentRequest.clientIdScheme,
+        presentation_definition_uri = consentRequest.presentation_definition_uri,
+        responseType = OidcResponseType.ID_TOKEN,
+        responseMode = consentRequest.responseMode
     )
 
     constructor(
         from: OidcAuthRequest,
         isCrossDeviceFlow: Boolean
     ) : this(
-        from.redirectUri,
-        from.scope,
-        from.claims?.idToken?.let { claimsMapper(it) } ?: listOf(),
-        from.clientId,
-        from.nonce,
-        from.redirectUri,
-        isCrossDeviceFlow,
-        from.presentationDefinition,
-        PartnerMetadata(from.clientMetadata),
-        from.clientIdScheme,
-        from.presentationDefinitionUri,
-        from.responseType,
-        from.responseMode
+        id = from.redirectUri ?: "", // TODO discuss with the team
+        scope = from.scope,
+        claims = from.claims?.idToken?.let { claimsMapper(it) } ?: listOf(),
+        clientId = from.clientId,
+        nonce = from.nonce,
+        state = from.state,
+        redirectUri = from.redirectUri ?: "", // TODO discuss with the team
+        responseUri = from.responseUri,
+        isCrossDeviceFlow = isCrossDeviceFlow,
+        presentationDefinition = from.presentationDefinition,
+        clientMetadata = from.clientMetadata?.let { PartnerMetadata(it) },
+        clientIdScheme = from.clientIdScheme,
+        presentation_definition_uri = from.presentationDefinitionUri,
+        responseType = from.responseType,
+        responseMode = from.responseMode
     )
 }
 

@@ -12,17 +12,19 @@ fun OidcAuthRequest(from: ConsentRequest): OidcAuthRequest {
     mapIdToken(claims, from)
 
     return OidcAuthRequest(
-        from.scope,
-        claims,
-        OidcClientMetadata(from.clientMetadata),
-        from.nonce,
-        from.clientId,
-        from.redirectUri,
-        from.presentationDefinition,
-        from.clientIdScheme,
-        from.presentation_definition_uri,
-        from.responseType,
-        from.responseMode
+        scope = from.scope,
+        claims = claims,
+        clientMetadata = from.clientMetadata?.let { OidcClientMetadata(it) },
+        nonce = from.nonce,
+        clientId = from.clientId,
+        redirectUri = from.redirectUri,
+        responseUri = from.responseUri,
+        state = from.state,
+        presentationDefinition = from.presentationDefinition,
+        clientIdScheme = from.clientIdScheme,
+        presentationDefinitionUri = from.presentation_definition_uri,
+        responseType = from.responseType,
+        responseMode = from.responseMode
     )
 
 }

@@ -138,14 +138,14 @@ fun ConsentPageNew(
                         )
                     }
                     Image(
-                        painter = rememberAsyncImagePainter(model = data.clientMetadata.logoUrl),
+                        painter = rememberAsyncImagePainter(model = data.clientMetadata!!.logoUrl),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier.size(48.dp)
                     )
                 }
                 Text(
-                    text = data.clientMetadata.name,
+                    text = data.clientMetadata!!.name,
                     fontFamily = publicSansFamily,
                     fontSize = 30.sp,
                     fontWeight = FontWeight(700),

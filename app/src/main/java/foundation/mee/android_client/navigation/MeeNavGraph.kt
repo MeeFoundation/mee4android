@@ -3,6 +3,7 @@ package foundation.mee.android_client.navigation
 import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -11,9 +12,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import foundation.mee.android_client.R
 import foundation.mee.android_client.utils.DEEP_LINK_URL_STRING
 import foundation.mee.android_client.navigation.MeeDestinations.*
 import foundation.mee.android_client.utils.buildConsentRequestFromUrl
+import foundation.mee.android_client.utils.showConsentToast
 import foundation.mee.android_client.views.connections.ConnectionsScreenWithSidebar
 import foundation.mee.android_client.views.consent.ConsentPage
 import foundation.mee.android_client.views.initial_flow.InitialFlow
@@ -31,6 +34,8 @@ fun MeeNavGraph(
 ) {
     val controller = rememberNavController()
     navigator.navController = controller
+
+    val context = LocalContext.current
 
     val startDestination: String =
         if (!initialFlowDone) INITIAL_FLOW.route
@@ -79,9 +84,16 @@ fun MeeNavGraph(
                 Log.e("navigation", e.message.orEmpty())
                 null
             }
-            consentRequest?.let {
+            if (consentRequest?.clientMetadata != null) { // TODO discuss with the team
                 ConsentPage(consentRequest)
-            } ?: ConnectionsScreenWithSidebar()
+            } else {
+                showConsentToast(
+                    context,
+                    R.string.connection_failed_toast
+                )
+                Log.e("Unable to connect", "clientMetadata is missing")
+                ConnectionsScreenWithSidebar()
+            }
         }
 
         composable(
@@ -91,9 +103,14 @@ fun MeeNavGraph(
             val params = it.arguments?.getString("params")
             val consentRequest = params?.let { buildConsentRequestFromUrl(it) }
 
-            if (consentRequest != null) {
+            if (consentRequest?.clientMetadata != null) {
                 ConsentPage(consentRequest)
             } else {
+                showConsentToast(
+                    context,
+                    R.string.connection_failed_toast
+                )
+                Log.e("Unable to connect", "clientMetadata is missing")
                 ConnectionsScreenWithSidebar()
             }
         }

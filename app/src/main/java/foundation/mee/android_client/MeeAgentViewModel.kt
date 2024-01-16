@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import foundation.mee.android_client.models.MeeAgentStore
-import uniffi.mee_agent.MeeException
-import uniffi.mee_agent.MeeStorageException
+import uniffi.mee_agent.MeeErr
+import uniffi.mee_agent.MeeStorageErr
 import javax.inject.Inject
 
 sealed class Result<out R>(val type: Type) {
@@ -34,12 +34,12 @@ class MeeAgentViewModel @Inject constructor(
         return try {
             meeAgentStore.initMeeAgent()
             Result.Success
-        } catch (e: MeeException) {
+        } catch (e: MeeErr) {
             Log.e("Mee Agent exception", e.message.orEmpty())
             when (e) {
-                is MeeException.MeeStorage -> {
+                is MeeErr.MeeStorage -> {
                     when (e.error) {
-                        is MeeStorageException.AppLevelMigration -> Result.MigrationError(e)
+                        is MeeStorageErr.AppLevelMigration -> Result.MigrationError(e)
                         else -> Result.DbError(e)
                     }
                 }
