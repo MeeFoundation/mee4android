@@ -42,7 +42,9 @@ fun buildConsentRequestFromUrl(url: String): ConsentRequest? {
         val res = siopRpAuthRequestFromUrl(url)
         val respondTo = Uri.parse(url).getQueryParameter("respondTo")
         val isCrossDeviceFlow = respondTo != null && respondTo == "proxy"
-        ConsentRequest(res, isCrossDeviceFlow)
+        res.redirectUri?.let {
+            ConsentRequest(res, isCrossDeviceFlow)
+        }
     } catch (e: Exception) {
         null
     }
