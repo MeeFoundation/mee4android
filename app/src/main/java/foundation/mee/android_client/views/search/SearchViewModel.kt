@@ -3,16 +3,13 @@ package foundation.mee.android_client.views.search
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import foundation.mee.android_client.models.ClientType
 import foundation.mee.android_client.models.MeeAgentStore
-import foundation.mee.android_client.models.MeeConnector
-import foundation.mee.android_client.models.MeeConnectorType
-import foundation.mee.android_client.utils.FuzzySearchHelper.getFoundConnectors
+import foundation.mee.android_client.models.MeeConnection
+import foundation.mee.android_client.utils.FuzzySearchHelper.getFoundConnections
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,17 +27,17 @@ class SearchViewModel @Inject constructor(
     private val _searchState = MutableStateFlow("")
     val searchState = _searchState.asStateFlow()
 
-    private var _connectors = MutableStateFlow(getAllConnectors())
-    private val connectors = searchState.combine(_connectors) { query, conn ->
+    private var _connections = MutableStateFlow(getAllConnections())
+    private val connections = searchState.combine(_connections) { query, conn ->
         if (query.isBlank()) {
             conn
         } else {
-            getFoundConnectors(query, conn)
+            getFoundConnections(query, conn)
         }
     }
 
-    private fun getAllConnectors(): List<MeeConnector> {
-        return meeAgentStore.getAllItems() ?: listOf()
+    private fun getAllConnections(): List<MeeConnection> {
+        return meeAgentStore.getAllConnections() ?: listOf()
     }
 
     fun onChange(query: String) {
@@ -60,38 +57,11 @@ class SearchViewModel @Inject constructor(
         _isSpeaking.value = false
     }
 
-    fun getWebConnectors(): Flow<List<MeeConnector>> {
-        return getConnectorsByClientType(connectors, ClientType.web)
-    }
-
-    fun getMobileConnectors(): Flow<List<MeeConnector>> {
-        return getConnectorsByClientType(connectors, ClientType.mobile)
+    fun getConnectionsFlow(): Flow<List<MeeConnection>> {
+        return connections
     }
 
     fun onChangeIsSpeaking(value: Boolean) {
         _isSpeaking.value = value
-    }
-
-    private fun getConnectorsByClientType(
-        connections: Flow<List<MeeConnector>>,
-        clientType: ClientType
-    ): Flow<List<MeeConnector>> {
-        return connections.map { list ->
-            list.filter {
-                when (val connType = it.value) {
-                    is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
-                        ClientType.web -> clientType == ClientType.web
-                        ClientType.mobile -> clientType == ClientType.mobile
-                    }
-
-                    is MeeConnectorType.Gapi -> when (clientType) {
-                        ClientType.web -> true
-                        ClientType.mobile -> false
-                    }
-
-                    else -> false
-                }
-            }
-        }
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +27,6 @@ import foundation.mee.android_client.ui.theme.DarkText
 import foundation.mee.android_client.ui.theme.DurationPopupBackground
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.PartnerEntryBackgroundColor
-import foundation.mee.android_client.ui.theme.SystemBlueLight
 
 @Composable
 fun ConnectToEntry(
@@ -36,8 +34,6 @@ fun ConnectToEntry(
     isLight: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val state = rememberPartnerEntryState(connector)
-
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -61,7 +57,7 @@ fun ConnectToEntry(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     painter = rememberAsyncImagePainter(
-                        model = state.logoUri
+                        model = "https://${connector.id}/favicon.ico"
                     ),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
@@ -74,7 +70,7 @@ fun ConnectToEntry(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = state.name,
+                        text = connector.name,
                         color = DarkText,
                         fontSize = 16.sp
                     )

@@ -5,8 +5,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import foundation.mee.android_client.models.ConnectorToEntries
+import foundation.mee.android_client.models.ManageConnectionData
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.models.MeeConnector
+import foundation.mee.android_client.models.MeeConnectorType
 import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,8 +31,12 @@ class ManageConnectionViewModel @Inject constructor(
     private val meeAgentStore: MeeAgentStore
 ) : ViewModel() {
 
-    private val _screenData = MutableStateFlow<ConnectionDataState<Pair<MeeConnector, ConsentEntriesType>>>(ConnectionDataState.None)
-    val screenData: StateFlow<ConnectionDataState<Pair<MeeConnector, ConsentEntriesType>>> = _screenData
+    private val _screenData =
+        MutableStateFlow<ConnectionDataState<ManageConnectionData>>(
+            ConnectionDataState.None
+        )
+    val screenData: StateFlow<ConnectionDataState<ManageConnectionData>> =
+        _screenData
 
     init {
         viewModelScope.launch {
@@ -40,30 +47,29 @@ class ManageConnectionViewModel @Inject constructor(
     private fun loadData() {
         try {
             val hostname: String = checkNotNull(savedStateHandle["connectionHostname"])
-            val meeConnector = meeAgentStore.getConnectorByConnectionId(hostname)
-            if (meeConnector != null) {
-                val meeContext = meeAgentStore.getLastConnectionConsentById(meeConnector.otherPartyConnectionId)
-                if (meeContext != null) {
-                    _screenData.value =
-                        ConnectionDataState.Success(
-                            Pair(
-                                meeConnector,
-                                ConsentEntriesType.SiopClaims(meeContext.attributes)
+            val meeConnection =
+                meeAgentStore.getAllConnections()?.first { it.id == hostname }
+            if (meeConnection != null) {
+                val meeConnectors = meeAgentStore.getConnectionConnectors(hostname)
+                if (meeConnectors != null) {
+                    val res = meeConnectors.mapNotNull { connector ->
+                        toConsentEntriesType(connector)?.let {
+                            ConnectorToEntries(
+                                connector,
+                                it
                             )
-                        )
-                } else {
-                    val external = meeAgentStore.getLastExternalConsentById(hostname)
-                    if (external != null) {
+                        }
+                    }
+                    if (res.isNotEmpty()) {
                         _screenData.value =
                             ConnectionDataState.Success(
-                                Pair(
-                                    meeConnector,
-                                    ConsentEntriesType.GapiEntries(external)
-                                )
+                                ManageConnectionData(meeConnection, res)
                             )
                     } else {
                         _screenData.value = ConnectionDataState.None
                     }
+                } else {
+                    _screenData.value = ConnectionDataState.None
                 }
             } else {
                 _screenData.value = ConnectionDataState.None
@@ -74,8 +80,28 @@ class ManageConnectionViewModel @Inject constructor(
         }
     }
 
+    private fun toConsentEntriesType(connector: MeeConnector): ConsentEntriesType? {
+        return when (connector.value) {
+            is MeeConnectorType.Siop -> {
+                meeAgentStore.getLastConnectionConsentByConnectorId(connector.id)
+                    ?.let { meeContext ->
+                        ConsentEntriesType.SiopClaims(meeContext.attributes)
+                    }
+            }
+
+            is MeeConnectorType.Gapi -> {
+                meeAgentStore.getExternalConsentsByConnectorId(connector.id)
+                    ?.let { ConsentEntriesType.GapiEntries(it) }
+            }
+
+            else -> null
+        }
+    }
+
+
+    // TODO check naming
     fun removeConnection(id: String, navigator: Navigator) {
-        meeAgentStore.removeItemByConnectionId(id)
+        meeAgentStore.removeItemByConnectorId(id)
         navigator.navController.navigate(MeeDestinations.CONNECTIONS.route) {
             popUpTo(MeeDestinations.CONNECTIONS.route) {
                 inclusive = true

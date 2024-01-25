@@ -22,7 +22,7 @@ fun OidcAuthRequest(from: ConsentRequest): OidcAuthRequest {
         state = from.state,
         presentationDefinition = from.presentationDefinition,
         clientIdScheme = from.clientIdScheme,
-        presentationDefinitionUri = from.presentation_definition_uri,
+        presentationDefinitionUri = from.presentationDefinitionUri,
         responseType = from.responseType,
         responseMode = from.responseMode
     )

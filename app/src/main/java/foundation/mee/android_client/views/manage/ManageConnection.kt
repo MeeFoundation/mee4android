@@ -22,14 +22,13 @@ fun ManageConnection(
     when (loadState.value) {
         is ConnectionDataState.None -> navigator.navigateToMainScreen()
         is ConnectionDataState.Success -> {
-            val pair = (loadState.value as ConnectionDataState.Success).data
-            Scaffold(drawerElevation = 0.dp,topBar = {
+            val manageConnectionData = (loadState.value as ConnectionDataState.Success).data
+            Scaffold(drawerElevation = 0.dp, topBar = {
                 MeeTopAppBar(title = R.string.manage_connection_title) { navigator.popBackStack() }
             }) { padding ->
                 ManageConnectionContent(
                     modifier = Modifier.padding(padding),
-                    meeConnection = pair.first,
-                    consentEntriesType = pair.second,
+                    manageConnectionData = manageConnectionData,
                     onRemoveConnection = {
                         manageConnectionViewModel.removeConnection(it, navigator)
                     }

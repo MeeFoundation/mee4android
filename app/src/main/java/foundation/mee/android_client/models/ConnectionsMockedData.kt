@@ -3,30 +3,9 @@ package foundation.mee.android_client.models
 import uniffi.mee_agent.OidcClientMetadata
 
 
-val meConnectionMock = MeeConnector(
-    id = "https://mee.foundation/",
-    name = "Mee Foundation",
-    otherPartyConnectionId = "mee.foundation",
-    value = MeeConnectorType.Siop(
-        SiopConnectorType(
-            redirectUri = "https://mee.foundation/",
-            clientMetadata = PartnerMetadata(
-                from = OidcClientMetadata(
-                    applicationType = "web",
-                    clientName = "Mee Foundation",
-                    logoUri = "https://mee.foundation/favicon.png",
-                    contacts = emptyList(),
-                    jwks = null,
-                    jwksUri = null,
-                    idTokenSignedResponseAlg = null,
-                    idTokenEncryptedResponseAlg = null,
-                    idTokenEncryptedResponseEnc = null,
-                    subjectSyntaxTypesSupported = listOf()
-                )
-            ),
-            subjectSyntaxType = ConnectorTypeSubject.DidKey("")
-        )
-    )
+val meConnectionMock = MeeConnection(
+    id = "mee.foundation",
+    name = "Mee Foundation"
 )
 
 

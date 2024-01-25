@@ -15,7 +15,7 @@ data class ConsentRequest(
     var presentationDefinition: PresentationDefinition?,
     val clientMetadata: PartnerMetadata?,
     val clientIdScheme: ClientIdScheme?,
-    val presentation_definition_uri: String?,
+    val presentationDefinitionUri: String?,
     val responseType: OidcResponseType,
     val responseMode: OidcResponseMode?
 ) {
@@ -35,7 +35,7 @@ data class ConsentRequest(
         presentationDefinition = consentRequest.presentationDefinition,
         clientMetadata = consentRequest.clientMetadata,
         clientIdScheme = consentRequest.clientIdScheme,
-        presentation_definition_uri = consentRequest.presentation_definition_uri,
+        presentationDefinitionUri = consentRequest.presentationDefinitionUri,
         responseType = OidcResponseType.ID_TOKEN,
         responseMode = consentRequest.responseMode
     )
@@ -44,19 +44,19 @@ data class ConsentRequest(
         from: OidcAuthRequest,
         isCrossDeviceFlow: Boolean
     ) : this(
-        id = from.redirectUri!!, // TODO discuss with the team
+        id = from.clientId,
         scope = from.scope,
         claims = from.claims?.idToken?.let { claimsMapper(it) } ?: listOf(),
         clientId = from.clientId,
         nonce = from.nonce,
         state = from.state,
-        redirectUri = from.redirectUri!!, // TODO discuss with the team
+        redirectUri = from.redirectUri ?: "",
         responseUri = from.responseUri,
         isCrossDeviceFlow = isCrossDeviceFlow,
         presentationDefinition = from.presentationDefinition,
         clientMetadata = from.clientMetadata?.let { PartnerMetadata(it) },
         clientIdScheme = from.clientIdScheme,
-        presentation_definition_uri = from.presentationDefinitionUri,
+        presentationDefinitionUri = from.presentationDefinitionUri,
         responseType = from.responseType,
         responseMode = from.responseMode
     )

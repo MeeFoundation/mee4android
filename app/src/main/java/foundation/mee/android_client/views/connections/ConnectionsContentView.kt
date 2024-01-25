@@ -6,13 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,7 +23,6 @@ import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.navigation.Navigator
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.Border
-import foundation.mee.android_client.ui.theme.DefaultGray200
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.TextActive
 import foundation.mee.android_client.ui.theme.publicSansFamily
@@ -38,11 +35,10 @@ fun ConnectionsContent(
     searchViewModel: SearchViewModel = hiltViewModel(),
     navigator: Navigator = hiltViewModel<NavViewModel>().navigator
 ) {
-    val connectionsWeb by searchViewModel.getWebConnectors().collectAsState(listOf())
-    val connectionsMobile by searchViewModel.getMobileConnectors().collectAsState(listOf())
+    val connections by searchViewModel.getConnectionsFlow().collectAsState(listOf())
     val searchMenu by searchViewModel.searchMenu.collectAsState()
 
-    if (connectionsWeb.isEmpty() && connectionsMobile.isEmpty() && searchMenu) {
+    if (connections.isEmpty() && searchMenu) {
         Column() {
             Text(
                 text = stringResource(R.string.empty_search_result),
@@ -67,15 +63,8 @@ fun ConnectionsContent(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        if (connectionsWeb.isNotEmpty()) {
-            item {
-                Text(
-                    text = stringResource(R.string.connections_list_sites_title),
-                    style = MaterialTheme.typography.h6,
-                    modifier = modifier.padding(horizontal = 4.dp)
-                )
-            }
-            items(items = connectionsWeb,
+        if (connections.isNotEmpty()) {
+            items(items = connections,
                 key = { connection ->
                     connection.name
                 }) { connection ->
@@ -83,32 +72,7 @@ fun ConnectionsContent(
                     hasEntry = true,
                     connection = connection,
                     modifier = Modifier.clickableWithoutRipple {
-                        navigator.navigateToManageScreen(connection.otherPartyConnectionId)
-                    }
-                )
-            }
-        }
-        if (connectionsMobile.isNotEmpty()) {
-            item {
-                Text(
-                    text = stringResource(R.string.connections_list_sites_mobile_apps),
-                    style = MaterialTheme.typography.h6,
-                    modifier = modifier
-                        .padding(
-                            horizontal = 4.dp
-                        )
-                        .padding(top = 24.dp)
-                )
-            }
-            items(items = connectionsMobile,
-                key = { connection ->
-                    connection.name
-                }) { connection ->
-                PartnerEntry(
-                    hasEntry = true,
-                    connection = connection,
-                    modifier = Modifier.clickableWithoutRipple {
-                        navigator.navigateToManageScreen(connection.otherPartyConnectionId)
+                        navigator.navigateToManageScreen(connection.id)
                     }
                 )
             }
