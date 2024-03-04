@@ -23,8 +23,7 @@ import foundation.mee.android_client.ui.theme.publicSansFamily
 @Composable
 fun PartnerEntry(
     connection: MeeConnection,
-    modifier: Modifier = Modifier,
-    hasEntry: Boolean = false
+    modifier: Modifier = Modifier
 ) {
 
     Surface(
@@ -45,6 +44,7 @@ fun PartnerEntry(
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(
+                        // todo проверить https тут и в другом месте
                         model = "https://${connection.id}/favicon.ico"
                     ),
                     contentDescription = null,
@@ -68,18 +68,6 @@ fun PartnerEntry(
                     }
                 }
             }
-//            if (hasEntry) {
-//                Icon(
-//                    imageVector = ImageVector.vectorResource(
-//                        id = R.drawable.icon_chevron_right,
-//                    ),
-//                    contentDescription = null,
-//                    tint = ChevronRightIconColor,
-//                    modifier = modifier
-//                        .padding(end = 8.dp)
-//                        .size(width = 9.dp, height = 16.dp)
-//                )
-//            }
         }
     }
 }
@@ -90,8 +78,7 @@ fun PartnerEntry(
 fun PreviewPrintConnectionSummary() {
     MeeIdentityAgentTheme {
         PartnerEntry(
-            connection = meConnectionMock,
-            hasEntry = true,
+            connection = meConnectionMock
         )
     }
 }

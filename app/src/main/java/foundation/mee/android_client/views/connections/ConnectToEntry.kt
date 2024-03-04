@@ -55,9 +55,10 @@ fun ConnectToEntry(
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                // TODO
                 Image(
                     painter = rememberAsyncImagePainter(
-                        model = "https://${connector.id}/favicon.ico"
+                        model = "${connector.id}/favicon.ico"
                     ),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,

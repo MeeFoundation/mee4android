@@ -69,6 +69,8 @@ fun ConsentPageNew(
 
     val state = rememberConsentPageNewState()
 
+    val visibleConsentEntryDuration = requiredClaims.firstOrNull { it.id == state.durationPopupId }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.surface,
@@ -244,9 +246,7 @@ fun ConsentPageNew(
                                             id,
                                             isOpen
                                         )
-                                    }) {
-                                    state.durationPopupId = it.id
-                                }
+                                    })
                             }
                         }
                     }
@@ -345,7 +345,7 @@ fun ConsentPageNew(
         }
     }
 
-    if (state.shouldShowDurationPopup) {
+    if (state.shouldShowDurationPopup && visibleConsentEntryDuration != null) {
         Dialog(
             onDismissRequest = {},
         ) {
@@ -359,13 +359,13 @@ fun ConsentPageNew(
             Surface(
                 modifier = Modifier.fillMaxWidth(1f)
             ) {
-                if (state.shouldShowDurationPopup) {
-                    ConsentDuration(
-                        consentEntries = data.claims,
-                        id = state.durationPopupId!!
-                    ) {
-                        state.durationPopupId = null
+                ConsentDuration(
+                    consentEntry = visibleConsentEntryDuration,
+                    onSave = {
+                        visibleConsentEntryDuration.retentionDuration = it
                     }
+                ) {
+                    state.durationPopupId = null
                 }
             }
         }

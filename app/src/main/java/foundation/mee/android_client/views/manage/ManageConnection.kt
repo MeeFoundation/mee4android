@@ -29,6 +29,10 @@ fun ManageConnection(
                 ManageConnectionContent(
                     modifier = Modifier.padding(padding),
                     manageConnectionData = manageConnectionData,
+                    onRemoveConnector = {
+                        manageConnectionViewModel.removeConnector(it)
+                        manageConnectionViewModel.updateViewmodel()
+                    },
                     onRemoveConnection = {
                         manageConnectionViewModel.removeConnection(it, navigator)
                     }

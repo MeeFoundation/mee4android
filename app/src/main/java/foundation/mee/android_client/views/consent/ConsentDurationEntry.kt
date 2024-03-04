@@ -6,7 +6,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -15,9 +14,8 @@ import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.ui.theme.publicSansFamily
 import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
-import foundation.mee.android_client.ui.theme.LabelLightSecondary
+import foundation.mee.android_client.ui.theme.DefaultGray400
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
-import foundation.mee.android_client.ui.theme.SystemBlueLight
 import foundation.mee.android_client.ui.theme.TextActive
 import foundation.mee.android_client.ui.theme.TextSecondary
 
@@ -26,15 +24,19 @@ fun ConsentDurationEntry(
     text: String,
     description: String,
     selected: Boolean,
-    modifier: Modifier = Modifier,
+    isDisabled: Boolean = false,
     onClick: () -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .clickableWithoutRipple { onClick() }
+            .clickableWithoutRipple {
+                if (!isDisabled) {
+                    onClick()
+                }
+            }
             .padding(vertical = 8.dp)
 
     ) {
@@ -62,7 +64,7 @@ fun ConsentDurationEntry(
                 id = if (selected) R.drawable.radio_selected else R.drawable.radio_empty
             ),
             contentDescription = null,
-            tint = MeeGreenPrimaryColor,
+            tint = if (isDisabled) DefaultGray400 else MeeGreenPrimaryColor,
             modifier = Modifier
                 .width(24.dp)
                 .height(24.dp)

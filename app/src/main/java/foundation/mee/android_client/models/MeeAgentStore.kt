@@ -60,13 +60,17 @@ class MeeAgentStore @Inject constructor(
         }
     }
 
-    fun getAllConnections(): List<MeeConnection>? {
+    private fun getAllConnections(): List<MeeConnection>? {
         return try {
             agent.otherPartyConnections().map { MeeConnection(it) }
         } catch (e: Exception) {
             Log.e("error getting all connections: ", e.message.orEmpty())
             null
         }
+    }
+
+    fun getConnectionsWithConnectors(): List<MeeConnection>? {
+        return getAllConnections()?.filter { !getConnectionConnectors(it.id).isNullOrEmpty() }
     }
 
     fun getLastConnectionConsentById(id: String): MeeContext? {
@@ -102,7 +106,7 @@ class MeeAgentStore @Inject constructor(
         }
     }
 
-    fun removeItemByConnectorId(id: String): String? { // TODO не удаляется коннекшн
+    fun removeConnectorById(id: String): String? {
         return try {
             agent.deleteOtherPartyConnector(id)
             id
@@ -112,7 +116,16 @@ class MeeAgentStore @Inject constructor(
         }
     }
 
-    // TODO
+    fun removeConnectionById(id: String): String? {
+        return try {
+            agent.deleteOtherPartyConnection(id)
+            id
+        } catch (e: Exception) {
+            Log.e("removeItem", e.message.orEmpty())
+            null
+        }
+    }
+
     fun isReturningUser(id: String): Boolean =
         getConnectionConnectors(getHostname(id))?.isNotEmpty() ?: false
 

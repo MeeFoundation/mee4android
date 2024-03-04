@@ -37,7 +37,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun getAllConnections(): List<MeeConnection> {
-        return meeAgentStore.getAllConnections() ?: listOf()
+        return meeAgentStore.getConnectionsWithConnectors() ?: listOf()
     }
 
     fun onChange(query: String) {

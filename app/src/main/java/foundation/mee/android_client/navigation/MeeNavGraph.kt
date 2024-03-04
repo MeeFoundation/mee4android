@@ -22,7 +22,6 @@ import foundation.mee.android_client.views.consent.ConsentPage
 import foundation.mee.android_client.views.initial_flow.InitialFlow
 import foundation.mee.android_client.views.manage.ManageConnection
 import foundation.mee.android_client.views.settings.MeeSettingsView
-import foundation.mee.android_client.views.sidebar.MeeSidebarMenu
 import foundation.mee.android_client.views.welcome_pages.WelcomePage
 
 @Composable
@@ -60,9 +59,7 @@ fun MeeNavGraph(
                 type = NavType.StringType
             })
         ) {
-            MeeSidebarMenu {
-                ManageConnection()
-            }
+            ManageConnection()
         }
 
         composable(

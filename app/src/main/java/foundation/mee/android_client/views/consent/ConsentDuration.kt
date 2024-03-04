@@ -2,7 +2,6 @@ package foundation.mee.android_client.views.consent
 
 import android.view.Gravity
 import android.view.ViewGroup
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -29,17 +28,15 @@ import foundation.mee.android_client.utils.getConsentEntryIconByType
 import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.*
-import foundation.mee.android_client.views.MeeWhiteScreen
-import foundation.mee.android_client.views.connections.WarningPopup
-import foundation.mee.android_client.views.initial_flow.BaseBottomMessage
-import foundation.mee.android_client.views.initial_flow.BottomMessage
-import foundation.mee.android_client.views.initial_flow.InitialFlowSteps
 import uniffi.mee_agent.RetentionDuration
 
 @Composable
-fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onComplete: () -> Unit) {
-
-    val consentEntry = consentEntries.first { it.id == id }
+fun ConsentDuration(
+    consentEntry: ConsentRequestClaim,
+    isReadOnly: Boolean = false,
+    onSave: (RetentionDuration) -> Unit,
+    onClose: () -> Unit
+) {
 
     var storageDuration by rememberSaveable {
         mutableStateOf(
@@ -140,6 +137,7 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
                                     text = stringResource(durationElement.name),
                                     description = stringResource(durationElement.description),
                                     selected = durationElement.value == storageDuration,
+                                    isDisabled = isReadOnly,
                                 ) {
                                     storageDuration = durationElement.value
                                 }
@@ -157,29 +155,40 @@ fun ConsentDuration(consentEntries: List<ConsentRequestClaim>, id: String, onCom
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-                        Text(
-                            text = stringResource(R.string.negative_button_text),
-                            color = MeeGreenPrimaryColor,
-                            fontFamily = publicSansFamily,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight(500),
-                            modifier = Modifier
-                                .padding(end = 32.dp)
-                                .clickableWithoutRipple { onComplete() }
-                        )
-                        Text(
-                            text = stringResource(R.string.save_button_text),
-                            color = MeeGreenPrimaryColor,
-                            fontFamily = publicSansFamily,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight(500),
-                            modifier = Modifier
-                                .clickableWithoutRipple {
-                                    consentEntries.first { it.id == id }.retentionDuration =
-                                        storageDuration
-                                    onComplete()
-                                }
-                        )
+                        if (isReadOnly) {
+                            Text(
+                                text = stringResource(R.string.close_button_text),
+                                color = MeeGreenPrimaryColor,
+                                fontFamily = publicSansFamily,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight(500),
+                                modifier = Modifier
+                                    .clickableWithoutRipple { onClose() }
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(R.string.negative_button_text),
+                                color = MeeGreenPrimaryColor,
+                                fontFamily = publicSansFamily,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight(500),
+                                modifier = Modifier
+                                    .padding(end = 32.dp)
+                                    .clickableWithoutRipple { onClose() }
+                            )
+                            Text(
+                                text = stringResource(R.string.save_button_text),
+                                color = MeeGreenPrimaryColor,
+                                fontFamily = publicSansFamily,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight(500),
+                                modifier = Modifier
+                                    .clickableWithoutRipple {
+                                        onSave(storageDuration)
+                                        onClose()
+                                    }
+                            )
+                        }
                     }
                 }
             }

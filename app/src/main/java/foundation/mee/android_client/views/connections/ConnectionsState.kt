@@ -23,7 +23,7 @@ class ConnectionsState(
 )
 
 fun getOtherPartners(meeAgentStore: MeeAgentStore): List<MeeConnector> {
-    val data = meeAgentStore.getAllConnections()
+    val data = meeAgentStore.getConnectionsWithConnectors()
     return PartnersRegistry.shared.filter { x ->
         val isNotPresentedInExistingList =
             data?.find { it.id == x.otherPartyConnectionId } == null

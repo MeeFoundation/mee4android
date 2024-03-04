@@ -44,11 +44,17 @@ class ManageConnectionViewModel @Inject constructor(
         }
     }
 
+    fun updateViewmodel() {
+        viewModelScope.launch {
+            loadData()
+        }
+    }
+
     private fun loadData() {
         try {
             val hostname: String = checkNotNull(savedStateHandle["connectionHostname"])
             val meeConnection =
-                meeAgentStore.getAllConnections()?.first { it.id == hostname }
+                meeAgentStore.getConnectionsWithConnectors()?.first { it.id == hostname }
             if (meeConnection != null) {
                 val meeConnectors = meeAgentStore.getConnectionConnectors(hostname)
                 if (meeConnectors != null) {
@@ -60,14 +66,10 @@ class ManageConnectionViewModel @Inject constructor(
                             )
                         }
                     }
-                    if (res.isNotEmpty()) {
-                        _screenData.value =
-                            ConnectionDataState.Success(
-                                ManageConnectionData(meeConnection, res)
-                            )
-                    } else {
-                        _screenData.value = ConnectionDataState.None
-                    }
+                    _screenData.value =
+                        ConnectionDataState.Success(
+                            ManageConnectionData(meeConnection, res)
+                        )
                 } else {
                     _screenData.value = ConnectionDataState.None
                 }
@@ -98,14 +100,16 @@ class ManageConnectionViewModel @Inject constructor(
         }
     }
 
-
-    // TODO check naming
     fun removeConnection(id: String, navigator: Navigator) {
-        meeAgentStore.removeItemByConnectorId(id)
+        meeAgentStore.removeConnectionById(id)
         navigator.navController.navigate(MeeDestinations.CONNECTIONS.route) {
             popUpTo(MeeDestinations.CONNECTIONS.route) {
                 inclusive = true
             }
         }
+    }
+
+    fun removeConnector(id: String) {
+        meeAgentStore.removeConnectorById(id)
     }
 }

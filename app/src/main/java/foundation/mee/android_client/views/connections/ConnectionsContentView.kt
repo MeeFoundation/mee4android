@@ -69,7 +69,6 @@ fun ConnectionsContent(
                     connection.name
                 }) { connection ->
                 PartnerEntry(
-                    hasEntry = true,
                     connection = connection,
                     modifier = Modifier.clickableWithoutRipple {
                         navigator.navigateToManageScreen(connection.id)

@@ -1,38 +1,54 @@
 package foundation.mee.android_client.views.manage
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material.Button
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.ScrollableTabRow
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ManageConnectionData
+import foundation.mee.android_client.models.manageConnectionDataMock
+import foundation.mee.android_client.ui.components.NoRippleInteractionSource
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.*
-import foundation.mee.android_client.views.connections.PartnerEntry
+import foundation.mee.android_client.views.connections.ConnectionEntry
 import foundation.mee.android_client.views.connections.WarningPopup
+
+
+private fun checkType(consentEntriesType: ConsentEntriesType): Int {
+    return when (consentEntriesType) {
+        is ConsentEntriesType.SiopClaims -> R.string.profile
+        is ConsentEntriesType.GapiEntries -> R.string.google_account
+    }
+}
 
 @Composable
 fun ManageConnectionContent(
     modifier: Modifier = Modifier,
     manageConnectionData: ManageConnectionData,
-    onRemoveConnection: (String) -> Unit,
+    onRemoveConnector: (String) -> Unit,
+    onRemoveConnection: (String) -> Unit
 ) {
     var showRemoveConnectionWarning by remember {
+        mutableStateOf(false)
+    }
+
+    var showRemoveConnectorWarning by remember {
         mutableStateOf(false)
     }
 
@@ -48,94 +64,157 @@ fun ManageConnectionContent(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = modifier
-                .padding(start = 16.dp, end = 16.dp, top = 10.dp)
+            modifier = modifier.padding(top = 10.dp)
         ) {
-            PartnerEntry(
+            ConnectionEntry(
                 connection = manageConnectionData.meeConnection,
-                modifier = Modifier
-                    .padding(bottom = 48.dp, top = 16.dp)
-                    .border(border = BorderStroke(2.dp, MeeGreenPrimaryColor))
+                description = String.format(
+                    pluralStringResource(
+                        id = R.plurals.connection_entry_description,
+                        count = entries.size
+                    ), entries.size
+                ),
+                onDelete = { showRemoveConnectionWarning = true })
+            Divider(
+                color = DividerColor,
+                thickness = 1.dp
             )
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 128.dp)
-            ) {
-                itemsIndexed(items = entries) { index, item ->
-                    when (item.consentEntriesType) {
-                        is ConsentEntriesType.SiopClaims -> {
-                            Button(onClick = {
-                                visibleEntryIndex = index
-                            }) {
+            if (entries.isNotEmpty()) {
+                ScrollableTabRow(
+                    selectedTabIndex = visibleEntryIndex,
+                    backgroundColor = Color.Transparent,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            color = TabIndicator,
+                            height = 3.dp,
+                            modifier = Modifier
+                                .tabIndicatorOffset(tabPositions[visibleEntryIndex])
+                        )
+                    },
+                    divider = {}) {
+                    entries.forEachIndexed { index, item ->
+                        Tab(
+                            selected = index == visibleEntryIndex,
+                            onClick = { visibleEntryIndex = index },
+                            text = {
                                 Text(
-                                    text = "User Profile",
-                                    color = if (index == visibleEntryIndex) MeeGreenPrimaryColor else Color.Gray
+                                    text = stringResource(id = checkType(item.consentEntriesType)),
+                                    fontFamily = publicSansFamily,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 14.sp,
+                                    lineHeight = 20.sp,
+                                    letterSpacing = 0.1.sp
                                 )
-                            }
-                        }
-
-                        is ConsentEntriesType.GapiEntries -> {
-                            Button(onClick = {
-                                visibleEntryIndex = index
-                            }) {
-                                Text(
-                                    text = "Google account",
-                                    color = if (index == visibleEntryIndex) MeeGreenPrimaryColor else Color.Gray
-                                )
-                            }
-                        }
+                            },
+                            selectedContentColor = TextActive,
+                            unselectedContentColor = DarkText,
+                            modifier = Modifier
+                                .height(48.dp),
+                            interactionSource = NoRippleInteractionSource()
+                        )
                     }
                 }
+                Divider(
+                    color = DividerColor,
+                    thickness = 1.dp
+                )
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 16.dp)
+                ) {
+                    ManageConnectorContent(
+                        entries = entries[visibleEntryIndex].consentEntriesType
+                    )
+                }
             }
-
-            ManageConnectorContent(entries = manageConnectionData.connectorToEntries[visibleEntryIndex].consentEntriesType)
         }
-        Row(
-            Modifier
-                .padding(bottom = 26.dp)
-                .clickableWithoutRipple
-                { showRemoveConnectionWarning = true }
-        ) {
+        if (entries.isNotEmpty()) {
             Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
+                Modifier
+                    .padding(bottom = 26.dp)
             ) {
-                Icon(
-                    imageVector =
-                    ImageVector.vectorResource(
-                        id = R.drawable.trash
-                    ),
-                    contentDescription = null,
-                    tint = WarningRed,
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .width(18.dp)
-                )
-                Text(
-                    text = stringResource(R.string.manage_connection_delete_button),
-                    fontFamily = publicSansFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = WarningRed,
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                )
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector =
+                        ImageVector.vectorResource(
+                            id = R.drawable.trash
+                        ),
+                        contentDescription = null,
+                        tint = WarningRed,
+                        modifier = Modifier
+                            .width(18.dp)
+                    )
+                    Text(
+                        text = String.format(
+                            stringResource(R.string.delete_connector),
+                            stringResource(checkType(entries[visibleEntryIndex].consentEntriesType))
+                        ),
+                        fontFamily = publicSansFamily,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = WarningRed,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .clickableWithoutRipple { showRemoveConnectorWarning = true }
+                    )
 
+                }
             }
         }
 
     }
-    if (showRemoveConnectionWarning)
+
+    if (showRemoveConnectionWarning) {
         WarningPopup(
             icon = R.drawable.exclamation_mark,
-            title = R.string.connection_delete_connection_title,
+            title = String.format(
+                stringResource(R.string.connection_delete_connection_title),
+                manageConnectionData.meeConnection.name
+            ),
             messageText = R.string.connection_delete_connection_message,
             buttonText = R.string.delete_popup_button_text,
             additionalButtonText = R.string.negative_button_text,
             onAdditionalButtonClick = { showRemoveConnectionWarning = false }
         ) {
             showRemoveConnectionWarning = false
-            onRemoveConnection(entries[visibleEntryIndex].meeConnector.id)
+            onRemoveConnection(manageConnectionData.meeConnection.id)
         }
+    }
 
+    if (showRemoveConnectorWarning) {
+        WarningPopup(
+            icon = R.drawable.exclamation_mark,
+            title = String.format(
+                stringResource(R.string.delete_data_group_title),
+                stringResource(checkType(entries[visibleEntryIndex].consentEntriesType)),
+                manageConnectionData.meeConnection.name
+            ),
+            messageText = R.string.delete_data_group_message,
+            buttonText = R.string.delete_popup_button_text,
+            additionalButtonText = R.string.negative_button_text,
+            onAdditionalButtonClick = { showRemoveConnectorWarning = false }
+        ) {
+            showRemoveConnectorWarning = false
+            onRemoveConnector(entries[visibleEntryIndex].meeConnector.id)
+            visibleEntryIndex = maxOf(0, visibleEntryIndex - 1)
+        }
+    }
+
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@Composable
+fun PreviewManageConnectionContent() {
+    MeeIdentityAgentTheme {
+        ManageConnectionContent(
+            manageConnectionData = manageConnectionDataMock,
+            onRemoveConnector = {}
+        ) {}
+    }
 }

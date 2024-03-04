@@ -15,16 +15,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ConsentEntryType
-import foundation.mee.android_client.utils.getConsentEntryIconByType
 import foundation.mee.android_client.models.ConsentRequestClaim
+import foundation.mee.android_client.models.manageConnectionDataMock
 import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.ui.components.Toggle
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
+import foundation.mee.android_client.views.manage.ConsentEntriesType.SiopClaims
 
 @Composable
 fun ConsentEntry(
@@ -121,33 +123,47 @@ fun ConsentEntry(
                     }
 
                 }
-                if (isReadOnly || !entry.isOn) Box(modifier = Modifier
-                    .matchParentSize()
-                    .background(Color.White.copy(alpha = 0.3f))
-                    .border(BorderStroke(width = 1.dp, color = InactiveCover.copy(alpha = 0.5f)))
-                )
-            }
-        }
-        if (!isReadOnly) {
-            if (!entry.isRequired) {
-                Toggle(entry.isOn, onChange, modifier = Modifier.height(16.dp))
-            } else {
-                Icon(
-                    imageVector = ImageVector.vectorResource(
-                        id = R.drawable.storage_duration,
-                    ),
-                    contentDescription = null,
-                    tint = Color.Unspecified,
+                if (isReadOnly || !entry.isOn) Box(
                     modifier = Modifier
-                        .padding(start = 8.dp)
-                        .width(48.dp)
-                        .clickableWithoutRipple {
-                            onDurationPopupShow()
-                        }
+                        .matchParentSize()
+                        .background(Color.White.copy(alpha = 0.3f))
+                        .border(
+                            BorderStroke(
+                                width = 1.dp,
+                                color = InactiveCover.copy(alpha = 0.5f)
+                            )
+                        )
                 )
-
             }
         }
-
+        if (entry.isRequired) {
+            Icon(
+                imageVector = ImageVector.vectorResource(
+                    id = R.drawable.storage_duration,
+                ),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .width(48.dp)
+                    .clickableWithoutRipple {
+                        onDurationPopupShow()
+                    }
+            )
+        } else {
+            if (!isReadOnly) {
+                Toggle(entry.isOn, onChange, modifier = Modifier.height(16.dp))
+            }
+        }
     }
+}
+
+@Preview
+@Composable
+fun ConsentEntryPreview() {
+    val entry = manageConnectionDataMock.connectorToEntries[0].consentEntriesType as SiopClaims
+    ConsentEntry(
+        entry = entry.value.first(),
+        isReadOnly = false
+    )
 }

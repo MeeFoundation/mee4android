@@ -24,6 +24,7 @@ fun Sidebar(
 ) {
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             ModalDrawerSheet(
                 drawerContainerColor = Color.White,

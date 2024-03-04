@@ -24,10 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import foundation.mee.android_client.R
-import foundation.mee.android_client.ui.components.DeclineButton
-import foundation.mee.android_client.ui.components.MainButton
 import foundation.mee.android_client.ui.components.PopupButton
-import foundation.mee.android_client.ui.components.PrimaryButton
 import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.utils.goToSystemSettings
 import foundation.mee.android_client.utils.sendFeedback
@@ -40,11 +37,38 @@ fun BottomMessage(
     buttonText: Int? = null,
     additionalButtonText: Int? = null,
     onAdditionalButtonClick: (() -> Unit)? = null,
-    buttonColor: Color? = null,
     bottomMessageHeader: @Composable () -> Unit = {},
     message: Int,
     @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier.padding(bottom = 24.dp),
-    title: Int? = null,
+    title: Int,
+    onNext: () -> Unit
+) {
+    BottomMessage(
+        icon = icon,
+        iconSize = iconSize,
+        buttonText = buttonText,
+        additionalButtonText = additionalButtonText,
+        onAdditionalButtonClick = onAdditionalButtonClick,
+        bottomMessageHeader = bottomMessageHeader,
+        message = message,
+        textModifier = textModifier,
+        title = stringResource(id = title),
+    ) {
+        onNext()
+    }
+}
+
+@Composable
+fun BottomMessage(
+    icon: Int?,
+    iconSize: Dp?,
+    buttonText: Int? = null,
+    additionalButtonText: Int? = null,
+    onAdditionalButtonClick: (() -> Unit)? = null,
+    bottomMessageHeader: @Composable () -> Unit = {},
+    message: Int,
+    @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier.padding(bottom = 24.dp),
+    title: String? = null,
     onNext: () -> Unit
 ) {
     BaseBottomMessage(
@@ -55,7 +79,7 @@ fun BottomMessage(
         textModifier = textModifier,
         bottomMessageHeader = bottomMessageHeader
     ) {
-        Row() {
+        Row {
             Spacer(Modifier.weight(1f))
             additionalButtonText?.let {
                 PopupButton(
@@ -113,7 +137,28 @@ fun RestrictBottomMessage(
 fun BaseBottomMessage(
     icon: Int?,
     iconSize: Dp?,
-    title: Int?,
+    title: Int,
+    message: Int,
+    bottomMessageHeader: @Composable () -> Unit = {},
+    @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    BaseBottomMessage(
+        icon = icon,
+        iconSize = iconSize,
+        title = stringResource(title),
+        message = message,
+        bottomMessageHeader = bottomMessageHeader,
+        textModifier = textModifier,
+        content = content
+    )
+}
+
+@Composable
+private fun BaseBottomMessage(
+    icon: Int?,
+    iconSize: Dp?,
+    title: String?,
     message: Int,
     bottomMessageHeader: @Composable () -> Unit = {},
     @SuppressLint("ModifierParameter") textModifier: Modifier = Modifier,
@@ -121,7 +166,14 @@ fun BaseBottomMessage(
 ) {
     Surface(
         color = DurationPopupBackground,
-        modifier = Modifier.clip(RoundedCornerShape(topEnd = 28.dp, topStart = 28.dp, bottomEnd = 28.dp, bottomStart = 28.dp))
+        modifier = Modifier.clip(
+            RoundedCornerShape(
+                topEnd = 28.dp,
+                topStart = 28.dp,
+                bottomEnd = 28.dp,
+                bottomStart = 28.dp
+            )
+        )
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -147,7 +199,7 @@ fun BaseBottomMessage(
                 }
                 title?.let {
                     Text(
-                        text = stringResource(title),
+                        text = title,
                         fontFamily = publicSansFamily,
                         fontWeight = FontWeight(700),
                         color = Color.Black,
