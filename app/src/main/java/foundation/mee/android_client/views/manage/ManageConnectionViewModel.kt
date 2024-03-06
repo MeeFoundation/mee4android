@@ -85,7 +85,7 @@ class ManageConnectionViewModel @Inject constructor(
     private fun toConsentEntriesType(connector: MeeConnector): ConsentEntriesType? {
         return when (connector.connectorProtocol) {
             is MeeConnectorProtocol.Siop -> {
-                meeAgentStore.getLastConnectionConsentByConnectorId(connector.id)
+                meeAgentStore.getLastConsentByConnectorId(connector.id)
                     ?.let { meeContext ->
                         ConsentEntriesType.SiopClaims(meeContext.attributes)
                     }

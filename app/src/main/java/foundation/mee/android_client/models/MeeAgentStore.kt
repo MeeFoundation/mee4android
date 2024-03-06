@@ -73,19 +73,7 @@ class MeeAgentStore @Inject constructor(
         return getAllConnections()?.filter { !getConnectionConnectors(it.id).isNullOrEmpty() }
     }
 
-    private fun getLastConsentByConnectorId(id: String): MeeContext? {
-        return try {
-            val coreConsent = agent.siopLastConsentByConnectorId(connId = id)
-            if (coreConsent != null) {
-                MeeContext(coreConsent)
-            } else null
-        } catch (e: Exception) {
-            Log.e("getLastConnectionConsent", e.message.orEmpty())
-            null
-        }
-    }
-
-    fun getLastConnectionConsentByConnectorId(id: String): MeeContext? {
+     fun getLastConsentByConnectorId(id: String): MeeContext? {
         return try {
             val coreConsent = agent.siopLastConsentByConnectorId(connId = id)
             if (coreConsent != null) {
