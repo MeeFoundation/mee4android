@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.util.Base64
+import android.util.Log
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ConsentRequest
 import uniffi.mee_agent.siopRpAuthRequestFromUrl
@@ -42,10 +43,9 @@ fun buildConsentRequestFromUrl(url: String): ConsentRequest? {
         val res = siopRpAuthRequestFromUrl(url)
         val respondTo = Uri.parse(url).getQueryParameter("respondTo")
         val isCrossDeviceFlow = respondTo != null && respondTo == "proxy"
-        res.redirectUri?.let {
-            ConsentRequest(res, isCrossDeviceFlow)
-        }
+        ConsentRequest(res, isCrossDeviceFlow)
     } catch (e: Exception) {
+        Log.e("Error building consent request from url", e.message.orEmpty())
         null
     }
 }

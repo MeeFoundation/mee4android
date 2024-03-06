@@ -6,8 +6,6 @@ import com.intuit.fuzzymatcher.domain.Element
 import com.intuit.fuzzymatcher.domain.ElementType
 import com.intuit.fuzzymatcher.domain.Match
 import foundation.mee.android_client.models.MeeConnection
-import foundation.mee.android_client.models.MeeConnector
-import foundation.mee.android_client.models.MeeConnectorType
 
 object FuzzySearchHelper {
 

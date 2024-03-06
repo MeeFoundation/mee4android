@@ -60,7 +60,6 @@ fun ConnectionEntry(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // TODO check
                 Image(
                     painter = rememberAsyncImagePainter(
                         model = "https://${connection.id}/favicon.ico"

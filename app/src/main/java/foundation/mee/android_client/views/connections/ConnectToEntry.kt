@@ -1,7 +1,6 @@
 package foundation.mee.android_client.views.connections
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,14 +23,11 @@ import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeConnector
 import foundation.mee.android_client.ui.theme.DarkText
-import foundation.mee.android_client.ui.theme.DurationPopupBackground
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
-import foundation.mee.android_client.ui.theme.PartnerEntryBackgroundColor
 
 @Composable
 fun ConnectToEntry(
     connector: MeeConnector,
-    isLight: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -39,13 +35,6 @@ fun ConnectToEntry(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                if (isLight) {
-                    DurationPopupBackground
-                } else {
-                    PartnerEntryBackgroundColor
-                }
-            )
             .sizeIn(minHeight = 56.dp)
             .padding(start = 16.dp, end = 24.dp),
     ) {
@@ -55,7 +44,6 @@ fun ConnectToEntry(
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // TODO
                 Image(
                     painter = rememberAsyncImagePainter(
                         model = "${connector.id}/favicon.ico"

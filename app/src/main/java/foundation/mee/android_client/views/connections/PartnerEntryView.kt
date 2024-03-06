@@ -44,7 +44,6 @@ fun PartnerEntry(
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(
-                        // todo проверить https тут и в другом месте
                         model = "https://${connection.id}/favicon.ico"
                     ),
                     contentDescription = null,

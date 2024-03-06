@@ -13,7 +13,7 @@ data class ConsentRequest(
     val responseUri: Url?,
     val isCrossDeviceFlow: Boolean = false,
     var presentationDefinition: PresentationDefinition?,
-    val clientMetadata: PartnerMetadata?,
+    val clientMetadata: PartnerMetadata,
     val clientIdScheme: ClientIdScheme?,
     val presentationDefinitionUri: String?,
     val responseType: OidcResponseType,
@@ -44,17 +44,19 @@ data class ConsentRequest(
         from: OidcAuthRequest,
         isCrossDeviceFlow: Boolean
     ) : this(
-        id = from.clientId,
+        id = from.redirectUri ?: throw IllegalArgumentException("Redirect uri is required"),
         scope = from.scope,
         claims = from.claims?.idToken?.let { claimsMapper(it) } ?: listOf(),
         clientId = from.clientId,
         nonce = from.nonce,
         state = from.state,
-        redirectUri = from.redirectUri ?: "",
+        redirectUri = from.redirectUri
+            ?: throw IllegalArgumentException("Redirect uri is required"),
         responseUri = from.responseUri,
         isCrossDeviceFlow = isCrossDeviceFlow,
         presentationDefinition = from.presentationDefinition,
-        clientMetadata = from.clientMetadata?.let { PartnerMetadata(it) },
+        clientMetadata = from.clientMetadata?.let { PartnerMetadata(it) }
+            ?: throw IllegalArgumentException("Client metadata is required"),
         clientIdScheme = from.clientIdScheme,
         presentationDefinitionUri = from.presentationDefinitionUri,
         responseType = from.responseType,

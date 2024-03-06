@@ -10,87 +10,6 @@ val meConnectionMock = MeeConnection(
     name = "Mee Foundation"
 )
 
-
-val sites: List<MeeConnector> = listOf(
-    MeeConnector(
-        id = "https://www.nytimes.com",
-        name = "New York Times",
-        otherPartyConnectionId = "nytimes.com",
-        value = MeeConnectorType.Siop(
-            SiopConnectorType(
-                redirectUri = "https://www.nytimes.com",
-                clientMetadata = PartnerMetadata(
-                    from = OidcClientMetadata(
-                        applicationType = null,
-                        clientName = "New York Times",
-                        logoUri = "https://www.nytimes.com/favicon.ico",
-                        contacts = emptyList(),
-                        jwks = null,
-                        jwksUri = null,
-                        idTokenSignedResponseAlg = null,
-                        idTokenEncryptedResponseAlg = null,
-                        idTokenEncryptedResponseEnc = null,
-                        subjectSyntaxTypesSupported = listOf()
-                    )
-                ),
-                subjectSyntaxType = ConnectorTypeSubject.DidKey("")
-            )
-        )
-    )
-)
-val mobileApps: List<MeeConnector> = listOf(
-    MeeConnector(
-        id = "https://www.washingtonpost.com",
-        name = "The Washington Post",
-        otherPartyConnectionId = "washingtonpost.com",
-        value = MeeConnectorType.Siop(
-            SiopConnectorType(
-                redirectUri = "https://www.washingtonpost.com",
-                clientMetadata = PartnerMetadata(
-                    from = OidcClientMetadata(
-                        applicationType = null,
-                        clientName = "The Washington Post",
-                        logoUri = "https://www.washingtonpost.com/favicon.ico",
-                        contacts = emptyList(),
-                        jwks = null,
-                        jwksUri = null,
-                        idTokenSignedResponseAlg = null,
-                        idTokenEncryptedResponseAlg = null,
-                        idTokenEncryptedResponseEnc = null,
-                        subjectSyntaxTypesSupported = listOf()
-                    )
-                ),
-                subjectSyntaxType = ConnectorTypeSubject.DidKey("")
-            )
-        )
-    ),
-    MeeConnector(
-        id = "https://www.theguardian.com",
-        name = "The Guardian",
-        otherPartyConnectionId = "theguardian.com",
-        value = MeeConnectorType.Siop(
-            SiopConnectorType(
-                redirectUri = "https://www.theguardian.com",
-                clientMetadata = PartnerMetadata(
-                    from = OidcClientMetadata(
-                        applicationType = null,
-                        clientName = "The Guardian",
-                        logoUri = "https://www.theguardian.com/favicon.ico",
-                        contacts = emptyList(),
-                        jwks = null,
-                        jwksUri = null,
-                        idTokenSignedResponseAlg = null,
-                        idTokenEncryptedResponseAlg = null,
-                        idTokenEncryptedResponseEnc = null,
-                        subjectSyntaxTypesSupported = listOf()
-                    )
-                ),
-                subjectSyntaxType = ConnectorTypeSubject.DidKey("")
-            )
-        )
-    )
-)
-
 val manageConnectionDataMock = ManageConnectionData(
     meeConnection = MeeConnection(
         id = "oldeyorktimes.com",
@@ -102,14 +21,13 @@ val manageConnectionDataMock = ManageConnectionData(
                 id = "41bc4ae8-8175-453b-8212-f8ddc3d51e61",
                 name = "Olde York Times",
                 otherPartyConnectionId = "oldeyorktimes.com",
-                value = MeeConnectorType.Siop(
-                    value = SiopConnectorType(
+                connectorProtocol = MeeConnectorProtocol.Siop(
+                    value = SiopConnectorProtocol(
                         redirectUri = "https://oldeyorktimes.com/",
                         clientMetadata = PartnerMetadata(
                             name = "Olde York Times",
                             displayUrl = "Olde York Times",
                             logoUrl = "https://oldeyorktimes.com/favicon.png",
-                            type = ClientType.mobile,
                             contacts = null,
                             jwks = null,
                             jwksUri = null,
@@ -118,7 +36,7 @@ val manageConnectionDataMock = ManageConnectionData(
                             idTokenEncryptedResponseEnc = null,
                             subjectSyntaxTypesSupported = null
                         ),
-                        subjectSyntaxType = ConnectorTypeSubject.DidKey(
+                        subjectSyntaxType = ConnectorProtocolSubject.DidKey(
                             value = ""
                         )
                     )
@@ -133,7 +51,7 @@ val manageConnectionDataMock = ManageConnectionData(
                         attributeType = "https://schema.org/name",
                         businessPurpose = null,
                         isSensitive = true,
-                        value = "a",
+                        value = "Test",
                         retentionDuration = RetentionDuration.UNTIL_CONNECTION_DELETION,
                         isRequired = true,
                         type = ConsentEntryType.string,
@@ -177,14 +95,13 @@ val manageConnectionDataMock = ManageConnectionData(
                 id = "181c4d27-0e6c-4497-a57b-dc5f4aa97817",
                 name = "The Olde York Times",
                 otherPartyConnectionId = "oldeyorktimes.com",
-                value = MeeConnectorType.Siop(
-                    value = SiopConnectorType(
+                connectorProtocol = MeeConnectorProtocol.Siop(
+                    value = SiopConnectorProtocol(
                         redirectUri = "https://oldeyorktimes.com/#/login",
                         clientMetadata = PartnerMetadata(
                             name = "The Olde York Times",
                             displayUrl = "The Olde York Times",
                             logoUrl = "https://oldeyorktimes.com/favicon.png",
-                            type = ClientType.web,
                             contacts = null,
                             jwks = null,
                             jwksUri = null,
@@ -193,7 +110,7 @@ val manageConnectionDataMock = ManageConnectionData(
                             idTokenEncryptedResponseEnc = null,
                             subjectSyntaxTypesSupported = null
                         ),
-                        subjectSyntaxType = ConnectorTypeSubject.DidKey(
+                        subjectSyntaxType = ConnectorProtocolSubject.DidKey(
                             value = ""
                         )
                     )

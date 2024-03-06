@@ -9,7 +9,7 @@ import foundation.mee.android_client.models.ConnectorToEntries
 import foundation.mee.android_client.models.ManageConnectionData
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.models.MeeConnector
-import foundation.mee.android_client.models.MeeConnectorType
+import foundation.mee.android_client.models.MeeConnectorProtocol
 import foundation.mee.android_client.navigation.MeeDestinations
 import foundation.mee.android_client.navigation.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -83,15 +83,15 @@ class ManageConnectionViewModel @Inject constructor(
     }
 
     private fun toConsentEntriesType(connector: MeeConnector): ConsentEntriesType? {
-        return when (connector.value) {
-            is MeeConnectorType.Siop -> {
+        return when (connector.connectorProtocol) {
+            is MeeConnectorProtocol.Siop -> {
                 meeAgentStore.getLastConnectionConsentByConnectorId(connector.id)
                     ?.let { meeContext ->
                         ConsentEntriesType.SiopClaims(meeContext.attributes)
                     }
             }
 
-            is MeeConnectorType.Gapi -> {
+            is MeeConnectorProtocol.Gapi -> {
                 meeAgentStore.getExternalConsentsByConnectorId(connector.id)
                     ?.let { ConsentEntriesType.GapiEntries(it) }
             }

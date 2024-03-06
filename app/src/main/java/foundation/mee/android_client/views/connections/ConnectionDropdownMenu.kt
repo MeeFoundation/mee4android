@@ -45,7 +45,6 @@ fun ConnectionDropdownMenu(
             contentDescription = null,
             tint = TextSecondary,
             modifier = Modifier
-                .width(40.dp)
                 .height(40.dp)
                 .clickableWithoutRipple {
                     onClickMenu(!isDropdownOpen)
@@ -55,7 +54,7 @@ fun ConnectionDropdownMenu(
             expanded = isDropdownOpen,
             onDismissRequest = { onClickMenu(false) },
             modifier = Modifier
-                .crop(vertical = 8.dp)
+                .crop(vertical = 8.dp, horizontal = 8.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(4.dp))
         ) {
             DropdownMenuItem(onClick = onDelete) {
@@ -82,7 +81,7 @@ fun ConnectionDropdownMenu(
                         lineHeight = 20.sp,
                         letterSpacing = 0.1.sp,
                         modifier = Modifier
-                            .padding(start = 8.dp)
+                            .padding(horizontal = 6.dp)
                             .clickableWithoutRipple {
                                 onClickMenu(false)
                                 onDelete()

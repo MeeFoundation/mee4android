@@ -3,9 +3,10 @@ package foundation.mee.android_client.ui.theme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 private val LightColorPalette = lightColors(
-    surface = PartnerEntryBackgroundColor,
+    surface = Color.White,
     onSurface = PartnerEntryOnBackgroundColor,
     primaryVariant = Purple700,
     secondary = MeeBrand,

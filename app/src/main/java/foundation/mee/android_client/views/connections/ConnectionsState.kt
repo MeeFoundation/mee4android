@@ -27,16 +27,6 @@ fun getOtherPartners(meeAgentStore: MeeAgentStore): List<MeeConnector> {
     return PartnersRegistry.shared.filter { x ->
         val isNotPresentedInExistingList =
             data?.find { it.id == x.otherPartyConnectionId } == null
-        when (val connType = x.value) {
-            is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.web -> isNotPresentedInExistingList && meeAgentStore.getLastConnectionConsentById(
-                    x.otherPartyConnectionId
-                ) == null
-                else -> true
-            }
-
-            is MeeConnectorType.Gapi -> true
-            else -> true
-        }
+        isNotPresentedInExistingList || x.isGapi()
     }
 }

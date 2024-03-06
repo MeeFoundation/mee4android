@@ -40,11 +40,10 @@ fun ConsentPage(
     }
 
     val isReturningUser by rememberSaveable {
-        mutableStateOf(meeAgentStore.isReturningUser(consentRequest.id))
+        mutableStateOf(meeAgentStore.isReturningUser(consentRequest.redirectUri))
     }
 
-    // TODO rethink returning user flow in case of 2 connectors
-    if (/*isReturningUser*/false) {
+    if (isReturningUser) {
         val response = meeAgentStore.recoverRequest(consentRequest)
         if (response != null) {
             ConsentPageAnimation {

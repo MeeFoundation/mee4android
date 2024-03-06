@@ -81,14 +81,14 @@ fun MeeNavGraph(
                 Log.e("navigation", e.message.orEmpty())
                 null
             }
-            if (consentRequest?.clientMetadata != null) { // TODO discuss with the team
+            if (consentRequest != null) {
                 ConsentPage(consentRequest)
             } else {
                 showConsentToast(
                     context,
                     R.string.connection_failed_toast
                 )
-                Log.e("Unable to connect", "clientMetadata is missing")
+                Log.e("Unable to connect", "error building consent request from url")
                 ConnectionsScreenWithSidebar()
             }
         }
@@ -100,14 +100,14 @@ fun MeeNavGraph(
             val params = it.arguments?.getString("params")
             val consentRequest = params?.let { buildConsentRequestFromUrl(it) }
 
-            if (consentRequest?.clientMetadata != null) {
+            if (consentRequest != null) {
                 ConsentPage(consentRequest)
             } else {
                 showConsentToast(
                     context,
                     R.string.connection_failed_toast
                 )
-                Log.e("Unable to connect", "clientMetadata is missing")
+                Log.e("Unable to connect", "error building consent request from url")
                 ConnectionsScreenWithSidebar()
             }
         }

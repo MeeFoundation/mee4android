@@ -63,11 +63,11 @@ fun ConsentEntry(
                 Text(
                     text = entry.name,
                     fontFamily = publicSansFamily,
-                    color = if (isReadOnly) TextActive else if (isFocused && entry.isOn) MeeGreenPrimaryColor else DarkText,
+                    color = if (isReadOnly) TextActive.copy(0.85f) else if (isFocused && entry.isOn) MeeGreenPrimaryColor else DarkText,
                     fontSize = 12.sp,
                     fontWeight = FontWeight(400),
                     modifier = Modifier
-                        .background(LightBackground)
+                        .background(Color.White, RoundedCornerShape(3.dp))
                         .padding(horizontal = 4.dp)
                 )
             }
@@ -164,6 +164,6 @@ fun ConsentEntryPreview() {
     val entry = manageConnectionDataMock.connectorToEntries[0].consentEntriesType as SiopClaims
     ConsentEntry(
         entry = entry.value.first(),
-        isReadOnly = false
+        isReadOnly = true
     )
 }

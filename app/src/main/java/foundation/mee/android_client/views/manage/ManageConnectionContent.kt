@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ManageConnectionData
+import foundation.mee.android_client.models.MeeConnector
+import foundation.mee.android_client.models.MeeConnectorProtocol
 import foundation.mee.android_client.models.manageConnectionDataMock
 import foundation.mee.android_client.ui.components.NoRippleInteractionSource
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
@@ -30,10 +32,13 @@ import foundation.mee.android_client.views.connections.ConnectionEntry
 import foundation.mee.android_client.views.connections.WarningPopup
 
 
-private fun checkType(consentEntriesType: ConsentEntriesType): Int {
-    return when (consentEntriesType) {
-        is ConsentEntriesType.SiopClaims -> R.string.profile
-        is ConsentEntriesType.GapiEntries -> R.string.google_account
+private fun getTabName(connector: MeeConnector): Int {
+    return when (connector.connectorProtocol) {
+        is MeeConnectorProtocol.Siop -> R.string.profile
+        is MeeConnectorProtocol.Gapi -> R.string.google_account
+        is MeeConnectorProtocol.MeeBrowserExtension -> R.string.extension
+        is MeeConnectorProtocol.OpenId4Vc -> R.string.open_id_4_vc
+        is MeeConnectorProtocol.MeeTalk -> R.string.mee_talk
     }
 }
 
@@ -74,6 +79,7 @@ fun ManageConnectionContent(
                         count = entries.size
                     ), entries.size
                 ),
+                modifier = Modifier.padding(end = 10.dp),
                 onDelete = { showRemoveConnectionWarning = true })
             Divider(
                 color = DividerColor,
@@ -98,7 +104,7 @@ fun ManageConnectionContent(
                             onClick = { visibleEntryIndex = index },
                             text = {
                                 Text(
-                                    text = stringResource(id = checkType(item.consentEntriesType)),
+                                    text = stringResource(id = getTabName(item.meeConnector)),
                                     fontFamily = publicSansFamily,
                                     fontWeight = FontWeight.SemiBold,
                                     fontSize = 14.sp,
@@ -153,7 +159,7 @@ fun ManageConnectionContent(
                     Text(
                         text = String.format(
                             stringResource(R.string.delete_connector),
-                            stringResource(checkType(entries[visibleEntryIndex].consentEntriesType))
+                            stringResource(getTabName(entries[visibleEntryIndex].meeConnector))
                         ),
                         fontFamily = publicSansFamily,
                         fontSize = 14.sp,
@@ -192,7 +198,7 @@ fun ManageConnectionContent(
             icon = R.drawable.exclamation_mark,
             title = String.format(
                 stringResource(R.string.delete_data_group_title),
-                stringResource(checkType(entries[visibleEntryIndex].consentEntriesType)),
+                stringResource(getTabName(entries[visibleEntryIndex].meeConnector)),
                 manageConnectionData.meeConnection.name
             ),
             messageText = R.string.delete_data_group_message,

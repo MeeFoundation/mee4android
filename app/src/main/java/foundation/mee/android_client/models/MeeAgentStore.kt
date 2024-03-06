@@ -73,9 +73,9 @@ class MeeAgentStore @Inject constructor(
         return getAllConnections()?.filter { !getConnectionConnectors(it.id).isNullOrEmpty() }
     }
 
-    fun getLastConnectionConsentById(id: String): MeeContext? {
+    private fun getLastConsentByConnectorId(id: String): MeeContext? {
         return try {
-            val coreConsent = agent.siopLastConsentByConnectionId(connId = id)
+            val coreConsent = agent.siopLastConsentByConnectorId(connId = id)
             if (coreConsent != null) {
                 MeeContext(coreConsent)
             } else null
@@ -126,13 +126,29 @@ class MeeAgentStore @Inject constructor(
         }
     }
 
-    fun isReturningUser(id: String): Boolean =
-        getConnectionConnectors(getHostname(id))?.isNotEmpty() ?: false
+    fun isReturningUser(redirectUri: String): Boolean {
+        return getLastSiopConsentByRedirectUri(redirectUri) != null
+    }
 
     fun recoverRequest(consentRequest: ConsentRequest): OidcAuthResponseWrapper? {
-        return getLastConnectionConsentById(getHostname(consentRequest.id))?.let { contextData ->
-            ConsentRequest(contextData, consentRequest)
+        val contextData = getLastSiopConsentByRedirectUri(consentRequest.redirectUri)
+        return contextData?.let {
+            ConsentRequest(it, consentRequest)
         }?.let { request -> authorize(request) }
+    }
+
+    private fun getLastSiopConsentByRedirectUri(redirectUri: String): MeeContext? {
+        val connectors = getConnectionConnectors(getHostname(redirectUri))
+        val consent = connectors?.firstOrNull {
+            when (val protocol = it.connectorProtocol) {
+                is MeeConnectorProtocol.Siop -> {
+                    protocol.value.redirectUri == redirectUri
+                }
+
+                else -> false
+            }
+        }
+        return consent?.let { getLastConsentByConnectorId(it.id) }
     }
 
     fun getGoogleIntegrationUrl(): Url? {
