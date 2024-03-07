@@ -16,9 +16,7 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.navigation.Navigator
-import foundation.mee.android_client.ui.components.BottomDialogHeader
 import foundation.mee.android_client.ui.components.NotificationPopup
-import foundation.mee.android_client.ui.theme.AccessibleSystemRedLight
 import foundation.mee.android_client.utils.goToSystemSettings
 import foundation.mee.android_client.views.connections.WarningPopup
 
@@ -46,7 +44,6 @@ fun DeleteAllDataDialogFlow(
                 title = R.string.settings_delete_user_data,
                 messageText = R.string.delete_popup_message_text,
                 buttonText = R.string.delete_popup_button_text,
-                buttonColor = AccessibleSystemRedLight,
                 additionalButtonText = R.string.negative_button_text,
                 onAdditionalButtonClick = onClose
             ) {

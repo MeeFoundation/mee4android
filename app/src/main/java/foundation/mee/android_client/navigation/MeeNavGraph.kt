@@ -22,7 +22,6 @@ import foundation.mee.android_client.views.consent.ConsentPage
 import foundation.mee.android_client.views.initial_flow.InitialFlow
 import foundation.mee.android_client.views.manage.ManageConnection
 import foundation.mee.android_client.views.settings.MeeSettingsView
-import foundation.mee.android_client.views.sidebar.MeeSidebarMenu
 import foundation.mee.android_client.views.welcome_pages.WelcomePage
 
 @Composable
@@ -60,9 +59,7 @@ fun MeeNavGraph(
                 type = NavType.StringType
             })
         ) {
-            MeeSidebarMenu {
-                ManageConnection()
-            }
+            ManageConnection()
         }
 
         composable(
@@ -84,14 +81,14 @@ fun MeeNavGraph(
                 Log.e("navigation", e.message.orEmpty())
                 null
             }
-            if (consentRequest?.clientMetadata != null) { // TODO discuss with the team
+            if (consentRequest != null) {
                 ConsentPage(consentRequest)
             } else {
                 showConsentToast(
                     context,
                     R.string.connection_failed_toast
                 )
-                Log.e("Unable to connect", "clientMetadata is missing")
+                Log.e("Unable to connect", "error building consent request from url")
                 ConnectionsScreenWithSidebar()
             }
         }
@@ -103,14 +100,14 @@ fun MeeNavGraph(
             val params = it.arguments?.getString("params")
             val consentRequest = params?.let { buildConsentRequestFromUrl(it) }
 
-            if (consentRequest?.clientMetadata != null) {
+            if (consentRequest != null) {
                 ConsentPage(consentRequest)
             } else {
                 showConsentToast(
                     context,
                     R.string.connection_failed_toast
                 )
-                Log.e("Unable to connect", "clientMetadata is missing")
+                Log.e("Unable to connect", "error building consent request from url")
                 ConnectionsScreenWithSidebar()
             }
         }

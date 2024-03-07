@@ -90,7 +90,7 @@ fun ConsentCardEntryInput(
                     id = getConsentEntryIconByType(entry.type),
                 ),
                 contentDescription = null,
-                tint = Color.Black,
+                tint = if (isReadOnly) TextActive.copy(0.45f) else Color.Black,
                 modifier = Modifier
                     .height(16.dp)
             )

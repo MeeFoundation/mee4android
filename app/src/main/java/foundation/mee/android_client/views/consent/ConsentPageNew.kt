@@ -69,6 +69,8 @@ fun ConsentPageNew(
 
     val state = rememberConsentPageNewState()
 
+    val visibleConsentEntryDuration = requiredClaims.firstOrNull { it.id == state.durationPopupId }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.surface,
@@ -138,14 +140,14 @@ fun ConsentPageNew(
                         )
                     }
                     Image(
-                        painter = rememberAsyncImagePainter(model = data.clientMetadata!!.logoUrl),
+                        painter = rememberAsyncImagePainter(model = data.clientMetadata.logoUrl),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier.size(48.dp)
                     )
                 }
                 Text(
-                    text = data.clientMetadata!!.name,
+                    text = data.clientMetadata.name,
                     fontFamily = publicSansFamily,
                     fontSize = 30.sp,
                     fontWeight = FontWeight(700),
@@ -208,12 +210,6 @@ fun ConsentPageNew(
                     }
                 }
 
-                Divider(
-                    color = DefaultGray200,
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
                 if (hasOptionalFields) {
                     Expander(
                         title = stringResource(R.string.consent_screen_optional),
@@ -244,9 +240,7 @@ fun ConsentPageNew(
                                             id,
                                             isOpen
                                         )
-                                    }) {
-                                    state.durationPopupId = it.id
-                                }
+                                    })
                             }
                         }
                     }
@@ -258,7 +252,6 @@ fun ConsentPageNew(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .background(color = PartnerEntryBackgroundColor)
                     .sizeIn(maxHeight = 159.dp)
             ) {
                 Row(modifier = Modifier.padding(top = 14.dp)) {
@@ -345,7 +338,7 @@ fun ConsentPageNew(
         }
     }
 
-    if (state.shouldShowDurationPopup) {
+    if (state.shouldShowDurationPopup && visibleConsentEntryDuration != null) {
         Dialog(
             onDismissRequest = {},
         ) {
@@ -359,13 +352,13 @@ fun ConsentPageNew(
             Surface(
                 modifier = Modifier.fillMaxWidth(1f)
             ) {
-                if (state.shouldShowDurationPopup) {
-                    ConsentDuration(
-                        consentEntries = data.claims,
-                        id = state.durationPopupId!!
-                    ) {
-                        state.durationPopupId = null
+                ConsentDuration(
+                    consentEntry = visibleConsentEntryDuration,
+                    onSave = {
+                        visibleConsentEntryDuration.retentionDuration = it
                     }
+                ) {
+                    state.durationPopupId = null
                 }
             }
         }

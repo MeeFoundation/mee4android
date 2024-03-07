@@ -23,20 +23,10 @@ class ConnectionsState(
 )
 
 fun getOtherPartners(meeAgentStore: MeeAgentStore): List<MeeConnector> {
-    val data = meeAgentStore.getAllItems()
+    val data = meeAgentStore.getConnectionsWithConnectors()
     return PartnersRegistry.shared.filter { x ->
         val isNotPresentedInExistingList =
-            data?.find { it.otherPartyConnectionId == x.otherPartyConnectionId } == null
-        when (val connType = x.value) {
-            is MeeConnectorType.Siop -> when (connType.value.clientMetadata.type) {
-                ClientType.web -> isNotPresentedInExistingList && meeAgentStore.getLastConnectionConsentById(
-                    x.otherPartyConnectionId
-                ) == null
-                else -> true
-            }
-
-            is MeeConnectorType.Gapi -> true
-            else -> true
-        }
+            data?.find { it.id == x.otherPartyConnectionId } == null
+        isNotPresentedInExistingList || x.isGapi()
     }
 }

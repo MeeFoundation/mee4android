@@ -5,22 +5,21 @@ import com.intuit.fuzzymatcher.domain.Document
 import com.intuit.fuzzymatcher.domain.Element
 import com.intuit.fuzzymatcher.domain.ElementType
 import com.intuit.fuzzymatcher.domain.Match
-import foundation.mee.android_client.models.MeeConnector
-import foundation.mee.android_client.models.MeeConnectorType
+import foundation.mee.android_client.models.MeeConnection
 
 object FuzzySearchHelper {
 
     private const val threshold = 0.0
     private val type = ElementType.NAME
 
-    fun getFoundConnectors(query: String, connections: List<MeeConnector>): List<MeeConnector> {
-        val docsList = buildDocList(connections.map { connectorNameChooser(it) })
+    fun getFoundConnections(query: String, connections: List<MeeConnection>): List<MeeConnection> {
+        val docsList = buildDocList(connections.map { it.name })
         val result = search(query, docsList)
         return result?.let {
             val resultMap = searchResultToMap(it)
             val comparator = getComparator(query, resultMap)
-            connections.filter { connector ->
-                connectorNameChooser(connector) in resultMap
+            connections.filter { connection ->
+                connection.name in resultMap
             }.sortedWith(comparator)
         } ?: listOf()
     }
@@ -63,12 +62,12 @@ object FuzzySearchHelper {
     private fun getComparator(
         query: String,
         resultMap: Map<String, Double>
-    ): Comparator<MeeConnector> {
+    ): Comparator<MeeConnection> {
         val missingElementScore = 0.0
         val exactMatchScore = 1.0
-        return Comparator { c1: MeeConnector, c2: MeeConnector ->
-            val name1 = connectorNameChooser(c1)
-            val name2 = connectorNameChooser(c2)
+        return Comparator { c1: MeeConnection, c2: MeeConnection ->
+            val name1 = c1.name
+            val name2 = c2.name
             val score1 = resultMap[name1] ?: missingElementScore
             val score2 = resultMap[name2] ?: missingElementScore
             if (score1 == exactMatchScore && score2 == exactMatchScore) {
@@ -81,14 +80,6 @@ object FuzzySearchHelper {
                 }
             }
             return@Comparator score2.compareTo(score1)
-        }
-    }
-
-    private fun connectorNameChooser(connector: MeeConnector): String {
-        val googleAccountName = "Google Account"
-        return when (connector.value) {
-            is MeeConnectorType.Gapi -> googleAccountName
-            else -> connector.name
         }
     }
 }

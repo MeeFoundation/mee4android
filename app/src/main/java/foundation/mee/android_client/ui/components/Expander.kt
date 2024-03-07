@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.theme.DarkText
-import foundation.mee.android_client.ui.theme.PartnerEntryOnBackgroundColor
 import foundation.mee.android_client.ui.theme.publicSansFamily
 
 
@@ -47,6 +46,8 @@ fun Expander(
                     text = title,
                     fontFamily = publicSansFamily,
                     fontSize = 16.sp,
+                    lineHeight = 24.sp,
+                    letterSpacing = 0.15.sp,
                     fontWeight = FontWeight(600),
                     color = DarkText,
                 )
@@ -62,7 +63,9 @@ fun Expander(
                     },
                     contentDescription = null,
                     tint = DarkText,
-                    modifier = Modifier.width(24.dp)
+                    modifier = Modifier
+                        .width(24.dp)
+                        .height(24.dp)
                 )
             }
 

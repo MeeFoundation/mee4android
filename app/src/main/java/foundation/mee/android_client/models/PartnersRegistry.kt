@@ -11,8 +11,8 @@ object PartnersRegistry {
                 id = "https://mee.foundation/",
                 name = "Mee Foundation",
                 otherPartyConnectionId = "mee.foundation",
-                value = MeeConnectorType.Siop(
-                    SiopConnectorType(
+                connectorProtocol = MeeConnectorProtocol.Siop(
+                    SiopConnectorProtocol(
                         redirectUri = "https://mee.foundation/",
                         clientMetadata = PartnerMetadata(
                             from = OidcClientMetadata(
@@ -28,7 +28,7 @@ object PartnersRegistry {
                                 subjectSyntaxTypesSupported = listOf()
                             )
                         ),
-                        subjectSyntaxType = ConnectorTypeSubject.DidKey("")
+                        subjectSyntaxType = ConnectorProtocolSubject.DidKey("")
                     )
                 )
             ),
@@ -36,8 +36,8 @@ object PartnersRegistry {
                 id = "https://oldeyorktimes.com/",
                 name = "The Olde York Times",
                 otherPartyConnectionId = "oldeyorktimes.com",
-                value = MeeConnectorType.Siop(
-                    SiopConnectorType(
+                connectorProtocol = MeeConnectorProtocol.Siop(
+                    SiopConnectorProtocol(
                         redirectUri = "https://oldeyorktimes.com/",
                         clientMetadata = PartnerMetadata(
                             from = OidcClientMetadata(
@@ -53,7 +53,7 @@ object PartnersRegistry {
                                 subjectSyntaxTypesSupported = listOf()
                             )
                         ),
-                        subjectSyntaxType = ConnectorTypeSubject.DidKey("")
+                        subjectSyntaxType = ConnectorProtocolSubject.DidKey("")
                     )
                 )
             ),
@@ -61,8 +61,8 @@ object PartnersRegistry {
                 id = "https://google.com",
                 name = "Google Account",
                 otherPartyConnectionId = "google.com",
-                value = MeeConnectorType.Gapi(
-                    GapiConnectorType(scopes = listOf())
+                connectorProtocol = MeeConnectorProtocol.Gapi(
+                    GapiConnectorProtocol(scopes = listOf())
                 )
             )
         )

@@ -1,7 +1,6 @@
 package foundation.mee.android_client.views.connections
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,31 +23,18 @@ import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeConnector
 import foundation.mee.android_client.ui.theme.DarkText
-import foundation.mee.android_client.ui.theme.DurationPopupBackground
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
-import foundation.mee.android_client.ui.theme.PartnerEntryBackgroundColor
-import foundation.mee.android_client.ui.theme.SystemBlueLight
 
 @Composable
 fun ConnectToEntry(
     connector: MeeConnector,
-    isLight: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val state = rememberPartnerEntryState(connector)
-
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                if (isLight) {
-                    DurationPopupBackground
-                } else {
-                    PartnerEntryBackgroundColor
-                }
-            )
             .sizeIn(minHeight = 56.dp)
             .padding(start = 16.dp, end = 24.dp),
     ) {
@@ -61,7 +46,7 @@ fun ConnectToEntry(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     painter = rememberAsyncImagePainter(
-                        model = state.logoUri
+                        model = "${connector.id}/favicon.ico"
                     ),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
@@ -74,7 +59,7 @@ fun ConnectToEntry(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = state.name,
+                        text = connector.name,
                         color = DarkText,
                         fontSize = 16.sp
                     )

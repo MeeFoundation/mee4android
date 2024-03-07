@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -30,10 +29,9 @@ import foundation.mee.android_client.MeeAgentViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeAgentStore
 import foundation.mee.android_client.models.MeeConnector
-import foundation.mee.android_client.models.MeeConnectorType
 import foundation.mee.android_client.ui.components.BottomDialogHeader
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
-import foundation.mee.android_client.ui.theme.DurationPopupBackground
+import foundation.mee.android_client.ui.theme.LightSurface
 import foundation.mee.android_client.utils.linkToWebpage
 
 val dialogShape = RoundedCornerShape(topEnd = 13.dp, topStart = 13.dp)
@@ -68,7 +66,7 @@ fun SitesToConnectDialog(
                 .fillMaxHeight(1f)
                 .clip(dialogShape)
                 .background(
-                    DurationPopupBackground,
+                    LightSurface,
                     dialogShape
                 )
         ) {
@@ -88,14 +86,12 @@ fun SitesToConnectDialog(
                     partners.mapIndexed { i, connector ->
                         ConnectToEntry(
                             connector = connector,
-                            isLight = false,
                             modifier = Modifier.clickableWithoutRipple {
-                                when (connector.value) {
-                                    is MeeConnectorType.Gapi -> showCompatibleWarning = true
-                                    else -> {
-                                        val uri = Uri.parse(connector.id)
-                                        linkToWebpage(context, uri)
-                                    }
+                                if (connector.isGapi()) {
+                                    showCompatibleWarning = true
+                                } else {
+                                    val uri = Uri.parse(connector.id)
+                                    linkToWebpage(context, uri)
                                 }
                             }
                         )

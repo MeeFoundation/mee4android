@@ -14,7 +14,7 @@ fun OidcAuthRequest(from: ConsentRequest): OidcAuthRequest {
     return OidcAuthRequest(
         scope = from.scope,
         claims = claims,
-        clientMetadata = from.clientMetadata?.let { OidcClientMetadata(it) },
+        clientMetadata = OidcClientMetadata(from.clientMetadata),
         nonce = from.nonce,
         clientId = from.clientId,
         redirectUri = from.redirectUri,
@@ -22,7 +22,7 @@ fun OidcAuthRequest(from: ConsentRequest): OidcAuthRequest {
         state = from.state,
         presentationDefinition = from.presentationDefinition,
         clientIdScheme = from.clientIdScheme,
-        presentationDefinitionUri = from.presentation_definition_uri,
+        presentationDefinitionUri = from.presentationDefinitionUri,
         responseType = from.responseType,
         responseMode = from.responseMode
     )

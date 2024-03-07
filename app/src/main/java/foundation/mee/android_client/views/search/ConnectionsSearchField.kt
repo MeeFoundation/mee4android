@@ -1,16 +1,13 @@
 package foundation.mee.android_client.views.search
 
-import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -34,7 +31,6 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.models.SearchRecognitionListener
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.DarkText
-import foundation.mee.android_client.ui.theme.LabelColor
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.PartnerEntryOnBackgroundColor

@@ -50,21 +50,32 @@ class MeeAgentStore @Inject constructor(
         agent.initUserAccount()
     }
 
-    fun getAllItems(): List<MeeConnector>? {
+    fun getConnectionConnectors(id: String): List<MeeConnector>? {
         return try {
-            val connectionsCore = agent.otherPartyConnections()
-            connectionsCore.map {
-                MeeConnector(agent.getOtherPartyConnectionConnectors(it.id).first())
-            }
+            val connectors = agent.getOtherPartyConnectionConnectors(id)
+            connectors.map { MeeConnector(it) }
+        } catch (e: Exception) {
+            Log.e("error getting all connectors: ", e.message.orEmpty())
+            null
+        }
+    }
+
+    private fun getAllConnections(): List<MeeConnection>? {
+        return try {
+            agent.otherPartyConnections().map { MeeConnection(it) }
         } catch (e: Exception) {
             Log.e("error getting all connections: ", e.message.orEmpty())
             null
         }
     }
 
-    fun getLastConnectionConsentById(id: String): MeeContext? {
+    fun getConnectionsWithConnectors(): List<MeeConnection>? {
+        return getAllConnections()?.filter { !getConnectionConnectors(it.id).isNullOrEmpty() }
+    }
+
+     fun getLastConsentByConnectorId(id: String): MeeContext? {
         return try {
-            val coreConsent = agent.siopLastConsentByConnectionId(connId = id)
+            val coreConsent = agent.siopLastConsentByConnectorId(connId = id)
             if (coreConsent != null) {
                 MeeContext(coreConsent)
             } else null
@@ -83,31 +94,49 @@ class MeeAgentStore @Inject constructor(
         }
     }
 
-    fun getConnectorByConnectionId(id: String): MeeConnector? {
-        val items = getAllItems() ?: return null
-        return items.firstOrNull { it.otherPartyConnectionId == id }
-    }
-
-    fun removeItemByConnectionId(id: String): String? {
-        val item = getConnectorByConnectionId(id)
-        if (item != null) {
-            return try {
-                agent.deleteOtherPartyConnection(item.otherPartyConnectionId)
-                id
-            } catch (e: Exception) {
-                Log.e("removeItem", e.message.orEmpty())
-                null
-            }
+    fun removeConnectorById(id: String): String? {
+        return try {
+            agent.deleteOtherPartyConnector(id)
+            id
+        } catch (e: Exception) {
+            Log.e("removeItem", e.message.orEmpty())
+            null
         }
-        return null
     }
 
-    fun isReturningUser(id: String): Boolean = getConnectorByConnectionId(getHostname(id)) != null
+    fun removeConnectionById(id: String): String? {
+        return try {
+            agent.deleteOtherPartyConnection(id)
+            id
+        } catch (e: Exception) {
+            Log.e("removeItem", e.message.orEmpty())
+            null
+        }
+    }
+
+    fun isReturningUser(redirectUri: String): Boolean {
+        return getLastSiopConsentByRedirectUri(redirectUri) != null
+    }
 
     fun recoverRequest(consentRequest: ConsentRequest): OidcAuthResponseWrapper? {
-        return getLastConnectionConsentById(getHostname(consentRequest.id))?.let { contextData ->
-            ConsentRequest(contextData, consentRequest)
+        val contextData = getLastSiopConsentByRedirectUri(consentRequest.redirectUri)
+        return contextData?.let {
+            ConsentRequest(it, consentRequest)
         }?.let { request -> authorize(request) }
+    }
+
+    private fun getLastSiopConsentByRedirectUri(redirectUri: String): MeeContext? {
+        val connectors = getConnectionConnectors(getHostname(redirectUri))
+        val consent = connectors?.firstOrNull {
+            when (val protocol = it.connectorProtocol) {
+                is MeeConnectorProtocol.Siop -> {
+                    protocol.value.redirectUri == redirectUri
+                }
+
+                else -> false
+            }
+        }
+        return consent?.let { getLastConsentByConnectorId(it.id) }
     }
 
     fun getGoogleIntegrationUrl(): Url? {
@@ -144,9 +173,9 @@ class MeeAgentStore @Inject constructor(
         }
     }
 
-    fun getLastExternalConsentById(id: String): ExternalMeeContext? {
+    fun getExternalConsentsByConnectorId(id: String): ExternalMeeContext? {
         return try {
-            val coreConsent = agent.otherPartyContextsByConnectionId(id)
+            val coreConsent = agent.otherPartyContextsByConnectorId(id)
             if (coreConsent.isNotEmpty()) {
                 return ExternalMeeContext(coreConsent.last())
             } else null

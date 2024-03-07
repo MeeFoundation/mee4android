@@ -52,7 +52,7 @@ fun DeclineButton(
     title: String,
     fontWeight: FontWeight = FontWeight(700),
     fontSize: TextUnit = 18.sp,
-    backgroundColor: Color = PartnerEntryBackgroundColor,
+    backgroundColor: Color = Color.White,
     onClick: () -> Unit
 ) {
     TextButton(
@@ -94,35 +94,6 @@ fun RejectButton(
             fontSize = 18.sp,
             letterSpacing = 0.45.sp
         )
-    }
-}
-
-@Composable
-fun MainButton(
-    text: Int,
-    textColor: Color? = null,
-    action: () -> Unit = {}
-) {
-    Button(
-        onClick = action,
-        shape = RoundedCornerShape(size = 13.dp),
-        elevation = null,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-        modifier = Modifier
-            .padding(0.dp)
-            .height(60.dp)
-            .fillMaxWidth()
-    ) {
-        Surface(color = Color.White) {
-            Text(
-                text = stringResource(text),
-                fontFamily = publicSansFamily,
-                fontWeight = FontWeight(600),
-                color = textColor ?: SystemBlueLight,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
-            )
-        }
     }
 }
 

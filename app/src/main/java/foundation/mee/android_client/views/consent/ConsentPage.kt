@@ -40,7 +40,7 @@ fun ConsentPage(
     }
 
     val isReturningUser by rememberSaveable {
-        mutableStateOf(meeAgentStore.isReturningUser(consentRequest.id))
+        mutableStateOf(meeAgentStore.isReturningUser(consentRequest.redirectUri))
     }
 
     if (isReturningUser) {
