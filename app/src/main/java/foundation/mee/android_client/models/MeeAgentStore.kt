@@ -201,4 +201,20 @@ class MeeAgentStore @Inject constructor(
         clearMeeAgentData()
         initMeeAgent()
     }
+
+    // TODO mock
+    // TODO comment everything to check emptiness
+    fun getAllConnectionsTags(): List<String> {
+        return listOf(
+            "#Music",
+            "#Cinema",
+            "#Explore",
+            "#Entertainment",
+            "#Art",
+            "#News",
+            "#Tech",
+            "#Science",
+            "#Other"
+        )
+    }
 }

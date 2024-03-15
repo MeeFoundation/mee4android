@@ -1,10 +1,9 @@
 package foundation.mee.android_client.views.connections
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +26,7 @@ import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.ui.theme.TextActive
 import foundation.mee.android_client.ui.theme.publicSansFamily
 import foundation.mee.android_client.views.search.SearchViewModel
+import foundation.mee.android_client.views.tag.TagConnectionsScreenBar
 
 
 @Composable
@@ -37,9 +37,10 @@ fun ConnectionsContent(
 ) {
     val connections by searchViewModel.getConnectionsFlow().collectAsState(listOf())
     val searchMenu by searchViewModel.searchMenu.collectAsState()
+    val scrollState = rememberScrollState()
 
     if (connections.isEmpty() && searchMenu) {
-        Column() {
+        Column {
             Text(
                 text = stringResource(R.string.empty_search_result),
                 color = TextActive,
@@ -56,24 +57,35 @@ fun ConnectionsContent(
             )
         }
 
-    }
-    LazyColumn(
-        modifier = modifier
-            .padding(top = 16.dp)
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        if (connections.isNotEmpty()) {
-            items(items = connections,
-                key = { connection ->
-                    connection.name
-                }) { connection ->
-                PartnerEntry(
-                    connection = connection,
-                    modifier = Modifier.clickableWithoutRipple {
-                        navigator.navigateToManageScreen(connection.id)
+    } else if (connections.isNotEmpty()) {
+        Column(
+            modifier = modifier
+                .verticalScroll(state = scrollState)
+        ) {
+            TagConnectionsScreenBar(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            )
+            Divider(
+                color = Border,
+                thickness = 1.dp,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+            Column{
+                if (connections.isNotEmpty()) {
+                    connections.forEach { connection ->
+                        PartnerEntry(
+                            connection = connection,
+                            modifier = Modifier.clickableWithoutRipple {
+                                navigator.navigateToManageScreen(connection.id)
+                            }
+                        )
+                        Divider(
+                            color = Border,
+                            thickness = 1.dp
+                        )
                     }
-                )
+                }
             }
         }
     }

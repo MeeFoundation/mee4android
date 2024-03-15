@@ -37,7 +37,7 @@ fun PartnerEntry(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp),
+                .padding(16.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -54,7 +54,7 @@ fun PartnerEntry(
                 )
                 Column(
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(start = 16.dp)
                 ) {
                     Row {
                         Text(
@@ -63,6 +63,8 @@ fun PartnerEntry(
                             fontFamily = publicSansFamily,
                             fontWeight = FontWeight.Normal,
                             fontSize = 16.sp,
+                            lineHeight = 24.sp,
+                            letterSpacing = 0.5.sp,
                         )
                     }
                 }
