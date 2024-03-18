@@ -1,7 +1,6 @@
 package foundation.mee.android_client.views.connections
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold

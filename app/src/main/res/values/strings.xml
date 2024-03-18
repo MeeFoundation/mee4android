@@ -92,4 +92,11 @@
         <item quantity="one">This connection has 1 data group</item>
         <item quantity="other">This connection has %1$s data groups</item>
     </plurals>
+    <string name="manage_tags">Manage Tags</string>
+    <string name="tags_title">Tags</string>
+    <string name="filter_by_tag">Filter by Tag</string>
+    <string name="more_tags">more tags</string>
+    <string name="less_tags">less tags</string>
+    <string name="expander_hide">Hide</string>
+    <string name="expander_show">Show</string>
 </resources>

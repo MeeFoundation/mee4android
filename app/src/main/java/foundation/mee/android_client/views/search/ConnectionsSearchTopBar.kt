@@ -18,11 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
-import foundation.mee.android_client.ui.theme.InactiveBorder
-import foundation.mee.android_client.ui.theme.LabelLightSecondary
-import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
-import foundation.mee.android_client.ui.theme.publicSansFamily
 
 @Composable
 fun ConnectionsSearchTopBar(
@@ -31,7 +27,7 @@ fun ConnectionsSearchTopBar(
     Row(
         modifier = Modifier
             .background(Color.White)
-            .padding(top = 4.dp)
+            .padding(top = 3.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically

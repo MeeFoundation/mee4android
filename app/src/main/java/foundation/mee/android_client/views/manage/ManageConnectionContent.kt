@@ -30,6 +30,7 @@ import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.views.connections.ConnectionEntry
 import foundation.mee.android_client.views.connections.WarningPopup
+import foundation.mee.android_client.views.tag.ManageConnectionTags
 
 
 private fun getTabName(connector: MeeConnector): Int {
@@ -81,6 +82,14 @@ fun ManageConnectionContent(
                 ),
                 modifier = Modifier.padding(end = 10.dp),
                 onDelete = { showRemoveConnectionWarning = true })
+            Divider(
+                color = DividerColor,
+                thickness = 1.dp
+            )
+            ManageConnectionTags(
+                modifier = Modifier
+                    .padding(16.dp)
+            )
             Divider(
                 color = DividerColor,
                 thickness = 1.dp
