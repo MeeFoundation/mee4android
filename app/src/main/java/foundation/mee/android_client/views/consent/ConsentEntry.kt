@@ -1,6 +1,5 @@
 package foundation.mee.android_client.views.consent
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -63,7 +62,14 @@ fun ConsentEntry(
                 Text(
                     text = entry.name,
                     fontFamily = publicSansFamily,
-                    color = if (isReadOnly) TextActive.copy(0.85f) else if (isFocused && entry.isOn) MeeGreenPrimaryColor else DarkText,
+                    color =
+                    if (entry.isOn && !isReadOnly && entry.isIncorrect()) {
+                        DefaultRedLight
+                    } else if (entry.isOn && !isReadOnly && isFocused) {
+                        MeeGreenPrimaryColor
+                    } else {
+                        TextActive.copy(0.75f)
+                    },
                     fontSize = 12.sp,
                     fontWeight = FontWeight(400),
                     modifier = Modifier
@@ -71,21 +77,11 @@ fun ConsentEntry(
                         .padding(horizontal = 4.dp)
                 )
             }
-
-
-
             Box(
                 modifier = Modifier
                     .padding(start = 0.dp, top = 8.dp)
                     .onFocusChanged { isFocused = it.isFocused }
-                    .clip(
-                        RoundedCornerShape(
-                            topEnd = 4.dp,
-                            topStart = 4.dp,
-                            bottomEnd = 4.dp,
-                            bottomStart = 4.dp
-                        )
-                    )
+                    .clip(RoundedCornerShape(4.dp))
                     .background(if (!entry.isOn || isReadOnly) GrayText else Color.Transparent)
                     .border(
                         if (isFocused && entry.isOn && !isReadOnly) 2.dp else 1.dp,
@@ -98,7 +94,7 @@ fun ConsentEntry(
                                 InactiveBorder
                             }
                         } else {
-                            GrayText
+                            InactiveCover.copy(alpha = 0.12f)
                         },
                         RoundedCornerShape(4.dp)
                     )
@@ -123,17 +119,6 @@ fun ConsentEntry(
                     }
 
                 }
-                if (isReadOnly || !entry.isOn) Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .background(Color.White.copy(alpha = 0.3f))
-                        .border(
-                            BorderStroke(
-                                width = 1.dp,
-                                color = InactiveCover.copy(alpha = 0.5f)
-                            )
-                        )
-                )
             }
         }
         if (entry.isRequired) {
@@ -144,7 +129,7 @@ fun ConsentEntry(
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier
-                    .padding(start = 8.dp)
+                    .padding(start = 8.dp, top = 8.dp)
                     .width(48.dp)
                     .clickableWithoutRipple {
                         onDurationPopupShow()

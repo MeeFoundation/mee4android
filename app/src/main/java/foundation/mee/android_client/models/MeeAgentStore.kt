@@ -203,18 +203,18 @@ class MeeAgentStore @Inject constructor(
     }
 
     // TODO mock
-    // TODO comment everything to check emptiness
     fun getAllConnectionsTags(): List<String> {
         return listOf(
-            "#Music",
-            "#Cinema",
-            "#Explore",
-            "#Entertainment",
-            "#Art",
-            "#News",
-            "#Tech",
-            "#Science",
-            "#Other"
+            "Music",
+            "Cinema",
+            "Explore",
+            "Entertainment",
+            "Enterprise",
+            "Art",
+            "News",
+            "Tech",
+            "Science",
+            "Other"
         )
     }
 }

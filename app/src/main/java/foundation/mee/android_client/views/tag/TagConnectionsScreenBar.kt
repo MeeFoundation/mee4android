@@ -1,5 +1,6 @@
 package foundation.mee.android_client.views.tag
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -23,22 +24,35 @@ fun TagConnectionsScreenBar(
         mutableStateOf(tagConnectionsViewModel.tagList)
     }
 
-    val isTagSelected by remember {
-        mutableStateOf(tagConnectionsViewModel.isTagSelected)
+    val selectedTagList by remember {
+        mutableStateOf(tagConnectionsViewModel.selectedTagList)
     }
 
     Column(
-        modifier = modifier
+        modifier = modifier.padding(top = 18.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        TagTitle(
-            text = stringResource(id = R.string.filter_by_tag)
-        )
-        SelectableTagRow(
-            tags = tagList,
-            isTagSelected = isTagSelected,
-            modifier = Modifier.padding(top = 8.dp),
-        ) { index, tag ->
-            tagConnectionsViewModel.updateTagAtIndex(index, tag)
+        if (selectedTagList.isNotEmpty()) {
+            TagTitle(
+                text = stringResource(id = R.string.filter_by_tag)
+            )
+            SelectableTagRow(
+                tags = selectedTagList,
+                isTagSelected = true,
+            ) { index, tag ->
+                tagConnectionsViewModel.unselectTag(index, tag)
+            }
+        }
+        if (tagList.isNotEmpty()) {
+            TagTitle(
+                text = stringResource(id = R.string.connections_existing_tags_header)
+            )
+            SelectableTagRow(
+                tags = tagList,
+                isTagSelected = false,
+            ) { index, tag ->
+                tagConnectionsViewModel.selectTag(index, tag)
+            }
         }
     }
 }

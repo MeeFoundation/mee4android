@@ -71,20 +71,18 @@ fun ConnectionsContent(
                 thickness = 1.dp,
                 modifier = Modifier.padding(top = 16.dp)
             )
-            Column{
-                if (connections.isNotEmpty()) {
-                    connections.forEach { connection ->
-                        PartnerEntry(
-                            connection = connection,
-                            modifier = Modifier.clickableWithoutRipple {
-                                navigator.navigateToManageScreen(connection.id)
-                            }
-                        )
-                        Divider(
-                            color = Border,
-                            thickness = 1.dp
-                        )
-                    }
+            Column {
+                connections.forEach { connection ->
+                    PartnerEntry(
+                        connection = connection,
+                        modifier = Modifier.clickableWithoutRipple {
+                            navigator.navigateToManageScreen(connection.id)
+                        }
+                    )
+                    Divider(
+                        color = Border,
+                        thickness = 1.dp
+                    )
                 }
             }
         }

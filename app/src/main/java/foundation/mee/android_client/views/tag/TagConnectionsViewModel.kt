@@ -1,7 +1,6 @@
 package foundation.mee.android_client.views.tag
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,28 +16,37 @@ class TagConnectionsViewModel @Inject constructor(
     private var _tagList = mutableStateListOf<String>()
     val tagList: List<String> = _tagList
 
-    private var _selectedTagsMap = mutableStateMapOf<String, Int>()
-    val isTagSelected = { tag: String -> tag in _selectedTagsMap }
+    private var _selectedTagList = mutableStateListOf<String>()
+    val selectedTagList: List<String> = _selectedTagList
 
     init {
         viewModelScope.launch {
-            _tagList.addAll(meeAgentStore.getAllConnectionsTags())
+            with(_tagList) {
+                addAll(meeAgentStore.getAllConnectionsTags())
+                sort()
+            }
         }
     }
 
-    fun updateTagAtIndex(index: Int, tag: String) {
-        if (tag in _selectedTagsMap) {
-            _selectedTagsMap.remove(tag)
-            _tagList.apply {
-                removeAt(index)
-                add(tag)
-            }
-        } else {
-            _selectedTagsMap[tag] = index
-            _tagList.apply {
-                removeAt(index)
-                add(0, tag)
-            }
+    fun selectTag(index: Int, tag: String) {
+        with(_selectedTagList) {
+            add(tag)
+            sort()
+        }
+        with(_tagList) {
+            removeAt(index)
+            sort()
+        }
+    }
+
+    fun unselectTag(index: Int, tag: String) {
+        with(_selectedTagList) {
+            removeAt(index)
+            sort()
+        }
+        with(_tagList) {
+            add(tag)
+            sort()
         }
     }
 }

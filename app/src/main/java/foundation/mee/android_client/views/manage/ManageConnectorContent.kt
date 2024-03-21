@@ -3,6 +3,7 @@ package foundation.mee.android_client.views.manage
 import android.view.Gravity
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -64,7 +65,7 @@ fun ManageConnectorContent(
                                 ConsentEntry(
                                     claim,
                                     isReadOnly = true,
-                                    modifier = Modifier.padding(top = 24.dp, start = 3.dp),
+                                    modifier = Modifier.padding(top = 24.dp),
                                     onDurationPopupShow = {
                                         state.durationPopupId = claim.id
                                     }
@@ -89,7 +90,7 @@ fun ManageConnectorContent(
                                 ConsentEntry(
                                     claim,
                                     isReadOnly = true,
-                                    modifier = Modifier.padding(top = 16.dp, start = 3.dp)
+                                    modifier = Modifier.padding(top = 24.dp)
                                 )
                             }
                         }
@@ -117,7 +118,11 @@ fun ManageConnectorContent(
 
                         else -> listOf()
                     }
-                gapiEntries.map { ExternalConsentEntry(it.first, it.second) }
+                gapiEntries.map {
+                    Row(modifier = Modifier.padding(bottom = 24.dp)) {
+                        ExternalConsentEntry(it.first, it.second)
+                    }
+                }
             }
         }
     }

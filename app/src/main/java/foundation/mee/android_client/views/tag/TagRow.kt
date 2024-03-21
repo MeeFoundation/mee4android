@@ -22,28 +22,32 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.theme.DarkText
 import foundation.mee.android_client.ui.theme.publicSansFamily
 
+const val DEFAULT_MAX_ROW_COUNT = 2
+
 @Composable
 fun SelectableTagRow(
     tags: List<String>,
     modifier: Modifier = Modifier,
-    isTagSelected: (String) -> Boolean,
+    isTagSelected: Boolean,
     onSelectTag: (Int, String) -> Unit
 ) {
-    var rowCount by remember { mutableStateOf<MeeFlowMaxRowCount?>(MeeFlowMaxRowCount.DEFAULT) }
+
+    var trailingElementState by remember { mutableStateOf(TrailingElementState.NONE) }
 
     MeeFlowRow(
         spacedBy = 8.dp,
+        trailingElementState = trailingElementState,
         showMore = {
             TrailingElement(text = R.string.more_tags) {
-                rowCount = MeeFlowMaxRowCount.MAX
+                trailingElementState = TrailingElementState.SHOW_MORE
             }
         },
         showLess = {
             TrailingElement(text = R.string.less_tags) {
-                rowCount = MeeFlowMaxRowCount.DEFAULT
+                trailingElementState = TrailingElementState.SHOW_LESS
             }
         },
-        maxRowCount = rowCount,
+        maxRowCount = DEFAULT_MAX_ROW_COUNT,
         modifier = modifier
             .fillMaxWidth()
     ) {
@@ -54,7 +58,7 @@ fun SelectableTagRow(
                     onSelectTag(index, it)
                 },
                 isRemovable = false,
-                isSelected = isTagSelected(it)
+                isSelected = isTagSelected
             )
         }
     }
@@ -63,23 +67,23 @@ fun SelectableTagRow(
 @Composable
 fun RemovableTagRow(
     tags: List<String>,
-    onRemoveTag: (Int) -> Unit
+    onRemoveTag: (String) -> Unit
 ) {
-    var rowCount by remember { mutableStateOf<MeeFlowMaxRowCount?>(MeeFlowMaxRowCount.DEFAULT) }
+    var trailingElementState by remember { mutableStateOf(TrailingElementState.NONE) }
 
     MeeFlowRow(
         spacedBy = 8.dp,
         showMore = {
             TrailingElement(text = R.string.more_tags) {
-                rowCount = MeeFlowMaxRowCount.MAX
+                trailingElementState = TrailingElementState.SHOW_MORE
             }
         },
         showLess = {
             TrailingElement(text = R.string.less_tags) {
-                rowCount = MeeFlowMaxRowCount.DEFAULT
+                trailingElementState = TrailingElementState.SHOW_LESS
             }
         },
-        maxRowCount = MeeFlowMaxRowCount.DEFAULT,
+        maxRowCount = DEFAULT_MAX_ROW_COUNT,
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -87,7 +91,7 @@ fun RemovableTagRow(
             Tag(
                 text = it,
                 onClick = {
-                    onRemoveTag(index)
+                    onRemoveTag(it)
                 },
                 isRemovable = true,
             )
@@ -131,7 +135,7 @@ fun TagRowPreview() {
                 "#Science",
                 "#Tech"
             ),
-            isTagSelected = { it == "#Entertainment" }
+            isTagSelected = true
         ) { _, _ -> }
         RemovableTagRow(
             listOf(

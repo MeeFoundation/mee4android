@@ -7,16 +7,18 @@ import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 
-enum class MeeFlowMaxRowCount(var value: Int) {
-    DEFAULT(2),
-    MAX(Int.MAX_VALUE)
+enum class TrailingElementState {
+    SHOW_MORE,
+    SHOW_LESS,
+    NONE
 }
 
 @Composable
 fun MeeFlowRow(
     spacedBy: Dp?,
     modifier: Modifier = Modifier,
-    maxRowCount: MeeFlowMaxRowCount? = null,
+    trailingElementState: TrailingElementState = TrailingElementState.NONE,
+    maxRowCount: Int?,
     showMore: @Composable () -> Unit,
     showLess: @Composable () -> Unit,
     content: @Composable () -> Unit,
@@ -32,7 +34,7 @@ fun MeeFlowRow(
         val placeableToOffset = mutableListOf<Pair<Placeable, IntOffset>>()
         var nextRow = 0
 
-        if ((maxRowCount?.value ?: 0) <= 0 || measurableList.isEmpty()) {
+        if ((maxRowCount ?: 0) <= 0 || measurableList.isEmpty()) {
             return@SubcomposeLayout layout(0, 0) {}
         }
         for (measurable in measurableList) {
@@ -42,7 +44,7 @@ fun MeeFlowRow(
                 nextRow += 1
                 val nextRowVerticalOffset = currentOffset.y + placeable.height + spacedByValue
 
-                if (maxRowCount != null && nextRow >= maxRowCount.value) {
+                if (maxRowCount != null && nextRow >= maxRowCount && trailingElementState != TrailingElementState.SHOW_MORE) {
                     val showMorePlaceable = subcompose("showMore") {
                         showMore()
                     }[0].measure(layoutConstraints.copy(minHeight = placeable.height))
@@ -65,8 +67,7 @@ fun MeeFlowRow(
                 currentOffset.copy(x = currentOffset.x + placeable.width + spacedByValue)
         }
 
-        if (maxRowCount != null && nextRow < maxRowCount.value && maxRowCount.value == MeeFlowMaxRowCount.MAX.value
-        ) {
+        if (maxRowCount != null && nextRow >= maxRowCount && trailingElementState == TrailingElementState.SHOW_MORE) {
             val showLessPlaceable = subcompose("showLess") {
                 showLess()
             }[0].measure(layoutConstraints.copy(minHeight = placeableToOffset[0].first.height))

@@ -24,6 +24,18 @@ object FuzzySearchHelper {
         } ?: listOf()
     }
 
+    fun getFoundTags(query: String, tags: List<String>): List<String> {
+        val docsList = buildDocList(tags)
+        val result = search(query, docsList)
+        return result?.let {
+            val resultMap = searchResultToMap(it)
+            val comparator = getTagsComparator(query, resultMap)
+            tags.filter { tag ->
+                tag in resultMap
+            }.sortedWith(comparator)
+        } ?: listOf()
+    }
+
     private fun buildDocList(strings: List<String>): List<Document> {
         return strings.map { string ->
             with(
@@ -73,6 +85,28 @@ object FuzzySearchHelper {
             if (score1 == exactMatchScore && score2 == exactMatchScore) {
                 val matches1 = query == name1
                 val matches2 = query == name2
+                if (matches1 == matches2) {
+                    return@Comparator 0
+                } else {
+                    return@Comparator if (matches2) 1 else -1
+                }
+            }
+            return@Comparator score2.compareTo(score1)
+        }
+    }
+
+    private fun getTagsComparator(
+        query: String,
+        resultMap: Map<String, Double>
+    ): Comparator<String> {
+        val missingElementScore = 0.0
+        val exactMatchScore = 1.0
+        return Comparator { s1: String, s2: String ->
+            val score1 = resultMap[s1] ?: missingElementScore
+            val score2 = resultMap[s2] ?: missingElementScore
+            if (score1 == exactMatchScore && score2 == exactMatchScore) {
+                val matches1 = query == s1
+                val matches2 = query == s2
                 if (matches1 == matches2) {
                     return@Comparator 0
                 } else {

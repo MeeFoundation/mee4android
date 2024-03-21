@@ -54,7 +54,7 @@ fun ConsentSimpleEntryInput(
                 fontFamily = publicSansFamily,
                 fontSize = 16.sp,
                 fontWeight = FontWeight(400),
-                color = TextActive,
+                color = if (!entry.isOn || isReadOnly) TextActive.copy(0.75f) else TextActive,
                 textAlign = TextAlign.Left
             ),
             modifier = Modifier
@@ -73,7 +73,7 @@ fun ConsentSimpleEntryInput(
                                 id = getConsentEntryIconByType(entry.type),
                             ),
                             contentDescription = null,
-                            tint = if (isReadOnly) TextActive.copy(0.45f) else Color.Black,
+                            tint = if (!entry.isOn || isReadOnly) TextActive.copy(0.38f) else Color.Black,
                             modifier = Modifier
                                 .height(16.dp)
                         )
