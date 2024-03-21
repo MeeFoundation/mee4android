@@ -32,14 +32,12 @@ class TagSearchViewModel @Inject constructor(
 
     val isTagSelected = { tag: String -> tag in _selectedTagsMap }
 
-    private var _tags = MutableStateFlow(getAllTags())
-    private var foundTags = listOf<String>()
-    private val tags = searchState.combine(_tags) { query, tag ->
+    private var _allTags = MutableStateFlow(getAllTags())
+    private val _foundTags = searchState.combine(_allTags) { query, tag ->
         if (query.isBlank()) {
             tag
         } else {
-            foundTags = FuzzySearchHelper.getFoundTags(query, tag)
-            foundTags
+            FuzzySearchHelper.getFoundTags(query, tag)
         }
     }
 
@@ -48,16 +46,16 @@ class TagSearchViewModel @Inject constructor(
             _searchState.value = ""
             _selectedTagsMap[tag] = Unit
             _recentlyAddedTags[tag] = Unit
-            _tags.value = _tags.value.toMutableList().apply { add(tag) }
+            _allTags.value = _allTags.value.toMutableList().apply { add(tag) }
         }
     }
 
-    val isShowAddTagElement = searchState.combine(_tags) { query, tag ->
+    val isShowAddTagElement = searchState.combine(_allTags) { query, tag ->
         query.isNotBlank() && !tag.any { x -> query.equals(x, ignoreCase = true) }
     }
 
-    val isShowEntireList = searchState.combine(MutableStateFlow(foundTags)) { query, tag ->
-        query.isNotBlank() && tag.isEmpty() && _tags.value.isNotEmpty()
+    val isShowEntireList = searchState.combine(_foundTags) { query, tag ->
+        query.isNotBlank() && tag.isEmpty() && _allTags.value.isNotEmpty()
     }
 
     val isQueryEmpty = _searchState.map { value ->
@@ -65,13 +63,13 @@ class TagSearchViewModel @Inject constructor(
     }
 
     fun getTagsFlow(): Flow<List<String>> {
-        return tags.map { tags ->
+        return _foundTags.map { tags ->
             tags.sortedWith(getComparator())
         }
     }
 
     fun getAllTagsFlow(): Flow<List<String>> {
-        return _tags.map { tags ->
+        return _allTags.map { tags ->
             tags.sortedWith(getComparator())
         }
     }
