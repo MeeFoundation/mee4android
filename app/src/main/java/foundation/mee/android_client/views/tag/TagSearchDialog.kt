@@ -19,6 +19,7 @@ import androidx.compose.ui.window.DialogWindowProvider
 
 @Composable
 fun TagSearchDialog(
+    connectionId: String,
     onClose: () -> Unit
 ) {
     Dialog(
@@ -47,7 +48,9 @@ fun TagSearchDialog(
                 TagSearchScreenHeader {
                     onClose()
                 }
-                TagSearchContentView()
+                TagSearchContentView(
+                    connectionId = connectionId
+                )
             }
         }
     }
@@ -56,7 +59,7 @@ fun TagSearchDialog(
 @Composable
 @Preview
 fun SearchTagsDialogPreview() {
-    TagSearchDialog(
-        onClose = {}
-    )
+    TagSearchDialog("") {
+    }
+
 }

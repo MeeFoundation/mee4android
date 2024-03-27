@@ -6,6 +6,7 @@ import com.intuit.fuzzymatcher.domain.Element
 import com.intuit.fuzzymatcher.domain.ElementType
 import com.intuit.fuzzymatcher.domain.Match
 import foundation.mee.android_client.models.MeeConnection
+import foundation.mee.android_client.models.MeeTag
 
 object FuzzySearchHelper {
 
@@ -24,14 +25,14 @@ object FuzzySearchHelper {
         } ?: listOf()
     }
 
-    fun getFoundTags(query: String, tags: List<String>): List<String> {
-        val docsList = buildDocList(tags)
+    fun getFoundTags(query: String, tags: List<MeeTag>): List<MeeTag> {
+        val docsList = buildDocList(tags.map { it.name })
         val result = search(query, docsList)
         return result?.let {
             val resultMap = searchResultToMap(it)
             val comparator = getTagsComparator(query, resultMap)
             tags.filter { tag ->
-                tag in resultMap
+                tag.name in resultMap
             }.sortedWith(comparator)
         } ?: listOf()
     }
@@ -98,15 +99,17 @@ object FuzzySearchHelper {
     private fun getTagsComparator(
         query: String,
         resultMap: Map<String, Double>
-    ): Comparator<String> {
+    ): Comparator<MeeTag> {
         val missingElementScore = 0.0
         val exactMatchScore = 1.0
-        return Comparator { s1: String, s2: String ->
-            val score1 = resultMap[s1] ?: missingElementScore
-            val score2 = resultMap[s2] ?: missingElementScore
+        return Comparator { t1: MeeTag, t2: MeeTag ->
+            val name1 = t1.name
+            val name2 = t2.name
+            val score1 = resultMap[name1] ?: missingElementScore
+            val score2 = resultMap[name2] ?: missingElementScore
             if (score1 == exactMatchScore && score2 == exactMatchScore) {
-                val matches1 = query == s1
-                val matches2 = query == s2
+                val matches1 = query == name1
+                val matches2 = query == name2
                 if (matches1 == matches2) {
                     return@Comparator 0
                 } else {

@@ -61,7 +61,7 @@ fun Tag(
             .padding(start = 12.dp, end = if (isRemovable) 8.dp else 12.dp)
     ) {
         Text(
-            text = text,
+            text = "#${text}",
             fontFamily = publicSansFamily,
             fontSize = 14.sp,
             fontWeight = FontWeight(500),
@@ -92,7 +92,7 @@ fun Tag(
 @Composable
 fun TagPreview() {
     Column {
-        Tag(text = "#Entertainment", isRemovable = true, onClick = {})
-        Tag(text = "#Entertainment", isSelected = true, onClick = {})
+        Tag(text = "Entertainment", isRemovable = true, onClick = {})
+        Tag(text = "Entertainment", isSelected = true, onClick = {})
     }
 }

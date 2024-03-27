@@ -11,10 +11,12 @@ import foundation.mee.android_client.R
 import foundation.mee.android_client.navigation.NavViewModel
 import foundation.mee.android_client.navigation.Navigator
 import foundation.mee.android_client.ui.components.MeeTopAppBar
+import foundation.mee.android_client.views.tag.TagSearchViewModel
 
 @Composable
 fun ManageConnection(
     manageConnectionViewModel: ManageConnectionViewModel = hiltViewModel(),
+    tagSearchViewModel: TagSearchViewModel = hiltViewModel(),
     navigator: Navigator = hiltViewModel<NavViewModel>().navigator
 ) {
     val loadState = manageConnectionViewModel.screenData.collectAsState()
@@ -23,6 +25,7 @@ fun ManageConnection(
         is ConnectionDataState.None -> navigator.navigateToMainScreen()
         is ConnectionDataState.Success -> {
             val manageConnectionData = (loadState.value as ConnectionDataState.Success).data
+            tagSearchViewModel.addTagsToSelected(manageConnectionData.meeConnection.tags)
             Scaffold(drawerElevation = 0.dp, topBar = {
                 MeeTopAppBar(title = R.string.manage_connection_title) { navigator.popBackStack() }
             }) { padding ->

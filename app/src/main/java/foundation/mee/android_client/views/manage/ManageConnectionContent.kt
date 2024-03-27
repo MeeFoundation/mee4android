@@ -87,6 +87,7 @@ fun ManageConnectionContent(
                 thickness = 1.dp
             )
             ManageConnectionTags(
+                connectionId = manageConnectionData.meeConnection.id,
                 modifier = Modifier
                     .padding(16.dp)
             )

@@ -41,7 +41,7 @@ fun TagSearchEntry(
             .fillMaxWidth()
     ) {
         Text(
-            text = tag,
+            text = "#$tag",
             color = TextActive,
             fontFamily = publicSansFamily,
             fontWeight = FontWeight.Normal,
@@ -91,7 +91,7 @@ fun TagSearchEntry(
 @Composable
 fun SearchTagEntryPreview() {
     TagSearchEntry(
-        tag = "#Entertainment",
+        tag = "Entertainment",
         isExactMatch = false,/* isChecked = true, */
         onClick = {})
 }

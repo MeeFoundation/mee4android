@@ -19,15 +19,16 @@ import foundation.mee.android_client.ui.components.Expander
 
 @Composable
 fun ManageConnectionTags(
+    connectionId: String,
     modifier: Modifier = Modifier,
-    searchViewModel: TagSearchViewModel = hiltViewModel(),
+    tagsSearchViewModel: TagSearchViewModel = hiltViewModel(),
 ) {
 
     var isExpanded by remember {
         mutableStateOf(true)
     }
 
-    val isShowSearch by searchViewModel.searchMenu.collectAsState()
+    val isShowSearch by tagsSearchViewModel.searchMenu.collectAsState()
 
     Expander(
         title = stringResource(R.string.tags_title),
@@ -42,17 +43,17 @@ fun ManageConnectionTags(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AddTagButton {
-                searchViewModel.showSearchMenu()
+                tagsSearchViewModel.showSearchMenu()
             }
-            RemovableTagRow(tags = searchViewModel.selectedTagsList) {
-                searchViewModel.updateTag(it)
+            RemovableTagRow(tags = tagsSearchViewModel.selectedTagsList) {
+                tagsSearchViewModel.updateTag(connectionId, it)
             }
         }
     }
     if (isShowSearch) {
-        TagSearchDialog {
-            searchViewModel.hideSearchMenu()
-            searchViewModel.onCancelClick()
+        TagSearchDialog(connectionId = connectionId) {
+            tagsSearchViewModel.hideSearchMenu()
+            tagsSearchViewModel.onCancelClick()
         }
     }
 }
@@ -61,5 +62,5 @@ fun ManageConnectionTags(
 @Preview
 @Composable
 fun ManageConnectionTagsPreview() {
-    ManageConnectionTags()
+    ManageConnectionTags("")
 }

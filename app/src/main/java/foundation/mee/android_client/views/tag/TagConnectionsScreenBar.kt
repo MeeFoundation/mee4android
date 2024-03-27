@@ -13,19 +13,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
+import foundation.mee.android_client.views.search.SearchViewModel
 
 @Composable
 fun TagConnectionsScreenBar(
     modifier: Modifier = Modifier,
-    tagConnectionsViewModel: TagConnectionsViewModel = hiltViewModel()
-) {
+    searchViewModel: SearchViewModel = hiltViewModel()
 
+) {
     val tagList by remember {
-        mutableStateOf(tagConnectionsViewModel.tagList)
+        mutableStateOf(searchViewModel.tagList)
     }
 
     val selectedTagList by remember {
-        mutableStateOf(tagConnectionsViewModel.selectedTagList)
+        mutableStateOf(searchViewModel.selectedTagList)
     }
 
     Column(
@@ -40,7 +41,7 @@ fun TagConnectionsScreenBar(
                 tags = selectedTagList,
                 isTagSelected = true,
             ) { index, tag ->
-                tagConnectionsViewModel.unselectTag(index, tag)
+                searchViewModel.unselectTag(index, tag)
             }
         }
         if (tagList.isNotEmpty()) {
@@ -51,7 +52,7 @@ fun TagConnectionsScreenBar(
                 tags = tagList,
                 isTagSelected = false,
             ) { index, tag ->
-                tagConnectionsViewModel.selectTag(index, tag)
+                searchViewModel.selectTag(index, tag)
             }
         }
     }

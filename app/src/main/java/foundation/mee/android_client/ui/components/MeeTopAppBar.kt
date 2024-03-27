@@ -25,7 +25,7 @@ import foundation.mee.android_client.ui.theme.publicSansFamily
 @Composable
 fun MeeTopAppBar(
     title: Int,
-    onClickBack: () -> Boolean
+    onClickBack: () -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
@@ -67,6 +67,6 @@ fun MeeTopAppBar(
 @Composable
 fun PreviewMeeTopAppBar() {
     MeeIdentityAgentTheme {
-        MeeTopAppBar(title = R.string.manage_connection_title, onClickBack = { true })
+        MeeTopAppBar(title = R.string.manage_connection_title, onClickBack = { })
     }
 }

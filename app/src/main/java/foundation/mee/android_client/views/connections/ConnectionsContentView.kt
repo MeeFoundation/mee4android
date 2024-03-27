@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -39,53 +40,59 @@ fun ConnectionsContent(
     val searchMenu by searchViewModel.searchMenu.collectAsState()
     val scrollState = rememberScrollState()
 
-    if (connections.isEmpty() && searchMenu) {
-        Column {
-            Text(
-                text = stringResource(R.string.empty_search_result),
-                color = TextActive,
-                fontFamily = publicSansFamily,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Left,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
-            )
-            Divider(
-                color = Border,
-                thickness = 1.dp,
-            )
-        }
-
-    } else if (connections.isNotEmpty()) {
-        Column(
-            modifier = modifier
-                .verticalScroll(state = scrollState)
-        ) {
+    Column {
+        if (searchViewModel.showTagsPanel) {
             TagConnectionsScreenBar(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
             Divider(
                 color = Border,
                 thickness = 1.dp,
                 modifier = Modifier.padding(top = 16.dp)
             )
+        }
+        if (connections.isEmpty() && (searchMenu || searchViewModel.selectedTagList.isNotEmpty())) {
             Column {
-                connections.forEach { connection ->
-                    PartnerEntry(
-                        connection = connection,
-                        modifier = Modifier.clickableWithoutRipple {
-                            navigator.navigateToManageScreen(connection.id)
-                        }
-                    )
-                    Divider(
-                        color = Border,
-                        thickness = 1.dp
-                    )
+                Text(
+                    text = stringResource(R.string.empty_search_result),
+                    color = TextActive,
+                    fontFamily = publicSansFamily,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 16.dp)
+                )
+                Divider(
+                    color = Border,
+                    thickness = 1.dp,
+                )
+            }
+
+        } else if (connections.isNotEmpty()) {
+            Column(
+                modifier = modifier
+                    .verticalScroll(state = scrollState)
+            ) {
+                Column {
+                    connections.forEach { connection ->
+                        PartnerEntry(
+                            connection = connection,
+                            modifier = Modifier.clickableWithoutRipple {
+                                navigator.navigateToManageScreen(connection.id)
+                            }
+                        )
+                        Divider(
+                            color = Border,
+                            thickness = 1.dp
+                        )
+                    }
                 }
             }
         }
+    }
+    LaunchedEffect(Unit) {
+        searchViewModel.update()
     }
 }
 

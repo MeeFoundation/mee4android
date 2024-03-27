@@ -104,4 +104,5 @@
     <string name="choose_from_existing_tags">Choose from your existing tags</string>
     <string name="tags_found">Tags found</string>
     <string name="connections_existing_tags_header">Choose from your tags</string>
+    <string name="tag_add_failed">Failed to add tag</string>
 </resources>

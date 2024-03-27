@@ -15,7 +15,9 @@ fun MeeSettingsView(
     navigator: Navigator = hiltViewModel<NavViewModel>().navigator
 ) {
     Scaffold(topBar = {
-        MeeTopAppBar(title = R.string.top_app_bar_settings_title) { navigator.popBackStack() }
+        MeeTopAppBar(title = R.string.top_app_bar_settings_title) {
+            navigator.navigateToMainScreenAndRefresh()
+        }
     }) { padding ->
         MeeSettingsContent(modifier = Modifier.padding(padding))
     }
