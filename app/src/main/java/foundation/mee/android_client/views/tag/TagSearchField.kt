@@ -9,10 +9,14 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -44,6 +48,7 @@ fun TagSearchField(
     searchViewModel: TagSearchViewModel = hiltViewModel()
 ) {
 
+    val focusRequester = remember { FocusRequester() }
     val textFieldValue by searchViewModel.searchState.collectAsState()
 
     Row(
@@ -56,6 +61,7 @@ fun TagSearchField(
                 onValueChange = {
                     searchViewModel.onChange(it)
                 },
+                modifier = Modifier.focusRequester(focusRequester),
                 textStyle = searchTagsStyle.copy(color = TextActive),
                 decorationBox = { innerTextField ->
                     if (textFieldValue.isEmpty()) {
@@ -81,6 +87,9 @@ fun TagSearchField(
                         searchViewModel.onChange("")
                     })
         }
+    }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }
 

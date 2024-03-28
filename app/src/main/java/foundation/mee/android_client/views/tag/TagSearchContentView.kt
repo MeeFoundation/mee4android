@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
@@ -56,6 +57,7 @@ fun TagSearchContentView(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = modifier
                         .background(LightSurface)
+                        .sizeIn(minHeight = 55.dp)
                         .padding(vertical = 15.5.dp)
                         .padding(start = 16.dp)
                         .fillMaxWidth()

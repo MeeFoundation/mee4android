@@ -54,7 +54,6 @@ fun ManageConnectorContent(
                     Expander(
                         title = stringResource(R.string.manage_connection_required_expander),
                         color = Color.White,
-                        modifier = Modifier.padding(bottom = 24.dp),
                         isExpanded = state.isRequiredSectionOpened,
                         onChangeExpanded = {
                             state.isRequiredSectionOpened = !state.isRequiredSectionOpened
@@ -65,7 +64,7 @@ fun ManageConnectorContent(
                                 ConsentEntry(
                                     claim,
                                     isReadOnly = true,
-                                    modifier = Modifier.padding(top = 24.dp),
+                                    modifier = Modifier.padding(top = 16.dp),
                                     onDurationPopupShow = {
                                         state.durationPopupId = claim.id
                                     }
@@ -78,7 +77,6 @@ fun ManageConnectorContent(
                 if (!optionalClaims.isNullOrEmpty()) {
                     Expander(
                         title = stringResource(R.string.manage_connection_optional_expander),
-                        modifier = Modifier.padding(top = 16.dp),
                         color = Color.White,
                         isExpanded = state.isOptionalSectionOpened,
                         onChangeExpanded = {
@@ -90,7 +88,7 @@ fun ManageConnectorContent(
                                 ConsentEntry(
                                     claim,
                                     isReadOnly = true,
-                                    modifier = Modifier.padding(top = 24.dp)
+                                    modifier = Modifier.padding(top = 16.dp)
                                 )
                             }
                         }
@@ -119,7 +117,7 @@ fun ManageConnectorContent(
                         else -> listOf()
                     }
                 gapiEntries.map {
-                    Row(modifier = Modifier.padding(bottom = 24.dp)) {
+                    Row(modifier = Modifier.padding(bottom = 16.dp)) {
                         ExternalConsentEntry(it.first, it.second)
                     }
                 }

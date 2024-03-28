@@ -58,7 +58,7 @@ fun SelectableTagRow(
                 onClick = {
                     onSelectTag(index, it)
                 },
-                isRemovable = false,
+                isRemovable = isTagSelected,
                 isSelected = isTagSelected
             )
         }
@@ -89,7 +89,7 @@ fun RemovableTagRow(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        tags.forEachIndexed { index, it ->
+        tags.forEach {
             Tag(
                 text = it.name,
                 onClick = {
@@ -114,6 +114,7 @@ fun TrailingElement(
         textAlign = TextAlign.Center,
         lineHeight = 20.sp,
         color = DarkText,
+        letterSpacing = 0.1.sp,
         modifier = Modifier
             .clickable {
                 onClick()
@@ -128,27 +129,27 @@ fun TagRowPreview() {
     Column {
         SelectableTagRow(
             listOf(
-                "#Entertainment",
-                "#News",
-                "#Other",
-                "#Music",
-                "#Cinema",
-                "#Art",
-                "#Science",
-                "#Tech"
+                "Entertainment",
+                "News",
+                "Other",
+                "Music",
+                "Cinema",
+                "Art",
+                "Science",
+                "Tech"
             ).map { MeeTag("", it) },
             isTagSelected = true
         ) { _, _ -> }
         RemovableTagRow(
             listOf(
-                "#Entertainment",
-                "#News",
-                "#Other",
-                "#Music",
-                "#Cinema",
-                "#Art",
-                "#Science",
-                "#Tech"
+                "Entertainment",
+                "News",
+                "Other",
+                "Music",
+                "Cinema",
+                "Art",
+                "Science",
+                "Tech"
             ).map { MeeTag("", it) }
         ) {}
     }

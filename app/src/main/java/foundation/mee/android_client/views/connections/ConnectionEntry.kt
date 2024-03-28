@@ -46,7 +46,8 @@ fun ConnectionEntry(
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
-            .sizeIn(minHeight = 88.dp),
+            .sizeIn(minHeight = 56.dp)
+            .padding(vertical = 16.dp),
         color = Color.White
     ) {
         Row(
@@ -54,7 +55,7 @@ fun ConnectionEntry(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),

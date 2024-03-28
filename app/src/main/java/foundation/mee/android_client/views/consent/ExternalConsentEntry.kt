@@ -89,6 +89,7 @@ fun ExternalConsentEntry(
                             textAlign = TextAlign.Left
                         ),
                         modifier = Modifier
+                            .sizeIn(minHeight = 56.dp)
                             .padding(horizontal = 16.dp, vertical = 16.dp)
                             .weight(1f),
                         decorationBox = { innerTextField ->

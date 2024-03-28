@@ -45,12 +45,12 @@ fun Tag(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
             .background(
-                if (isSelected && !isRemovable) SecondaryContainer else Color.Transparent,
+                if (isSelected) SecondaryContainer else Color.Transparent,
                 shape
             )
             .border(
                 1.dp,
-                if (isSelected && !isRemovable) SecondaryContainer else InactiveBorder,
+                if (isSelected) SecondaryContainer else InactiveBorder,
                 shape
             )
             .clickableWithoutRipple {
@@ -77,7 +77,7 @@ fun Tag(
                 id = R.drawable.closeicon
             ),
                 contentDescription = null,
-                tint = DarkText,
+                tint = if (isSelected) OnSecondary else DarkText,
                 modifier = Modifier
                     .width(18.dp)
                     .height(20.dp)
@@ -93,6 +93,7 @@ fun Tag(
 fun TagPreview() {
     Column {
         Tag(text = "Entertainment", isRemovable = true, onClick = {})
-        Tag(text = "Entertainment", isSelected = true, onClick = {})
+        Tag(text = "Entertainment", isSelected = true, isRemovable = true, onClick = {})
+        Tag(text = "Entertainment", isRemovable = false, onClick = {})
     }
 }

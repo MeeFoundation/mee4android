@@ -3,6 +3,7 @@ package foundation.mee.android_client.views.tag
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
+import foundation.mee.android_client.ui.theme.Border
 import foundation.mee.android_client.views.search.SearchViewModel
 
 @Composable
@@ -30,29 +32,32 @@ fun TagConnectionsScreenBar(
     }
 
     Column(
-        modifier = modifier.padding(top = 18.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = modifier.padding(top = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        if (selectedTagList.isNotEmpty()) {
-            TagTitle(
-                text = stringResource(id = R.string.filter_by_tag)
-            )
-            SelectableTagRow(
-                tags = selectedTagList,
-                isTagSelected = true,
-            ) { index, tag ->
-                searchViewModel.unselectTag(index, tag)
-            }
-        }
+        TagTitle(
+            text = stringResource(id = R.string.filter_by_tag)
+        )
         if (tagList.isNotEmpty()) {
-            TagTitle(
-                text = stringResource(id = R.string.connections_existing_tags_header)
-            )
             SelectableTagRow(
                 tags = tagList,
                 isTagSelected = false,
             ) { index, tag ->
                 searchViewModel.selectTag(index, tag)
+            }
+        }
+        if (selectedTagList.isNotEmpty() && tagList.isNotEmpty()) {
+            Divider(
+                color = Border,
+                thickness = 1.dp
+            )
+        }
+        if (selectedTagList.isNotEmpty()) {
+            SelectableTagRow(
+                tags = selectedTagList,
+                isTagSelected = true,
+            ) { index, tag ->
+                searchViewModel.unselectTag(index, tag)
             }
         }
     }

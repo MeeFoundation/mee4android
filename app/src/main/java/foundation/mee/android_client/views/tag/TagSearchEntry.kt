@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -36,7 +37,8 @@ fun TagSearchEntry(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .padding(vertical = if (isExactMatch) 24.dp else 15.5.dp)
+            .sizeIn(minHeight = 56.dp)
+            .padding(vertical = 16.dp)
             .padding(start = 16.dp)
             .fillMaxWidth()
     ) {
@@ -92,6 +94,7 @@ fun TagSearchEntry(
 fun SearchTagEntryPreview() {
     TagSearchEntry(
         tag = "Entertainment",
-        isExactMatch = false,/* isChecked = true, */
+        isExactMatch = true,
+        isChecked = true,
         onClick = {})
 }

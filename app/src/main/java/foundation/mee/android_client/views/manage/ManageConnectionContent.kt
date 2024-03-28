@@ -69,8 +69,7 @@ fun ManageConnectionContent(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
-            modifier = modifier.padding(top = 10.dp)
+            verticalArrangement = Arrangement.Top
         ) {
             ConnectionEntry(
                 connection = manageConnectionData.meeConnection,
@@ -148,7 +147,7 @@ fun ManageConnectionContent(
         if (entries.isNotEmpty()) {
             Row(
                 Modifier
-                    .padding(bottom = 26.dp)
+                    .padding(bottom = 43.dp)
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,

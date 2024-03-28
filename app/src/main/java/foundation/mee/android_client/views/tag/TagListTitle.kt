@@ -29,11 +29,11 @@ fun TagTitle(
             Text(
                 text = text,
                 fontFamily = publicSansFamily,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight(600),
                 textAlign = TextAlign.Left,
-                lineHeight = 20.sp,
-                letterSpacing = 0.1.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.15.sp,
                 color = DarkText
             )
         }
