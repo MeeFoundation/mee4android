@@ -19,42 +19,47 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
+import foundation.mee.android_client.models.MeeTag
 import foundation.mee.android_client.ui.theme.DarkText
 import foundation.mee.android_client.ui.theme.publicSansFamily
 
+const val DEFAULT_MAX_ROW_COUNT = 2
+
 @Composable
 fun SelectableTagRow(
-    tags: List<String>,
+    tags: List<MeeTag>,
     modifier: Modifier = Modifier,
-    isTagSelected: (String) -> Boolean,
-    onSelectTag: (Int, String) -> Unit
+    isTagSelected: Boolean,
+    onSelectTag: (Int, MeeTag) -> Unit
 ) {
-    var rowCount by remember { mutableStateOf<MeeFlowMaxRowCount?>(MeeFlowMaxRowCount.DEFAULT) }
+
+    var trailingElementState by remember { mutableStateOf(TrailingElementState.NONE) }
 
     MeeFlowRow(
         spacedBy = 8.dp,
+        trailingElementState = trailingElementState,
         showMore = {
             TrailingElement(text = R.string.more_tags) {
-                rowCount = MeeFlowMaxRowCount.MAX
+                trailingElementState = TrailingElementState.SHOW_MORE
             }
         },
         showLess = {
             TrailingElement(text = R.string.less_tags) {
-                rowCount = MeeFlowMaxRowCount.DEFAULT
+                trailingElementState = TrailingElementState.SHOW_LESS
             }
         },
-        maxRowCount = rowCount,
+        maxRowCount = DEFAULT_MAX_ROW_COUNT,
         modifier = modifier
             .fillMaxWidth()
     ) {
         tags.forEachIndexed { index, it ->
             Tag(
-                text = it,
+                text = it.name,
                 onClick = {
                     onSelectTag(index, it)
                 },
-                isRemovable = false,
-                isSelected = isTagSelected(it)
+                isRemovable = isTagSelected,
+                isSelected = isTagSelected
             )
         }
     }
@@ -62,32 +67,33 @@ fun SelectableTagRow(
 
 @Composable
 fun RemovableTagRow(
-    tags: List<String>,
-    onRemoveTag: (Int) -> Unit
+    tags: List<MeeTag>,
+    onRemoveTag: (MeeTag) -> Unit
 ) {
-    var rowCount by remember { mutableStateOf<MeeFlowMaxRowCount?>(MeeFlowMaxRowCount.DEFAULT) }
+    var trailingElementState by remember { mutableStateOf(TrailingElementState.NONE) }
 
     MeeFlowRow(
         spacedBy = 8.dp,
+        trailingElementState = trailingElementState,
         showMore = {
             TrailingElement(text = R.string.more_tags) {
-                rowCount = MeeFlowMaxRowCount.MAX
+                trailingElementState = TrailingElementState.SHOW_MORE
             }
         },
         showLess = {
             TrailingElement(text = R.string.less_tags) {
-                rowCount = MeeFlowMaxRowCount.DEFAULT
+                trailingElementState = TrailingElementState.SHOW_LESS
             }
         },
-        maxRowCount = MeeFlowMaxRowCount.DEFAULT,
+        maxRowCount = DEFAULT_MAX_ROW_COUNT,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        tags.forEachIndexed { index, it ->
+        tags.forEach {
             Tag(
-                text = it,
+                text = it.name,
                 onClick = {
-                    onRemoveTag(index)
+                    onRemoveTag(it)
                 },
                 isRemovable = true,
             )
@@ -108,6 +114,7 @@ fun TrailingElement(
         textAlign = TextAlign.Center,
         lineHeight = 20.sp,
         color = DarkText,
+        letterSpacing = 0.1.sp,
         modifier = Modifier
             .clickable {
                 onClick()
@@ -122,28 +129,28 @@ fun TagRowPreview() {
     Column {
         SelectableTagRow(
             listOf(
-                "#Entertainment",
-                "#News",
-                "#Other",
-                "#Music",
-                "#Cinema",
-                "#Art",
-                "#Science",
-                "#Tech"
-            ),
-            isTagSelected = { it == "#Entertainment" }
+                "Entertainment",
+                "News",
+                "Other",
+                "Music",
+                "Cinema",
+                "Art",
+                "Science",
+                "Tech"
+            ).map { MeeTag("", it) },
+            isTagSelected = true
         ) { _, _ -> }
         RemovableTagRow(
             listOf(
-                "#Entertainment",
-                "#News",
-                "#Other",
-                "#Music",
-                "#Cinema",
-                "#Art",
-                "#Science",
-                "#Tech"
-            )
+                "Entertainment",
+                "News",
+                "Other",
+                "Music",
+                "Cinema",
+                "Art",
+                "Science",
+                "Tech"
+            ).map { MeeTag("", it) }
         ) {}
     }
 }

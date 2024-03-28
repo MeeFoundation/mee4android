@@ -6,6 +6,7 @@ import com.intuit.fuzzymatcher.domain.Element
 import com.intuit.fuzzymatcher.domain.ElementType
 import com.intuit.fuzzymatcher.domain.Match
 import foundation.mee.android_client.models.MeeConnection
+import foundation.mee.android_client.models.MeeTag
 
 object FuzzySearchHelper {
 
@@ -20,6 +21,18 @@ object FuzzySearchHelper {
             val comparator = getComparator(query, resultMap)
             connections.filter { connection ->
                 connection.name in resultMap
+            }.sortedWith(comparator)
+        } ?: listOf()
+    }
+
+    fun getFoundTags(query: String, tags: List<MeeTag>): List<MeeTag> {
+        val docsList = buildDocList(tags.map { it.name })
+        val result = search(query, docsList)
+        return result?.let {
+            val resultMap = searchResultToMap(it)
+            val comparator = getTagsComparator(query, resultMap)
+            tags.filter { tag ->
+                tag.name in resultMap
             }.sortedWith(comparator)
         } ?: listOf()
     }
@@ -68,6 +81,30 @@ object FuzzySearchHelper {
         return Comparator { c1: MeeConnection, c2: MeeConnection ->
             val name1 = c1.name
             val name2 = c2.name
+            val score1 = resultMap[name1] ?: missingElementScore
+            val score2 = resultMap[name2] ?: missingElementScore
+            if (score1 == exactMatchScore && score2 == exactMatchScore) {
+                val matches1 = query == name1
+                val matches2 = query == name2
+                if (matches1 == matches2) {
+                    return@Comparator 0
+                } else {
+                    return@Comparator if (matches2) 1 else -1
+                }
+            }
+            return@Comparator score2.compareTo(score1)
+        }
+    }
+
+    private fun getTagsComparator(
+        query: String,
+        resultMap: Map<String, Double>
+    ): Comparator<MeeTag> {
+        val missingElementScore = 0.0
+        val exactMatchScore = 1.0
+        return Comparator { t1: MeeTag, t2: MeeTag ->
+            val name1 = t1.name
+            val name2 = t2.name
             val score1 = resultMap[name1] ?: missingElementScore
             val score2 = resultMap[name2] ?: missingElementScore
             if (score1 == exactMatchScore && score2 == exactMatchScore) {

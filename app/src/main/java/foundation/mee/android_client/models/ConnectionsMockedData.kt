@@ -1,19 +1,20 @@
 package foundation.mee.android_client.models
 
 import foundation.mee.android_client.views.manage.ConsentEntriesType
-import uniffi.mee_agent.OidcClientMetadata
 import uniffi.mee_agent.RetentionDuration
 
 
 val meConnectionMock = MeeConnection(
     id = "mee.foundation",
-    name = "Mee Foundation"
+    name = "Mee Foundation",
+    tags = listOf()
 )
 
 val manageConnectionDataMock = ManageConnectionData(
     meeConnection = MeeConnection(
         id = "oldeyorktimes.com",
-        name = "Olde York Times"
+        name = "Olde York Times",
+        tags = listOf()
     ),
     connectorToEntries = listOf(
         ConnectorToEntries(

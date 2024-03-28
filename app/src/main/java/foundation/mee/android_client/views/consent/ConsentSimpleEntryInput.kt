@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Icon
@@ -54,10 +55,11 @@ fun ConsentSimpleEntryInput(
                 fontFamily = publicSansFamily,
                 fontSize = 16.sp,
                 fontWeight = FontWeight(400),
-                color = TextActive,
+                color = if (!entry.isOn || isReadOnly) TextActive.copy(0.75f) else TextActive,
                 textAlign = TextAlign.Left
             ),
             modifier = Modifier
+                .sizeIn(minHeight = 56.dp)
                 .padding(horizontal = 16.dp, vertical = 16.dp)
                 .weight(1f),
             decorationBox = { innerTextField ->
@@ -73,7 +75,7 @@ fun ConsentSimpleEntryInput(
                                 id = getConsentEntryIconByType(entry.type),
                             ),
                             contentDescription = null,
-                            tint = if (isReadOnly) TextActive.copy(0.45f) else Color.Black,
+                            tint = if (!entry.isOn || isReadOnly) TextActive.copy(0.38f) else Color.Black,
                             modifier = Modifier
                                 .height(16.dp)
                         )

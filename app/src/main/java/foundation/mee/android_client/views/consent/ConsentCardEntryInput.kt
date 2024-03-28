@@ -24,6 +24,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.squareup.moshi.JsonAdapter
@@ -33,8 +34,10 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.ConsentRequestClaim
 import foundation.mee.android_client.models.CreditCard
+import foundation.mee.android_client.models.manageConnectionDataMock
 import foundation.mee.android_client.ui.theme.*
 import foundation.mee.android_client.utils.getConsentEntryIconByType
+import foundation.mee.android_client.views.manage.ConsentEntriesType
 
 @Composable
 private fun Placeholder(text: String) {
@@ -60,7 +63,7 @@ fun ConsentCardEntryInput(
         fontSize = 16.sp,
         fontWeight = FontWeight(400),
         textAlign = TextAlign.Left,
-        color = TextActive
+        color = if (!entry.isOn || isReadOnly) TextActive.copy(0.75f) else TextActive
     )
     val emptyCreditCardValue = CreditCard(number = null, cvc = null, expirationDate = null)
     val moshi: Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
@@ -90,7 +93,7 @@ fun ConsentCardEntryInput(
                     id = getConsentEntryIconByType(entry.type),
                 ),
                 contentDescription = null,
-                tint = if (isReadOnly) TextActive.copy(0.45f) else Color.Black,
+                tint = if (!entry.isOn || isReadOnly) TextActive.copy(0.38f) else Color.Black,
                 modifier = Modifier
                     .height(16.dp)
             )
@@ -158,4 +161,15 @@ fun ConsentCardEntryInput(
     }
 
 
+}
+
+@Preview
+@Composable
+fun ConsentCardEntryInputPreview() {
+    val entry =
+        manageConnectionDataMock.connectorToEntries[0].consentEntriesType as ConsentEntriesType.SiopClaims
+    ConsentCardEntryInput(
+        entry = entry.value.first(),
+        isReadOnly = true
+    ) { _, _ -> }
 }

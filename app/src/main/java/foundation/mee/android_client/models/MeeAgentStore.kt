@@ -202,19 +202,50 @@ class MeeAgentStore @Inject constructor(
         initMeeAgent()
     }
 
-    // TODO mock
-    // TODO comment everything to check emptiness
-    fun getAllConnectionsTags(): List<String> {
-        return listOf(
-            "#Music",
-            "#Cinema",
-            "#Explore",
-            "#Entertainment",
-            "#Art",
-            "#News",
-            "#Tech",
-            "#Science",
-            "#Other"
-        )
+    fun getAllTags(): List<MeeTag>? {
+        return try {
+            agent.searchTags("").map { MeeTag(it) }
+        } catch (e: Exception) {
+            Log.e("error getting all tags: ", e.message.orEmpty())
+            null
+        }
+    }
+
+    fun getConnectionsByTagId(tagId: String): List<MeeConnection>? {
+        return try {
+            agent.getConnectionsByTag(tagId).map { MeeConnection(it) }
+        } catch (e: Exception) {
+            Log.e("error getting connections by tag: ", e.message.orEmpty())
+            null
+        }
+    }
+
+    fun getAllTagsWithConnections(): List<MeeTag>? {
+        return try {
+            agent.searchTags("").filter { agent.getConnectionsByTag(it.id).isNotEmpty() }
+                .map { MeeTag(it) }
+        } catch (e: Exception) {
+            Log.e("error getting all tags with connections: ", e.message.orEmpty())
+            null
+        }
+    }
+
+    fun createTag(connId: String, tagIds: List<String>, newTagName: String): MeeTag? {
+        return try {
+            val tag = MeeTag(agent.getOrCreateTag(newTagName))
+            agent.assignTagsToConnection(connId, tagIds + tag.id)
+            return tag
+        } catch (e: Exception) {
+            Log.e("error on create tag", e.message.orEmpty())
+            null
+        }
+    }
+
+    fun updateTags(connId: String, tagIds: List<String>) {
+        try {
+            agent.assignTagsToConnection(connId, tagIds)
+        } catch (e: Exception) {
+            Log.e("error on update tags", e.message.orEmpty())
+        }
     }
 }

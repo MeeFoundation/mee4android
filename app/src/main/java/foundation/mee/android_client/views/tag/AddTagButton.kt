@@ -32,6 +32,7 @@ fun AddTagButton(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
+            .clickableWithoutRipple { onClick() }
             .background(Color.Transparent, shape)
             .border(1.dp, InactiveBorder, shape)
     ) {
@@ -46,7 +47,6 @@ fun AddTagButton(
             color = DarkText,
             modifier = Modifier
                 .padding(16.dp)
-                .clickableWithoutRipple { onClick() }
         )
     }
 }

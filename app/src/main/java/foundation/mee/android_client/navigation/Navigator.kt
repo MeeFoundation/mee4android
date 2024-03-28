@@ -24,4 +24,12 @@ class Navigator @Inject constructor() {
     fun navigateToManageScreen(otherPartyConnectionId: String) {
         navController.navigate("${MeeDestinations.MANAGE.route}/${otherPartyConnectionId}")
     }
+
+    fun navigateToMainScreenAndRefresh() {
+        navController.navigate(MeeDestinations.CONNECTIONS.route) {
+            popUpTo(MeeDestinations.CONNECTIONS.route) {
+                inclusive = true
+            }
+        }
+    }
 }

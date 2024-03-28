@@ -1,10 +1,10 @@
 package foundation.mee.android_client.views.tag
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -13,25 +13,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.components.Expander
 
-// TODO remove after refactoring
-@SuppressLint("UnrememberedMutableState")
 @Composable
 fun ManageConnectionTags(
-    modifier: Modifier = Modifier
+    connectionId: String,
+    modifier: Modifier = Modifier,
+    tagsSearchViewModel: TagSearchViewModel = hiltViewModel(),
 ) {
 
     var isExpanded by remember {
         mutableStateOf(true)
     }
 
-    // TODO mock data
-    var tagList by remember {
-        mutableStateOf(listOf("Tag 1", "Tag 2", "Tag 3"))
-    }
-
+    val isShowSearch by tagsSearchViewModel.searchMenu.collectAsState()
 
     Expander(
         title = stringResource(R.string.tags_title),
@@ -46,13 +43,17 @@ fun ManageConnectionTags(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AddTagButton {
-
+                tagsSearchViewModel.showSearchMenu()
             }
-            RemovableTagRow(tags = tagList) {
-                tagList = tagList.toMutableList().apply {
-                    removeAt(it)
-                }
+            RemovableTagRow(tags = tagsSearchViewModel.selectedTagsList) {
+                tagsSearchViewModel.updateTag(connectionId, it)
             }
+        }
+    }
+    if (isShowSearch) {
+        TagSearchDialog(connectionId = connectionId) {
+            tagsSearchViewModel.hideSearchMenu()
+            tagsSearchViewModel.onCancelClick()
         }
     }
 }
@@ -61,5 +62,5 @@ fun ManageConnectionTags(
 @Preview
 @Composable
 fun ManageConnectionTagsPreview() {
-    ManageConnectionTags()
+    ManageConnectionTags("")
 }
