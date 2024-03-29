@@ -234,7 +234,7 @@ class MeeAgentStore @Inject constructor(
         return try {
             val tag = MeeTag(agent.getOrCreateTag(newTagName))
             agent.assignTagsToConnection(connId, tagIds + tag.id)
-            return tag
+            tag
         } catch (e: Exception) {
             Log.e("error on create tag", e.message.orEmpty())
             null

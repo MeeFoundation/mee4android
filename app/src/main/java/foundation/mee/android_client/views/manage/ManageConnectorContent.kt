@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.compose.ui.window.DialogWindowProvider
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.manageConnectionDataMock
 import foundation.mee.android_client.ui.components.Expander
+import foundation.mee.android_client.ui.theme.Border
 import foundation.mee.android_client.ui.theme.MeeIdentityAgentTheme
 import foundation.mee.android_client.views.consent.ConsentDuration
 import foundation.mee.android_client.views.consent.ConsentEntry
@@ -75,6 +77,11 @@ fun ManageConnectorContent(
                 }
 
                 if (!optionalClaims.isNullOrEmpty()) {
+                    Divider(
+                        color = Border,
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(vertical = 24.dp)
+                    )
                     Expander(
                         title = stringResource(R.string.manage_connection_optional_expander),
                         color = Color.White,
