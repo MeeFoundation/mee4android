@@ -16,7 +16,7 @@ fun MeeSettingsView(
 ) {
     Scaffold(topBar = {
         MeeTopAppBar(title = R.string.top_app_bar_settings_title) {
-            navigator.navigateToMainScreenAndRefresh()
+            navigator.popBackStack()
         }
     }) { padding ->
         MeeSettingsContent(modifier = Modifier.padding(padding))

@@ -21,7 +21,9 @@ import foundation.mee.android_client.ui.theme.DarkText
 
 @Composable
 fun TagSearchTopBar(
-    onCancelClick: () -> Unit
+    onCancelClick: () -> Unit,
+    textFieldValue: String,
+    onChangeText: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -43,15 +45,18 @@ fun TagSearchTopBar(
                 { onCancelClick() }
         )
         TagSearchField(
+            textFieldValue = textFieldValue,
             modifier = Modifier
                 .padding(start = 16.dp)
                 .weight(1f)
-        )
+        ) {
+            onChangeText(it)
+        }
     }
 }
 
 @Preview
 @Composable
 fun PreviewTagSearchTopBar() {
-    TagSearchTopBar {}
+    TagSearchTopBar(onCancelClick = {}, "") {}
 }

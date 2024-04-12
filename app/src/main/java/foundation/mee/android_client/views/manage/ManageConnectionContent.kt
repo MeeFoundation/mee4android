@@ -98,6 +98,7 @@ fun ManageConnectionContent(
                 ScrollableTabRow(
                     selectedTabIndex = visibleEntryIndex,
                     backgroundColor = Color.Transparent,
+                    edgePadding = 16.dp,
                     indicator = { tabPositions ->
                         TabRowDefaults.Indicator(
                             color = TabIndicator,

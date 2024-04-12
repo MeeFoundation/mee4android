@@ -10,8 +10,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
 import foundation.mee.android_client.ui.theme.DarkText
@@ -44,12 +41,12 @@ val searchTagsStyle = TextStyle(
 
 @Composable
 fun TagSearchField(
+    textFieldValue: String,
     modifier: Modifier = Modifier,
-    searchViewModel: TagSearchViewModel = hiltViewModel()
+    onChangeText: (String) -> Unit
 ) {
 
     val focusRequester = remember { FocusRequester() }
-    val textFieldValue by searchViewModel.searchState.collectAsState()
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -59,7 +56,7 @@ fun TagSearchField(
         Row(verticalAlignment = Alignment.CenterVertically) {
             BasicTextField(value = textFieldValue,
                 onValueChange = {
-                    searchViewModel.onChange(it)
+                    onChangeText(it)
                 },
                 modifier = Modifier.focusRequester(focusRequester),
                 textStyle = searchTagsStyle.copy(color = TextActive),
@@ -84,7 +81,7 @@ fun TagSearchField(
                     .width(24.dp)
                     .height(24.dp)
                     .clickableWithoutRipple {
-                        searchViewModel.onChange("")
+                        onChangeText("")
                     })
         }
     }
@@ -96,5 +93,5 @@ fun TagSearchField(
 @Composable
 @Preview
 fun PreviewTagsSearchField() {
-    TagSearchField()
+    TagSearchField("") {}
 }

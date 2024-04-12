@@ -19,7 +19,7 @@ fun MeeFlowRow(
     modifier: Modifier = Modifier,
     trailingElementState: TrailingElementState = TrailingElementState.NONE,
     maxRowCount: Int?,
-    showMore: @Composable () -> Unit,
+    showMore: @Composable (Int) -> Unit,
     showLess: @Composable () -> Unit,
     content: @Composable () -> Unit,
 ) {
@@ -31,6 +31,12 @@ fun MeeFlowRow(
         var currentOffset = IntOffset.Zero
         val maxWidth = layoutConstraints.maxWidth
         val measurableList = subcompose("content", content)
+        val calculateShowMorePlaceable = { remainingCount: Int, minHeight: Int ->
+            subcompose(remainingCount) {
+                showMore(remainingCount)
+            }[0].measure(layoutConstraints.copy(minHeight = minHeight))
+        }
+        var remainingCount = measurableList.size
         val placeableToOffset = mutableListOf<Pair<Placeable, IntOffset>>()
         var nextRow = 0
 
@@ -45,13 +51,15 @@ fun MeeFlowRow(
                 val nextRowVerticalOffset = currentOffset.y + placeable.height + spacedByValue
 
                 if (maxRowCount != null && nextRow >= maxRowCount && trailingElementState != TrailingElementState.SHOW_MORE) {
-                    val showMorePlaceable = subcompose("showMore") {
-                        showMore()
-                    }[0].measure(layoutConstraints.copy(minHeight = placeable.height))
+                    var showMorePlaceable =
+                        calculateShowMorePlaceable(remainingCount, placeable.height)
 
                     while (currentOffset.x + showMorePlaceable.width > maxWidth) {
                         val removed = placeableToOffset.removeLast()
                         currentOffset = removed.second
+                        remainingCount += 1
+                        showMorePlaceable =
+                            calculateShowMorePlaceable(remainingCount, placeable.height)
                     }
 
                     placeableToOffset.add(showMorePlaceable to currentOffset)
@@ -62,6 +70,7 @@ fun MeeFlowRow(
             }
 
             placeableToOffset.add(placeable to currentOffset)
+            remainingCount -= 1
 
             currentOffset =
                 currentOffset.copy(x = currentOffset.x + placeable.width + spacedByValue)

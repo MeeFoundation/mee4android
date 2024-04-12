@@ -28,12 +28,13 @@ import foundation.mee.android_client.ui.theme.TextActive
 import foundation.mee.android_client.ui.theme.publicSansFamily
 import foundation.mee.android_client.views.search.SearchViewModel
 import foundation.mee.android_client.views.tag.TagConnectionsScreenBar
-
+import foundation.mee.android_client.views.tag.TagSearchViewModelImpl
 
 @Composable
 fun ConnectionsContent(
     modifier: Modifier = Modifier,
     searchViewModel: SearchViewModel = hiltViewModel(),
+    tagSearchViewModel: TagSearchViewModelImpl = hiltViewModel(),
     navigator: Navigator = hiltViewModel<NavViewModel>().navigator
 ) {
     val connections by searchViewModel.getConnectionsFlow().collectAsState(listOf())
@@ -41,8 +42,9 @@ fun ConnectionsContent(
     val scrollState = rememberScrollState()
 
     Column {
-        if (searchViewModel.showTagsPanel) {
+        if (tagSearchViewModel.showTagsPanel) {
             TagConnectionsScreenBar(
+                tagsCount = searchViewModel.selectedTagList.size,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Divider(
@@ -82,10 +84,6 @@ fun ConnectionsContent(
                                 navigator.navigateToManageScreen(connection.id)
                             }
                         )
-                        Divider(
-                            color = Border,
-                            thickness = 1.dp
-                        )
                     }
                 }
             }
@@ -93,6 +91,7 @@ fun ConnectionsContent(
     }
     LaunchedEffect(Unit) {
         searchViewModel.update()
+        tagSearchViewModel.update()
     }
 }
 

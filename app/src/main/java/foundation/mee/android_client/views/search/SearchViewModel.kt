@@ -40,27 +40,16 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private var _tagList = mutableStateListOf<MeeTag>()
-    val tagList: List<MeeTag> = _tagList
-
     private var _selectedTagList = mutableStateListOf<MeeTag>()
     val selectedTagList: List<MeeTag> = _selectedTagList
 
-    val showTagsPanel: Boolean
-        get() = tagList.isNotEmpty() || selectedTagList.isNotEmpty()
-
     fun update() {
         viewModelScope.launch {
-            val allTagsWithConnections = meeAgentStore.getAllTagsWithConnections() ?: listOf()
+            val allTagsWithConnections = meeAgentStore.getAllTagsWithConnectors() ?: listOf()
             with(_selectedTagList) {
                 val refreshedSelected = filter { allTagsWithConnections.contains(it) }
                 clear()
                 addAll(refreshedSelected)
-            }
-            with(_tagList) {
-                clear()
-                val notSelected = allTagsWithConnections.filter { !selectedTagList.contains(it) }.sortedBy { it.name }
-                addAll(notSelected)
             }
             with(_connections) {
                 value = if (selectedTagList.isEmpty()) {
@@ -109,20 +98,30 @@ class SearchViewModel @Inject constructor(
         _isSpeaking.value = value
     }
 
-    fun selectTag(index: Int, tag: MeeTag) {
-        with(_selectedTagList) {
-            add(tag)
-            sortBy { it.name }
-        }
-        with(_connections) {
-            value = selectedTagList.flatMap { getConnectionsByTagId(it.id) }.distinct()
-        }
-        with(_tagList) {
-            removeAt(index)
+    fun updateTag(tag: MeeTag) {
+        if (tag in _selectedTagList) {
+            with(_selectedTagList) {
+                remove(tag)
+            }
+            with(_connections) {
+                value = if (selectedTagList.isEmpty()) {
+                    getAllConnections()
+                } else {
+                    selectedTagList.flatMap { getConnectionsByTagId(it.id) }.distinct()
+                }
+            }
+        } else {
+            with(_selectedTagList) {
+                add(tag)
+                sortBy { it.name }
+            }
+            with(_connections) {
+                value = selectedTagList.flatMap { getConnectionsByTagId(it.id) }.distinct()
+            }
         }
     }
 
-    fun unselectTag(index: Int, tag: MeeTag) {
+    fun unselectTag(index: Int) {
         with(_selectedTagList) {
             removeAt(index)
         }
@@ -132,10 +131,6 @@ class SearchViewModel @Inject constructor(
             } else {
                 selectedTagList.flatMap { getConnectionsByTagId(it.id) }.distinct()
             }
-        }
-        with(_tagList) {
-            add(tag)
-            sortBy { it.name }
         }
     }
 }

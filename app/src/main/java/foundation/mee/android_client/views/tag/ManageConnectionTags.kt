@@ -21,14 +21,16 @@ import foundation.mee.android_client.ui.components.Expander
 fun ManageConnectionTags(
     connectionId: String,
     modifier: Modifier = Modifier,
-    tagsSearchViewModel: TagSearchViewModel = hiltViewModel(),
+    tagSearchAndCreateViewModel: TagSearchAndCreateViewModel = hiltViewModel(),
 ) {
 
     var isExpanded by remember {
         mutableStateOf(true)
     }
 
-    val isShowSearch by tagsSearchViewModel.searchMenu.collectAsState()
+    val textFieldValue by tagSearchAndCreateViewModel.searchState.collectAsState()
+
+    val isShowSearch by tagSearchAndCreateViewModel.searchMenu.collectAsState()
 
     Expander(
         title = stringResource(R.string.tags_title),
@@ -43,17 +45,28 @@ fun ManageConnectionTags(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AddTagButton {
-                tagsSearchViewModel.showSearchMenu()
+                tagSearchAndCreateViewModel.showSearchMenu()
             }
-            RemovableTagRow(tags = tagsSearchViewModel.selectedTagsList) {
-                tagsSearchViewModel.updateTag(connectionId, it)
-            }
+            RemovableTagRow(
+                tags = tagSearchAndCreateViewModel.selectedTagsList,
+                onRemoveTag = { _, tag ->
+                    tagSearchAndCreateViewModel.updateTag(tag)
+                    tagSearchAndCreateViewModel.updateConnectionTag(connectionId)
+                })
         }
     }
     if (isShowSearch) {
-        TagSearchDialog(connectionId = connectionId) {
-            tagsSearchViewModel.hideSearchMenu()
-            tagsSearchViewModel.onCancelClick()
+        TagSearchDialog {
+            TagSearchScreenHeader(onClickBack = {
+                tagSearchAndCreateViewModel.hideSearchMenu()
+                tagSearchAndCreateViewModel.onCancelClick()
+            }, textFieldValue = textFieldValue) {
+                tagSearchAndCreateViewModel.onChange(it)
+            }
+            TagSearchContentView(
+                connectionId = connectionId,
+                tagSearchAndCreateViewModel = tagSearchAndCreateViewModel
+            )
         }
     }
 }

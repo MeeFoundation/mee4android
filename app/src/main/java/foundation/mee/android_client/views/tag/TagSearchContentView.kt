@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeTag
 import foundation.mee.android_client.ui.theme.Border
@@ -34,14 +33,14 @@ import foundation.mee.android_client.ui.theme.publicSansFamily
 fun TagSearchContentView(
     connectionId: String,
     modifier: Modifier = Modifier,
-    searchViewModel: TagSearchViewModel = hiltViewModel(),
+    tagSearchAndCreateViewModel: TagSearchAndCreateViewModel,
 ) {
-    val foundTags by searchViewModel.getTagsFlow().collectAsState(listOf())
-    val allTags by searchViewModel.getAllTagsFlow().collectAsState(listOf())
-    val isQueryEmpty by searchViewModel.isQueryEmpty.collectAsState(true)
-    val newTagText by searchViewModel.newTagText.collectAsState("")
-    val isShowAddTagElement by searchViewModel.isShowAddTagElement.collectAsState(false)
-    val isShowEntireList by searchViewModel.isShowEntireList.collectAsState(false)
+    val foundTags by tagSearchAndCreateViewModel.getTagsFlow().collectAsState(listOf())
+    val allTags by tagSearchAndCreateViewModel.getAllTagsFlow().collectAsState(listOf())
+    val isQueryEmpty by tagSearchAndCreateViewModel.isQueryEmpty.collectAsState(true)
+    val newTagText by tagSearchAndCreateViewModel.newTagText.collectAsState("")
+    val isShowAddTagElement by tagSearchAndCreateViewModel.isShowAddTagElement.collectAsState(false)
+    val isShowEntireList by tagSearchAndCreateViewModel.isShowEntireList.collectAsState(false)
 
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -74,7 +73,7 @@ fun TagSearchContentView(
                     )
                 }
                 AddTagElement(newTagText) {
-                    searchViewModel.addTag(
+                    tagSearchAndCreateViewModel.addTagToConnection(
                         connectionId,
                         newTagText,
                         context
@@ -86,17 +85,27 @@ fun TagSearchContentView(
                 FoundTagsResult(
                     true,
                     allTags,
-                    { searchViewModel.isTagSelected(it) },
-                    { searchViewModel.updateTag(connectionId, it) }
+                    { tagSearchAndCreateViewModel.isTagSelected(it) },
+                    {
+                        tagSearchAndCreateViewModel.updateTag(it)
+                        tagSearchAndCreateViewModel.updateConnectionTag(connectionId)
+                    }
                 )
             }
 
         } else {
-            FoundTagsResult(isQueryEmpty, foundTags, { searchViewModel.isTagSelected(it) },
-                { searchViewModel.updateTag(connectionId, it) })
+            FoundTagsResult(isQueryEmpty, foundTags, { tagSearchAndCreateViewModel.isTagSelected(it) },
+                {
+                    tagSearchAndCreateViewModel.updateTag(it)
+                    tagSearchAndCreateViewModel.updateConnectionTag(connectionId)
+                })
             if (isShowAddTagElement) {
                 AddTagElement(newTagText) {
-                    searchViewModel.addTag(connectionId, newTagText, context)
+                    tagSearchAndCreateViewModel.addTagToConnection(
+                        connectionId,
+                        newTagText,
+                        context
+                    )
                 }
             }
         }
@@ -120,9 +129,8 @@ fun AddTagElement(searchState: String, onAddTag: () -> Unit) {
     )
 }
 
-
 @Composable
-private fun FoundTagsResult(
+fun FoundTagsResult(
     isQueryEmpty: Boolean,
     foundTags: List<MeeTag>,
     isChecked: (MeeTag) -> Boolean,

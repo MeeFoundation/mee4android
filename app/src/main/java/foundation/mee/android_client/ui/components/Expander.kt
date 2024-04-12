@@ -30,9 +30,39 @@ fun Expander(
     onChangeExpanded: () -> Unit,
     content: @Composable () -> Unit
 ) {
+    Expander(
+        title = {
+            Text(
+                text = title,
+                fontFamily = publicSansFamily,
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.15.sp,
+                fontWeight = FontWeight(600),
+                color = DarkText,
+            )
+        },
+        modifier = modifier,
+        color = color,
+        isExpanded = isExpanded,
+        onChangeExpanded = onChangeExpanded
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun Expander(
+    title: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colors.surface,
+    isExpanded: Boolean,
+    onChangeExpanded: () -> Unit,
+    content: @Composable () -> Unit
+) {
 
     Surface(
-        modifier = modifier,
+        modifier = modifier.sizeIn(minHeight = 24.dp),
         color = color
     ) {
         Column {
@@ -44,15 +74,7 @@ fun Expander(
                     .clickableWithoutRipple
                     { onChangeExpanded() }
             ) {
-                Text(
-                    text = title,
-                    fontFamily = publicSansFamily,
-                    fontSize = 16.sp,
-                    lineHeight = 24.sp,
-                    letterSpacing = 0.15.sp,
-                    fontWeight = FontWeight(600),
-                    color = DarkText,
-                )
+                title()
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp)

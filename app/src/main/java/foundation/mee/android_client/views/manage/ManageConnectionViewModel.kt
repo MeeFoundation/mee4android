@@ -101,10 +101,15 @@ class ManageConnectionViewModel @Inject constructor(
 
     fun removeConnection(id: String, navigator: Navigator) {
         meeAgentStore.removeConnectionById(id)
-        navigator.navigateToMainScreenAndRefresh()
+        navigator.popBackStack()
     }
 
-    fun removeConnector(id: String) {
-        meeAgentStore.removeConnectorById(id)
+    fun removeConnector(connectionId: String, connectorId: String, navigator: Navigator) {
+        meeAgentStore.removeConnectorById(connectorId)
+        if (meeAgentStore.getConnectionConnectors(connectionId).isNullOrEmpty()) {
+            navigator.popBackStack()
+        } else {
+            updateViewmodel()
+        }
     }
 }

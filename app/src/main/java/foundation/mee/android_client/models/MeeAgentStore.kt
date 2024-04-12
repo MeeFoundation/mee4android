@@ -73,7 +73,7 @@ class MeeAgentStore @Inject constructor(
         return getAllConnections()?.filter { !getConnectionConnectors(it.id).isNullOrEmpty() }
     }
 
-     fun getLastConsentByConnectorId(id: String): MeeContext? {
+    fun getLastConsentByConnectorId(id: String): MeeContext? {
         return try {
             val coreConsent = agent.siopLastConsentByConnectorId(connId = id)
             if (coreConsent != null) {
@@ -220,10 +220,17 @@ class MeeAgentStore @Inject constructor(
         }
     }
 
-    fun getAllTagsWithConnections(): List<MeeTag>? {
+    fun getAllTagsWithConnectors(): List<MeeTag>? {
         return try {
-            agent.searchTags("").filter { agent.getConnectionsByTag(it.id).isNotEmpty() }
-                .map { MeeTag(it) }
+            agent.searchTags("").filter { tag ->
+                agent.getConnectionsByTag(tag.id)
+                    .flatMap { connection ->
+                        getConnectionConnectors(connection.id) ?: emptyList()
+                    }
+                    .isNotEmpty()
+            }.map { tag ->
+                MeeTag(tag)
+            }
         } catch (e: Exception) {
             Log.e("error getting all tags with connections: ", e.message.orEmpty())
             null
