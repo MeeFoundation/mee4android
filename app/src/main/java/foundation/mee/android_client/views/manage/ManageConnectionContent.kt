@@ -125,6 +125,7 @@ fun ManageConnectionContent(
                             selectedContentColor = TextActive,
                             unselectedContentColor = DarkText,
                             modifier = Modifier
+                                .padding(horizontal = 16.dp)
                                 .height(48.dp),
                             interactionSource = NoRippleInteractionSource()
                         )
