@@ -14,7 +14,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foundation.mee.android_client.R
 import foundation.mee.android_client.ui.components.clickableWithoutRipple
-import foundation.mee.android_client.ui.theme.DarkText
-import foundation.mee.android_client.ui.theme.InactiveBorder
 import foundation.mee.android_client.ui.theme.OnSecondary
 import foundation.mee.android_client.ui.theme.SecondaryContainer
 import foundation.mee.android_client.ui.theme.publicSansFamily
@@ -34,9 +31,7 @@ import foundation.mee.android_client.ui.theme.publicSansFamily
 fun Tag(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    isSelected: Boolean = false,
-    isRemovable: Boolean = false
+    modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(8.dp)
 
@@ -45,20 +40,18 @@ fun Tag(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
             .background(
-                if (isSelected) SecondaryContainer else Color.Transparent,
+                SecondaryContainer,
                 shape
             )
             .border(
                 1.dp,
-                if (isSelected) SecondaryContainer else InactiveBorder,
+                SecondaryContainer,
                 shape
             )
+            .padding(start = 12.dp, end = 8.dp)
             .clickableWithoutRipple {
-                if (!isRemovable) {
-                    onClick()
-                }
+                onClick()
             }
-            .padding(start = 12.dp, end = if (isRemovable) 8.dp else 12.dp)
     ) {
         Text(
             text = "#${text}",
@@ -68,23 +61,20 @@ fun Tag(
             textAlign = TextAlign.Center,
             lineHeight = 20.sp,
             letterSpacing = 0.1.sp,
-            color = if (isSelected) OnSecondary else DarkText,
+            color = OnSecondary,
             modifier = Modifier
                 .padding(vertical = 6.dp)
         )
-        if (isRemovable) {
-            Icon(imageVector = ImageVector.vectorResource(
+        Icon(
+            imageVector = ImageVector.vectorResource(
                 id = R.drawable.closeicon
             ),
-                contentDescription = null,
-                tint = if (isSelected) OnSecondary else DarkText,
-                modifier = Modifier
-                    .width(18.dp)
-                    .height(20.dp)
-                    .clickableWithoutRipple {
-                        onClick()
-                    })
-        }
+            contentDescription = null,
+            tint = OnSecondary,
+            modifier = Modifier
+                .width(18.dp)
+                .height(20.dp)
+        )
     }
 }
 
@@ -92,8 +82,6 @@ fun Tag(
 @Composable
 fun TagPreview() {
     Column {
-        Tag(text = "Entertainment", isRemovable = true, onClick = {})
-        Tag(text = "Entertainment", isSelected = true, isRemovable = true, onClick = {})
-        Tag(text = "Entertainment", isRemovable = false, onClick = {})
+        Tag(text = "Entertainment", onClick = {})
     }
 }

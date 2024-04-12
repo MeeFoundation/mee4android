@@ -14,7 +14,9 @@ import foundation.mee.android_client.ui.theme.InactiveBorder
 
 @Composable
 fun TagSearchScreenHeader(
-    onClickBack: () -> Unit
+    onClickBack: () -> Unit,
+    textFieldValue: String,
+    onChangeText: (String) -> Unit
 ) {
     Column {
         Column(
@@ -23,8 +25,8 @@ fun TagSearchScreenHeader(
                 .padding(vertical = 24.dp, horizontal = 16.dp)
                 .fillMaxWidth(),
         ) {
-            TagSearchTopBar {
-                onClickBack()
+            TagSearchTopBar(onCancelClick = onClickBack, textFieldValue = textFieldValue) {
+                onChangeText(it)
             }
         }
         Divider(
@@ -37,5 +39,5 @@ fun TagSearchScreenHeader(
 @Composable
 @Preview
 fun PreviewTagsSearchScreenTitle() {
-    TagSearchScreenHeader {}
+    TagSearchScreenHeader(onClickBack = {}, textFieldValue = "") {}
 }

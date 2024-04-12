@@ -29,7 +29,7 @@ fun PartnerEntry(
     Surface(
         modifier = modifier
             .fillMaxWidth(1f)
-            .sizeIn(minHeight = 64.dp),
+            .sizeIn(minHeight = 72.dp),
         color = Color.White
     ) {
         Row(
