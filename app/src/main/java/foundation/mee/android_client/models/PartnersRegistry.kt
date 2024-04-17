@@ -7,7 +7,7 @@ object PartnersRegistry {
 
     init {
         shared = listOf(
-            MeeConnector(
+            /*MeeConnector(
                 id = "https://mee.foundation/",
                 name = "Mee Foundation",
                 otherPartyConnectionId = "mee.foundation",
@@ -31,7 +31,7 @@ object PartnersRegistry {
                         subjectSyntaxType = ConnectorProtocolSubject.DidKey("")
                     )
                 )
-            ),
+            ),*/
             MeeConnector(
                 id = "https://oldeyorktimes.com/",
                 name = "The Olde York Times",
