@@ -64,6 +64,10 @@ data class MeeConnector(
         return this.connectorProtocol is MeeConnectorProtocol.Gapi
     }
 
+    fun isDemo(): Boolean {
+        return this.id == "https://oldeyorktimes.com/"
+    }
+
     companion object {
         private fun meeConnectorProtocol(from: OtherPartyConnectorUniffi): MeeConnectorProtocol {
             return when (val protocol = from.protocol) {

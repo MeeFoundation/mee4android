@@ -2,6 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/didkit" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/mee-core" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ssi" vcs="Git" />
   </component>
 </project>

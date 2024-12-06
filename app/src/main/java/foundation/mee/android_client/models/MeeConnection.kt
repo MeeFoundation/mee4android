@@ -7,6 +7,9 @@ data class MeeConnection(
     var name: String,
     var tags: List<MeeTag>,
 ) {
+    fun isDemo(): Boolean {
+        return this.name == "The Olde York Times"
+    }
     constructor(from: OtherPartyConnectionUniffi) : this(
         id = from.id,
         name = from.name,

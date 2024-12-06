@@ -68,6 +68,10 @@ fun PartnerEntry(
                         )
                     }
                 }
+                if (connection.isDemo()) foundation.mee.android_client.ui.components.Badge(
+                    text = "Example",
+                    Modifier.padding(horizontal = 8.dp)
+                )
             }
         }
     }

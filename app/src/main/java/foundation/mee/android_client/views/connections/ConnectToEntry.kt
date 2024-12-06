@@ -1,6 +1,7 @@
 package foundation.mee.android_client.views.connections
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,13 +19,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import foundation.mee.android_client.R
 import foundation.mee.android_client.models.MeeConnector
+import foundation.mee.android_client.ui.components.Badge
 import foundation.mee.android_client.ui.theme.DarkText
 import foundation.mee.android_client.ui.theme.MeeGreenPrimaryColor
+import foundation.mee.android_client.ui.theme.SecondaryContainer
+import foundation.mee.android_client.ui.theme.publicSansFamily
 
 @Composable
 fun ConnectToEntry(
@@ -56,7 +62,7 @@ fun ConnectToEntry(
                 )
                 Column(
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = if (!connector.isDemo()) Modifier.padding(horizontal = 16.dp) else Modifier.padding(start = 16.dp, end = 2.dp)
                 ) {
                     Text(
                         text = connector.name,
@@ -64,6 +70,7 @@ fun ConnectToEntry(
                         fontSize = 16.sp
                     )
                 }
+                if (connector.isDemo()) Badge(text = "Example", Modifier.padding(horizontal = 8.dp))
             }
             Row(modifier = modifier) {
                 Text(
