@@ -88,3 +88,6 @@ lint/tmp/
 # (see "Installation Documentation" in README.md)
 /ssi/
 /didkit/
+
+# Release signing secrets (never commit)
+keystore.properties

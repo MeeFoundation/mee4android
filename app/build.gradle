@@ -9,6 +9,21 @@ plugins {
 
 def google_api_key
 
+// Release signing. Values come from keystore.properties in the repository root (git-ignored)
+// or, as a fallback, from MEE_* environment variables, so no secret lives in the repository.
+// Without them the release build stays unsigned instead of failing.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+def signingStorePath = keystoreProperties.getProperty("storeFile") ?: System.getenv("MEE_STORE_FILE")
+def signingStorePassword = keystoreProperties.getProperty("storePassword") ?: System.getenv("MEE_STORE_PASSWORD")
+def signingKeyAlias = keystoreProperties.getProperty("keyAlias") ?: System.getenv("MEE_KEY_ALIAS")
+def signingKeyPassword = keystoreProperties.getProperty("keyPassword") ?: System.getenv("MEE_KEY_PASSWORD")
+def hasReleaseSigning = signingStorePath != null && signingStorePassword != null &&
+        signingKeyAlias != null && file(signingStorePath).exists()
+
 android {
     namespace 'foundation.mee.android_client'
     compileSdk 36
@@ -29,8 +44,24 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(signingStorePath)
+                storePassword signingStorePassword
+                keyAlias signingKeyAlias
+                keyPassword signingKeyPassword ?: signingStorePassword
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            } else {
+                logger.warn("keystore.properties not found: the release build will be UNSIGNED")
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             google_api_key = "1043231896197-4rn1v1fkg4jla06ugvdcgaol4lsoeu47"
@@ -75,6 +106,10 @@ cargo {
     targets = ["arm64", "arm", "x86_64"]  // Must stay in sync with android.defaultConfig.ndk.abiFilters
     targetDirectory = "../mee-core/target"
     apiLevel = 23
+    // Release profile keeps the shipped .so small (a debug-profile libuniffi_mee_agent.so is
+    // ~50 MB per ABI). Applies to every variant; pass -PrustProfile=debug for faster local
+    // iteration on the Rust side.
+    profile = (project.findProperty("rustProfile") ?: "release")
     // macOS has no bare "python"; set it here so the build does not depend on
     // the RUST_ANDROID_GRADLE_PYTHON_COMMAND environment variable being exported.
     pythonCommand = "python3"
