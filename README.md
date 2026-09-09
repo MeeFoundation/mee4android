@@ -54,23 +54,43 @@ This section provides a quick start guide and and an overview of the project str
 git submodule init
 git submodule update
 ```
+`.gitmodules` refers to `mee-core` through the SSH alias host `swift.github.com`. If you don't have that alias in your `~/.ssh/config`, point the submodule at GitHub directly (local override, no changes to `.gitmodules`):
+```
+git config submodule.mee-core.url git@github.com:MeeFoundation/mee-core.git
+git submodule update --init mee-core
+```
+4) Clone the two Rust crates that `mee-core` uses as path dependencies. They must be siblings of `mee-core`, i.e. in the repository root:
+```
+git clone -b did_key_jwk_jcs_pub git@github.com:MeeFoundation/ssi.git ssi
+git clone git@github.com:MeeFoundation/didkit.git didkit
+```
+The `did_key_jwk_jcs_pub` branch of `ssi` is required: `main` has no `DIDKey::generate_jwk_jcs_pub`, which `mee_did` calls.
+
 Steps for **Mac OS**:
 1)  Install [Rust](https://www.rust-lang.org/learn/get-started)
-2) Use Rust latest stable toolchain
+2) Use the Rust `1.76.0` toolchain for `mee-core`. Compilers newer than 1.79 fail on the pinned `time 0.3.20` crate (`error[E0282]`), and cargo 1.78+ rewrites `mee-core/Cargo.lock` into lockfile format v4:
+```
+rustup toolchain install 1.76.0
+cd mee-core && rustup override set 1.76.0
+```
 3) Install Rust targets:
 ```
-rustup target add aarch64-linux-android
-rustup target add x86_64-linux-android
+rustup target add --toolchain 1.76.0 aarch64-linux-android
+rustup target add --toolchain 1.76.0 x86_64-linux-android
 ```
 4) Compile **uniffi-bindgen**:
 ```
 cd mee-core
-$HOME/.cargo/bin/cargo build --bin mee_uniffi_bindgen
+cargo build --bin mee_uniffi_bindgen
 ```
-5) Install **NDK** version `25.2.9519653`
-6) Export `RUST_ANDROID_GRADLE_PYTHON_COMMAND` variable
+5) Install **NDK** version `25.2.9519653` (pinned as `ndkVersion` in [app/build.gradle](app/build.gradle))
+6) Export `RUST_ANDROID_GRADLE_PYTHON_COMMAND` variable. It has to point to a Python **older than 3.13** — `linker-wrapper.py` from the `rust-android-gradle` plugin imports the `pipes` module, which was removed in 3.13. On macOS the bundled interpreter works:
 ```
-export RUST_ANDROID_GRADLE_PYTHON_COMMAND=python3
+export RUST_ANDROID_GRADLE_PYTHON_COMMAND=/usr/bin/python3
+```
+7) Build the app and install it on a connected device or a running emulator:
+```
+./gradlew installDebug
 ```
 
 ### Project structure
