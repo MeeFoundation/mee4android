@@ -37,10 +37,10 @@ fun WelcomeScreen(
                 )
         ) {
             val pageCount = size<WelcomePageEnum>()
-            val pagerState = rememberPagerState()
+            // Compose 1.6+ takes the page count from the state, not from the pager itself.
+            val pagerState = rememberPagerState(pageCount = { pageCount })
 
             HorizontalPager(
-                pageCount = pageCount,
                 state = pagerState,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)

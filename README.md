@@ -73,9 +73,10 @@ Steps for **Mac OS**:
 rustup toolchain install 1.76.0
 cd mee-core && rustup override set 1.76.0
 ```
-3) Install Rust targets:
+3) Install Rust targets, one per ABI the app ships (see `cargo.targets` / `abiFilters` in [app/build.gradle](app/build.gradle)):
 ```
 rustup target add --toolchain 1.76.0 aarch64-linux-android
+rustup target add --toolchain 1.76.0 armv7-linux-androideabi
 rustup target add --toolchain 1.76.0 x86_64-linux-android
 ```
 4) Compile **uniffi-bindgen**:
@@ -84,10 +85,9 @@ cd mee-core
 cargo build --bin mee_uniffi_bindgen
 ```
 5) Install **NDK** version `25.2.9519653` (pinned as `ndkVersion` in [app/build.gradle](app/build.gradle))
-6) Export `RUST_ANDROID_GRADLE_PYTHON_COMMAND` variable. It has to point to a Python **older than 3.13** — `linker-wrapper.py` from the `rust-android-gradle` plugin imports the `pipes` module, which was removed in 3.13. On macOS the bundled interpreter works:
-```
-export RUST_ANDROID_GRADLE_PYTHON_COMMAND=/usr/bin/python3
-```
+6) Nothing to do about Python: the `rust-android-gradle` plugin needs an interpreter for its
+linker wrapper, and the build declares it as `cargo { pythonCommand = "python3" }`, so the
+`RUST_ANDROID_GRADLE_PYTHON_COMMAND` environment variable no longer has to be exported.
 7) Build the app and install it on a connected device or a running emulator:
 ```
 ./gradlew installDebug

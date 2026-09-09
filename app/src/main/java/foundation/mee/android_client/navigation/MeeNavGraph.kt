@@ -65,7 +65,14 @@ fun MeeNavGraph(
         composable(
             CONSENT.route,
             arguments = listOf(
-                navArgument("params") { type = NavType.StringType }),
+                // "params" only ever arrives through the deep links below, it is not part of the
+                // "consent" route itself. Navigation 2.9+ rejects a required argument that the
+                // route cannot supply, so it has to be declared as optional here.
+                navArgument("params") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }),
             deepLinks = listOf(
                 navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/authorize?{params}" },
                 navDeepLink { uriPattern = "${DEEP_LINK_URL_STRING}/?{params}" }

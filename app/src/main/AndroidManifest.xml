@@ -15,7 +15,15 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.MeeIdentityAgent"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
+
+        <!-- Android 16 (API 36) ignores screenOrientation/resizability on displays >= 600dp.
+             This temporary opt-out keeps the current portrait-only behaviour; it stops working
+             at targetSdk 37, by which point the UI has to be made resizable. -->
+        <property
+            android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY"
+            android:value="true" />
         <activity
             android:launchMode="singleTask"
             android:name=".MainActivity"

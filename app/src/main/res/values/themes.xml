@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MeeIdentityAgent" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
-    </style>
+    <!-- android:statusBarColor / navigationBarColor are no-ops once the app targets API 35+
+         (edge-to-edge enforcement), so system bar appearance is configured in code via
+         enableEdgeToEdge() in MainActivity instead. -->
+    <style name="Theme.MeeIdentityAgent" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

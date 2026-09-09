@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -37,6 +39,20 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Edge-to-edge is enforced for apps targeting API 35+ and cannot be opted out of on
+        // API 36. The app only ships a light color palette, so the system bar icons are pinned
+        // to the dark-on-transparent style regardless of the system's dark theme setting.
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.BLACK
+            ),
+            navigationBarStyle = SystemBarStyle.light(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.BLACK
+            )
+        )
+
         val keyguard = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
         intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or FLAG_ACTIVITY_NEW_TASK)
 
@@ -52,12 +68,12 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
         val model: NavViewModel by viewModels()
         val meeAgentViewModel: MeeAgentViewModel by viewModels()
-        if (intent?.data?.scheme == "com.googleusercontent.apps.${GOOGLE_API_KEY}") {
+        if (intent.data?.scheme == "com.googleusercontent.apps.${GOOGLE_API_KEY}") {
             lifecycleScope.launch {
                 withContext(Dispatchers.Default) {
                     meeAgentViewModel.meeAgentStore.createGoogleConnection(intent.dataString!!)
@@ -132,7 +148,11 @@ fun ContentOnInitSuccess(keyguard: KeyguardManager) {
             if (initialFlowDone != null) {
                 if (loginSuccess || initialFlowDone == false
                 ) {
-                    Box(modifier = Modifier.fillMaxSize()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(WindowInsets.safeDrawing)
+                    ) {
 
                         Box(
                             modifier = Modifier
@@ -147,7 +167,13 @@ fun ContentOnInitSuccess(keyguard: KeyguardManager) {
 
                     }
                 } else {
-                    MeeWhiteScreen()
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(WindowInsets.safeDrawing)
+                    ) {
+                        MeeWhiteScreen()
+                    }
                     BiometryHandler(
                         activityContext = ctx,
                         onSuccessfulAuth = { loginSuccess = true }
