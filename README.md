@@ -92,6 +92,33 @@ linker wrapper, and the build declares it as `cargo { pythonCommand = "python3" 
 ```
 ./gradlew installDebug
 ```
+The Rust core is built with cargo's `release` profile (a debug-profile `libuniffi_mee_agent.so`
+is ~50 MB per ABI instead of ~33 MB). For faster iteration on the Rust side use
+`./gradlew installDebug -PrustProfile=debug`. **Run `./gradlew clean` when you switch profiles**:
+`mergeReleaseJniLibFolders` does not notice the swapped `.so` files and will happily package the
+previous ones.
+
+### Publishing a release bundle
+
+Release signing reads `keystore.properties` from the repository root (git-ignored), falling back to
+the `MEE_STORE_FILE`, `MEE_STORE_PASSWORD`, `MEE_KEY_ALIAS` and `MEE_KEY_PASSWORD` environment
+variables. Without either the release build stays unsigned instead of failing.
+```
+storeFile=/absolute/path/to/key-store.jks
+storePassword=…
+keyAlias=key0
+keyPassword=…
+```
+```
+./gradlew clean bundleRelease
+```
+The signed bundle lands in `app/build/outputs/bundle/release/app-release.aab`. Verify the signer
+before uploading and compare it with *Upload key certificate* in the Play Console
+(*Protected with Play → Play Store distribution → Play app signing*):
+```
+jarsigner -verify app/build/outputs/bundle/release/app-release.aab
+keytool -printcert -jarfile app/build/outputs/bundle/release/app-release.aab
+```
 
 ### Project structure
 

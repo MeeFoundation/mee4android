@@ -55,7 +55,10 @@ fun MeeFlowRow(
                         calculateShowMorePlaceable(remainingCount, placeable.height)
 
                     while (currentOffset.x + showMorePlaceable.width > maxWidth) {
-                        val removed = placeableToOffset.removeLast()
+                        // removeAt(lastIndex), not removeLast(): the Kotlin extension compiles
+                        // to java.util.List.removeLast(), which only exists from API 35 and
+                        // throws NoSuchMethodError on Android 14 and earlier.
+                        val removed = placeableToOffset.removeAt(placeableToOffset.lastIndex)
                         currentOffset = removed.second
                         remainingCount += 1
                         showMorePlaceable =
