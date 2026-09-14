@@ -31,7 +31,7 @@ android {
         applicationId "foundation.mee.android_client"
         minSdk 23
         targetSdk 36
-        versionCode 29
+        versionCode 30
         versionName "1.0.4"
         ndk {
             // Only ABIs we actually ship a native library for; must stay in sync with cargo.targets below.
